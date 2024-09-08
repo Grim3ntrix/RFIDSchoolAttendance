@@ -102,4 +102,6 @@
    </div>
 </div>
 
+@include('layouts.teacher-layout.footer')
+
 </x-app-layout>
