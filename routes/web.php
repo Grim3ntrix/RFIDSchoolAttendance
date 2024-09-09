@@ -8,7 +8,7 @@ Route::get('/', function () {
 });
 
 Route::get('/overview', function () {
-    return view('layouts.teacher-layout.content.dashboard');
+    return view('layouts.teacher-layout.content.overview');
 })->middleware(['auth', 'verified'])->name('overview');
 
 Route::middleware('auth')->group(function () {

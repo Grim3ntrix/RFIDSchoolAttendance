@@ -25,6 +25,8 @@
                 {{ $slot }}
             </main>
 
+            @include('layouts.teacher-layout.footer') 
         </div>
     </body>
+    
 </html>

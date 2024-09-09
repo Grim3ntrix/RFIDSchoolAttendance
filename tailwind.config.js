@@ -9,7 +9,9 @@ export default {
         './storage/framework/views/*.php',
         './resources/views/**/*.blade.php',
         './node_modules/flowbite/**/*.js',
-    ],
+    ],  
+
+    safelist: [],
 
     theme: {
         extend: {
@@ -19,6 +21,11 @@ export default {
         },
     },
 
-    plugins: [forms],
-    flowbitePlugin,
+    plugins: [
+        forms, 
+        flowbitePlugin({
+            charts: true,
+        }),
+    ],
+    
 };
