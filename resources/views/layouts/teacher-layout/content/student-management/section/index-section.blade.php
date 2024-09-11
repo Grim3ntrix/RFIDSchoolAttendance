@@ -5,8 +5,8 @@
             <div class="mb-4">
                <div class="flex items-center justify-between mb-1">
                   <x-primary-button data-modal-target="default-modal" data-modal-toggle="default-modal">
-                     <svg class="mr-1 -ml-1 w-4 h-4" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                        <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd"></path>
+                     <svg class="w-5 h-5 text-white mr-2 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 7.757v8.486M7.757 12h8.486M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
                      </svg>
                      <a href="#" class="btn btn-outline-primary hover:no-underline">{{ __('Section') }}</a>
                   </x-primary-button> 

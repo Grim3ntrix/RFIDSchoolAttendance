@@ -25,6 +25,7 @@ export default {
         forms, 
         flowbitePlugin({
             charts: true,
+            datatables: true,
         }),
     ],
     
