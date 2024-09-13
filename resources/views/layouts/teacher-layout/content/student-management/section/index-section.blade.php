@@ -56,7 +56,7 @@
 
             <div class="flex items-center justify-between h-auto mb-4 rounded">
                <a href="{{ route('student_management_student.index') }}" class="hover:no-underline w-full">
-                  <div class="w-full bg-gray-50 dark:bg-gray-800 hover:bg-green-500 hover:text-white dark:hover:text-white-800 active:bg-green-700 transition-colors duration-150 focus:outline-none focus:ring focus:ring-green-300 rounded-lg shadow p-4 md:p-6">
+                  <div class="w-full bg-gray-50 dark:bg-gray-800 hover:bg-emerald-500 hover:text-white dark:hover:text-white-800 active:bg-emerald-700 transition-colors duration-150 focus:outline-none focus:ring focus:ring-emerald-300 rounded-lg shadow p-4 md:p-6">
                      <div> 
                         <div class="flex justify-between items-start w-full">
                            <p class="subpixel-antialiased font-medium">{{ __('Melon') }}</p>
@@ -146,7 +146,7 @@
             
             <div class="flex items-center justify-between h-auto mb-4 rounded">
                <a href="{{ route('student_management_student.index') }}" class="hover:no-underline w-full">
-                  <div class="w-full bg-gray-50 dark:bg-gray-800 hover:bg-green-500 hover:text-white dark:hover:text-white-800 active:bg-green-700 transition-colors duration-150 focus:outline-none focus:ring focus:ring-green-300 rounded-lg shadow p-4 md:p-6">
+                  <div class="w-full bg-gray-50 dark:bg-gray-800 hover:bg-emerald-500 hover:text-white dark:hover:text-white-800 active:bg-emerald-700 transition-colors duration-150 focus:outline-none focus:ring focus:ring-emerald-300 rounded-lg shadow p-4 md:p-6">
                      <div> 
                         <div class="flex justify-between items-start w-full">
                            <p class="subpixel-antialiased font-medium">{{ __('Guava') }}</p>
@@ -237,7 +237,7 @@
 
             <div class="flex items-center justify-between h-auto mb-4 rounded">
                <a href="{{ route('student_management_student.index') }}" class="hover:no-underline w-full">
-                  <div class="w-full bg-gray-50 dark:bg-gray-800 hover:bg-green-500 hover:text-white dark:hover:text-white-800 active:bg-green-700 transition-colors duration-150 focus:outline-none focus:ring focus:ring-green-300 rounded-lg shadow p-4 md:p-6">
+                  <div class="w-full bg-gray-50 dark:bg-gray-800 hover:bg-emerald-500 hover:text-white dark:hover:text-white-800 active:bg-emerald-700 transition-colors duration-150 focus:outline-none focus:ring focus:ring-emerald-300 rounded-lg shadow p-4 md:p-6">
                      <div> 
                         <div class="flex justify-between items-start w-full">
                            <p class="subpixel-antialiased font-medium">{{ __('Special Science Class (CCS)') }}</p>

@@ -28,7 +28,7 @@
                            </div>
                      </div>
                      <div class="ml-4">
-                           <p class="text-xl font-medium text-gray-400 dark:text-gray-400">Total Subjects</p>
+                           <p class="text-xl font-medium text-gray-500 dark:text-gray-400">Total Subjects</p>
                            <p class="text-2xl font-bold text-gray-900 dark:text-white">56</p>
                      </div>
                   </div>
