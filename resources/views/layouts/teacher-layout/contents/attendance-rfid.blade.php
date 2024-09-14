@@ -34,7 +34,12 @@
                   </div>
                </div>
 
-               <hr class="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700">
+               <div class="inline-flex items-center justify-center w-full">
+                  <hr class="w-96 h-1 my-8 bg-gray-200 border-0 rounded dark:bg-gray-700">
+                  <div class="absolute px-4 bg-gray-100 dark:bg-gray-900">
+                     <p class="font-sans antialiased font-normal tracking-wide uppercase">Attendance for Today</p>
+                  </div>
+               </div>
 
                <div id="table-loader" class="flex justify-center items-center py-10">
                   <svg role="status" class="inline w-8 h-8 mr-2 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -44,7 +49,7 @@
                   <span>Loading data, please wait...</span>
                </div>
 
-               <div id="attendance-datatable-container"></div>
+               <div id="attendance-table-container" class=" my-8"></div>
 
             </div>
         </div>

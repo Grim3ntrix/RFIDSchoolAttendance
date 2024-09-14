@@ -4,8 +4,8 @@
          <div class="p-4">
             <div class="mb-4">
                <div class="flex items-center justify-between mb-1">
-                  <x-primary-button data-modal-target="default-modal" data-modal-toggle="default-modal">
-                     <svg class="w-5 h-5 text-white mr-2 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                  <x-primary-button data-modal-target="new-section-modal" data-modal-toggle="new-section-modal">
+                     <svg class="w-4 h-4 text-white mr-2 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 7.757v8.486M7.757 12h8.486M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
                      </svg>
                      <a href="#" class="btn btn-outline-primary hover:no-underline">{{ __('Section') }}</a>
@@ -20,14 +20,14 @@
                   </div>
                </div>
 
-               <div id="default-modal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+               <div id="new-section-modal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
                   <div class="relative p-4 w-full max-w-2xl max-h-full">
                      <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
                         <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
                            <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
                               Add Section
                            </h3>
-                           <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="default-modal">
+                           <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="new-section-modal">
                               <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
                                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
                               </svg>
@@ -129,9 +129,11 @@
                                  <h3 class="mb-2 text-xl font-semibold text-gray-700 dark:text-gray-300">Delete Section?</h3>
                                  <p class="mb-5 text-sm text-gray-500 dark:text-gray-400">All data including student records will be permanently removed. This action cannot be undone.</p>
                                  <div class="flex justify-center space-x-3">
-                                    <button data-modal-hide="delete-section-modal" type="button" class="text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-700 font-medium rounded-lg text-sm px-5 py-2.5">
-                                       Yes, Delete
-                                    </button>
+                                    <form action="">
+                                       <button type="submit" data-modal-hide="delete-section-modal" class="text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-700 font-medium rounded-lg text-sm px-5 py-2.5">
+                                          Yes, Delete
+                                       </button>
+                                    </form>
                                     <button data-modal-hide="delete-section-modal" type="button" class="px-5 py-2.5 text-sm font-medium text-gray-900 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 dark:hover:bg-gray-700">
                                        No, Cancel
                                     </button>
@@ -220,9 +222,11 @@
                                  <h3 class="mb-2 text-xl font-semibold text-gray-700 dark:text-gray-300">Delete Section?</h3>
                                  <p class="mb-5 text-sm text-gray-500 dark:text-gray-400">All data including student records will be permanently removed. This action cannot be undone.</p>
                                  <div class="flex justify-center space-x-3">
-                                    <button data-modal-hide="delete-section-modal" type="button" class="text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-700 font-medium rounded-lg text-sm px-5 py-2.5">
-                                       Yes, Delete
-                                    </button>
+                                    <form action="">
+                                       <button type="submit" data-modal-hide="delete-section-modal" class="text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-700 font-medium rounded-lg text-sm px-5 py-2.5">
+                                          Yes, Delete
+                                       </button>
+                                    </form>
                                     <button data-modal-hide="delete-section-modal" type="button" class="px-5 py-2.5 text-sm font-medium text-gray-900 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 dark:hover:bg-gray-700">
                                        No, Cancel
                                     </button>
@@ -311,9 +315,11 @@
                                  <h3 class="mb-2 text-xl font-semibold text-gray-700 dark:text-gray-300">Delete Section?</h3>
                                  <p class="mb-5 text-sm text-gray-500 dark:text-gray-400">All data including student records will be permanently removed. This action cannot be undone.</p>
                                  <div class="flex justify-center space-x-3">
-                                    <button data-modal-hide="delete-section-modal" type="button" class="text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-700 font-medium rounded-lg text-sm px-5 py-2.5">
-                                       Yes, Delete
-                                    </button>
+                                    <form action="">
+                                       <button type="submit" data-modal-hide="delete-section-modal" class="text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-700 font-medium rounded-lg text-sm px-5 py-2.5">
+                                          Yes, Delete
+                                       </button>
+                                    </form>
                                     <button data-modal-hide="delete-section-modal" type="button" class="px-5 py-2.5 text-sm font-medium text-gray-900 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 dark:hover:bg-gray-700">
                                        No, Cancel
                                     </button>
