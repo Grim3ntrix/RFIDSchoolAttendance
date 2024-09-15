@@ -7,33 +7,53 @@ Route::get('/', function () {
     return view('auth.login');
 });
 
-Route::get('/overview', function () {
-    return view('layouts.teacher-layout.contents.overview');
-})->middleware(['auth', 'verified'])->name('overview');
+/* Super Admin Routes */
 
-Route::get('/attendance-rfid', function () {
-    return view('layouts.teacher-layout.contents.attendance-rfid');
-})->middleware(['auth', 'verified'])->name('attendance_rfid');
+Route::group(['middleware' => ['auth', 'verified', 'role:superadmin']], function (){
+    Route::get('superadmin/overview', function () {
+        return view('layouts.superadmin-layouts.contents.overview');
+    })->name('superadmin/overview');
+});
 
-Route::get('/student-management/section/index', function () {
-    return view('layouts.teacher-layout.contents.student-management.section.index-section');
-})->middleware(['auth', 'verified'])->name('student_management_section.index');
+/* Teacher Routes */
 
-Route::get('/student-management/section/student/index', function () {
-    return view('layouts.teacher-layout.contents.student-management.student.index-student-table');
-})->middleware(['auth', 'verified'])->name('student_management_student.index');
+Route::group(['middleware' => ['auth', 'verified', 'role:teacher']], function (){
+    Route::get('teacher/overview', function () {
+        return view('layouts.teacher-layouts.contents.overview');
+    })->name('teacher/overview');
+    
+    Route::get('/attendance-rfid', function () {
+        return view('layouts.teacher-layouts.contents.attendance-rfid');
+    })->name('attendance_rfid');
+    
+    Route::get('/student-management/section/index', function () {
+        return view('layouts.teacher-layouts.contents.student-management.section.index-section');
+    })->name('student_management_section.index');
+    
+    Route::get('/student-management/section/student/index', function () {
+        return view('layouts.teacher-layouts.contents.student-management.student.index-student-table');
+    })->name('student_management_student.index');
+    
+    Route::get('/class-schedule/index', function () {
+        return view('layouts.teacher-layouts.contents.class-schedule.index-class-schedule');
+    })->name('class_schedule.index');
+    
+    Route::get('/report', function () {
+        return view('layouts.teacher-layouts.contents.report');
+    })->name('report');
+    
+    Route::get('/geofence', function () {
+        return view('layouts.teacher-layouts.contents.geofence');
+    })->name('geofence');
+});
 
-Route::get('/class-schedule/index', function () {
-    return view('layouts.teacher-layout.contents.class-schedule.index-class-schedule');
-})->middleware(['auth', 'verified'])->name('class_schedule.index');
+/* Student Routes */
 
-Route::get('/report', function () {
-    return view('layouts.teacher-layout.contents.report');
-})->middleware(['auth', 'verified'])->name('report');
-
-Route::get('/geofence', function () {
-    return view('layouts.teacher-layout.contents.geofence');
-})->middleware(['auth', 'verified'])->name('geofence');
+Route::group(['middleware' => ['auth', 'verified', 'role:student']], function (){
+    Route::get('student/overview', function () {
+        return view('layouts.student-layouts.contents.overview');
+    })->name('student/overview');
+});
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

@@ -18,14 +18,14 @@
     </head>
     <body class="font-sans antialiased">
         <div class="min-h-screen flex flex-col bg-gray-100 dark:bg-gray-900">
-            @include('layouts.teacher-layout.navbar')
-            @include('layouts.teacher-layout.sidebar')
+            @include('layouts.navbar')
+            @include('layouts.sidebar')
 
             <main>
                 {{ $slot }}
             </main>
 
-            @include('layouts.teacher-layout.footer') 
+            @include('layouts.footer') 
         </div>
     </body>
     
