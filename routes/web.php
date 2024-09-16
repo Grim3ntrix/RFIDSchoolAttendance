@@ -5,14 +5,18 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('auth.login');
-});
+})->middleware('redirect_if_authenticated');
 
 /* Super Admin Routes */
 
 Route::group(['middleware' => ['auth', 'verified', 'role:superadmin']], function (){
     Route::get('superadmin/overview', function () {
         return view('layouts.superadmin-layouts.contents.overview');
-    })->name('superadmin/overview');
+    })->name('superadmin_overview');
+
+    Route::get('superadmin/teachers', function () {
+        return view('layouts.superadmin-layouts.contents.overview');
+    })->name('superadmin_teacher');
 });
 
 /* Teacher Routes */
@@ -20,7 +24,7 @@ Route::group(['middleware' => ['auth', 'verified', 'role:superadmin']], function
 Route::group(['middleware' => ['auth', 'verified', 'role:teacher']], function (){
     Route::get('teacher/overview', function () {
         return view('layouts.teacher-layouts.contents.overview');
-    })->name('teacher/overview');
+    })->name('teacher_overview');
     
     Route::get('/attendance-rfid', function () {
         return view('layouts.teacher-layouts.contents.attendance-rfid');
@@ -52,7 +56,7 @@ Route::group(['middleware' => ['auth', 'verified', 'role:teacher']], function ()
 Route::group(['middleware' => ['auth', 'verified', 'role:student']], function (){
     Route::get('student/overview', function () {
         return view('layouts.student-layouts.contents.overview');
-    })->name('student/overview');
+    })->name('student_overview');
 });
 
 Route::middleware('auth')->group(function () {

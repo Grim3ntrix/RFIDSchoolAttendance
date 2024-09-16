@@ -30,12 +30,14 @@ class AuthenticatedSessionController extends Controller
 
         $user = Auth::user();
 
-        if ($user->hasRole('teacher')){
-            return redirect()->intended(route('teacher/overview', absolute: false));
+        if ($user->hasRole('superadmin')){
+            return redirect()->intended(route('superadmin_overview'));
+        } elseif ($user->hasRole('teacher')){
+            return redirect()->intended(route('teacher_overview'));
         } elseif ($user->hasRole('student')){
-            return redirect()->intended(route('student/overview', absolute: false));
-        } elseif ($user->hasRole('superadmin')){
-            return redirect()->intended(route('superadmin/overview', absolute: false));
+            return redirect()->intended(route('student_overview'));
+        } else {
+            return redirect(route('login'));
         }
         
     }
