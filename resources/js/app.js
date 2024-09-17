@@ -1,27 +1,33 @@
 import './bootstrap';
 import 'flowbite';
-import { renderPieCharts } from './pie-chart-design';
+import { renderPieCharts } from './teacher/pie-chart-design';
 import Alpine from 'alpinejs';
-import { initializeStudentDatatable } from './student-page-datatable';
-import { initializeAttendanceDatatable } from './attendance-page-datatable';
-import { initializeClassScheduleDatatable } from './class-schedule-page-datatable';
+import { initializeTeacherDatatable } from './superadmin/teacher-datatable';
+import { initializeStudentDatatable } from './teacher/student-page-datatable';
+import { initializeAttendanceDatatable } from './teacher/attendance-page-datatable';
+import { initializeClassScheduleDatatable } from './teacher/class-schedule-page-datatable';
 
 window.Alpine = Alpine;
 
 Alpine.start();
 
-/* Pie Charts */
+/* SuperAdmin - Teacher Datatable */
+
+initializeTeacherDatatable();
+
+/* Teacher - Pie Charts */
 
 renderPieCharts();
 
-/* Student Page Datatables */
+/* Teacher - Student Page Datatables */
 
 initializeStudentDatatable();
 
-/* Attendance Page Datatables */
+/* Teacher - Attendance Page Datatables */
 
 initializeAttendanceDatatable();
 
-/* Class Schedule Page Datatables */
+/* Teacher - Class Schedule Page Datatables */
 
 initializeClassScheduleDatatable();
+

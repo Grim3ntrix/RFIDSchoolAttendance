@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SuperAdmin\TeacherController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -9,20 +10,18 @@ Route::get('/', function () {
 
 /* Super Admin Routes */
 
-Route::group(['middleware' => ['auth', 'verified', 'role:superadmin']], function (){
-    Route::get('superadmin/overview', function () {
+Route::group(['middleware' => ['auth', 'verified', 'role:superadmin'], 'prefix' => 'superadmin'], function (){
+    Route::get('/overview', function () {
         return view('layouts.superadmin-layouts.contents.overview');
     })->name('superadmin_overview');
 
-    Route::get('superadmin/teachers', function () {
-        return view('layouts.superadmin-layouts.contents.overview');
-    })->name('superadmin_teacher');
+    Route::resource('teachers', TeacherController::class);
 });
 
 /* Teacher Routes */
 
-Route::group(['middleware' => ['auth', 'verified', 'role:teacher']], function (){
-    Route::get('teacher/overview', function () {
+Route::group(['middleware' => ['auth', 'verified', 'role:teacher'], 'prefix' => 'teacher'], function (){
+    Route::get('/overview', function () {
         return view('layouts.teacher-layouts.contents.overview');
     })->name('teacher_overview');
     
@@ -53,8 +52,8 @@ Route::group(['middleware' => ['auth', 'verified', 'role:teacher']], function ()
 
 /* Student Routes */
 
-Route::group(['middleware' => ['auth', 'verified', 'role:student']], function (){
-    Route::get('student/overview', function () {
+Route::group(['middleware' => ['auth', 'verified', 'role:student'], 'prefix' => 'student'], function (){
+    Route::get('/overview', function () {
         return view('layouts.student-layouts.contents.overview');
     })->name('student_overview');
 });
