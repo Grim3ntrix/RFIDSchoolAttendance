@@ -11,10 +11,6 @@ window.Alpine = Alpine;
 
 Alpine.start();
 
-/* SuperAdmin - Teacher Datatable */
-
-initializeTeacherDatatable();
-
 /* Teacher - Pie Charts */
 
 renderPieCharts();
@@ -31,3 +27,6 @@ initializeAttendanceDatatable();
 
 initializeClassScheduleDatatable();
 
+/* SuperAdmin - Teacher Datatable */
+
+initializeTeacherDatatable();

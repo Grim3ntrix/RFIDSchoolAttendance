@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\SuperAdmin;
 
 use App\Http\Controllers\Controller;
+use App\Models\SuperAdmin\Teacher;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class TeacherController extends Controller
 {
@@ -15,12 +17,10 @@ class TeacherController extends Controller
         return view('layouts.superadmin-layouts.contents.teacher.index-teacher');
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function getTeacherRecords()
     {
-        //
+        $teacherRecords = Teacher::all();
+        return response()->json($teacherRecords);
     }
 
     /**
@@ -28,15 +28,24 @@ class TeacherController extends Controller
      */
     public function store(Request $request)
     {
-        //
-    }
+        $validated = $request->validate([
+            'teacher_id'        => 'required|string|max:255',
+            'last_name'         => 'required|string|max:255',
+            'first_name'        => 'required|string|max:255',
+            'middle_name'       => 'required|string|max:255',
+            'name_extension'    => 'nullable|string|max:50',
+            'sex'               => 'required|string|in:male,female',
+            'birth_date'        => 'nullable|date',
+            'email'             => 'nullable|email|max:255|unique:teachers,email'. $request->id, // Add to be unique
+            'phone_number'      => 'required|string|max:15',
+            'address'           => 'required|string|max:255',
+        ]);
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
+        $teacherTable = new Teacher();
+        $teacherTable->fill($validated);
+        $teacherTable->save();
+
+        return response()->json(['success' => true]);
     }
 
     /**
@@ -44,7 +53,8 @@ class TeacherController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $teacherData = Teacher::findOrFail($id);
+        return response()->json($teacherData);
     }
 
     /**
@@ -52,7 +62,22 @@ class TeacherController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $validated = $request->validate([
+            'teacher_id'        => 'required|string|max:255',
+            'last_name'         => 'required|string|max:255',
+            'first_name'        => 'required|string|max:255',
+            'middle_name'       => 'required|string|max:255',
+            'name_extension'    => 'nullable|string|max:50',
+            'sex'               => 'required|string|in:male,female',
+            'birth_date'        => 'nullable|date',
+            'email'             => 'nullable|email|max:255|unique:teachers,email,' . $id,
+            'phone_number'      => 'required|string|max:15',
+            'address'           => 'required|string|max:255',
+        ]);
+
+        Teacher::where('id', $id)->update($validated);
+
+        return response()->json(['success' => true]);
     }
 
     /**
@@ -60,6 +85,9 @@ class TeacherController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $teacherData = Teacher::findOrFail($id);
+        $teacherData->delete();
+
+        return response()->json(['success' => true]);
     }
 }

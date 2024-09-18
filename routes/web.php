@@ -15,7 +15,10 @@ Route::group(['middleware' => ['auth', 'verified', 'role:superadmin'], 'prefix' 
         return view('layouts.superadmin-layouts.contents.overview');
     })->name('superadmin_overview');
 
-    Route::resource('teachers', TeacherController::class);
+    Route::get('teachers/records', [TeacherController::class, 'getTeacherRecords'])->name('teachers.records');
+    Route::resource('teachers', TeacherController::class)->except([
+        'create', 'show',
+    ]);;
 });
 
 /* Teacher Routes */
