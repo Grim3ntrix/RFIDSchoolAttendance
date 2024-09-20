@@ -28,6 +28,8 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
+        app(UserStatusController::class)->updateStatusToOnline();
+
         $user = Auth::user();
 
         if ($user->hasRole('superadmin')){
@@ -39,7 +41,6 @@ class AuthenticatedSessionController extends Controller
         } else {
             return redirect(route('login'));
         }
-        
     }
 
     /**
@@ -47,6 +48,8 @@ class AuthenticatedSessionController extends Controller
      */
     public function destroy(Request $request): RedirectResponse
     {
+        app(UserStatusController::class)->updateStatusToOffline();
+
         Auth::guard('web')->logout();
 
         $request->session()->invalidate();

@@ -5,7 +5,7 @@ namespace App\Models\SuperAdmin;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Teacher extends Model
+class PreRegisteredTeacher extends Model
 {
     use HasFactory;
 

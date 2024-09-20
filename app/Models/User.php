@@ -46,4 +46,11 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    /* Relationship */
+
+    public function status()
+    {
+        return $this->belongsTo(UserStatus::class, 'status_id');
+    }
 }

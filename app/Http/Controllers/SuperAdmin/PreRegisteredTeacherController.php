@@ -3,11 +3,11 @@
 namespace App\Http\Controllers\SuperAdmin;
 
 use App\Http\Controllers\Controller;
-use App\Models\SuperAdmin\Teacher;
+use App\Models\SuperAdmin\PreRegisteredTeacher;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
-class TeacherController extends Controller
+class PreRegisteredTeacherController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -19,7 +19,7 @@ class TeacherController extends Controller
 
     public function getTeacherRecords()
     {
-        $teacherRecords = Teacher::all();
+        $teacherRecords = PreRegisteredTeacher::all();
         return response()->json($teacherRecords);
     }
 
@@ -41,7 +41,7 @@ class TeacherController extends Controller
             'address'           => 'required|string|max:255',
         ]);
 
-        $teacherTable = new Teacher();
+        $teacherTable = new PreRegisteredTeacher();
         $teacherTable->fill($validated);
         $teacherTable->save();
 
@@ -53,7 +53,7 @@ class TeacherController extends Controller
      */
     public function edit(string $id)
     {
-        $teacherData = Teacher::findOrFail($id);
+        $teacherData = PreRegisteredTeacher::findOrFail($id);
         return response()->json($teacherData);
     }
 
@@ -75,7 +75,7 @@ class TeacherController extends Controller
             'address'           => 'required|string|max:255',
         ]);
 
-        Teacher::where('id', $id)->update($validated);
+        PreRegisteredTeacher::where('id', $id)->update($validated);
 
         return response()->json(['success' => true]);
     }
@@ -85,7 +85,7 @@ class TeacherController extends Controller
      */
     public function destroy(string $id)
     {
-        $teacherData = Teacher::findOrFail($id);
+        $teacherData = PreRegisteredTeacher::findOrFail($id);
         $teacherData->delete();
 
         return response()->json(['success' => true]);

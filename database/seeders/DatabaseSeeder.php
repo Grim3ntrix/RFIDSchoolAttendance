@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
             'teacher_id'=> '01',
             'email'     => 'superadmin@gmail.com',
             'password'  => Hash::make('12345678'),
+            'status_id'  => 1,
         ]);
 
         $superadmin->assignRole('superadmin');
@@ -28,6 +29,7 @@ class DatabaseSeeder extends Seeder
             'teacher_id'=> '02',
             'email'     => 'teacher@gmail.com',
             'password'  => Hash::make('12345678'),
+            'status_id'  => 1,
         ]);
 
         $teacher->assignRole('teacher');
@@ -37,6 +39,7 @@ class DatabaseSeeder extends Seeder
             'teacher_id'=> '03',
             'email'     => 'student@gmail.com',
             'password'  => Hash::make('12345678'),
+            'status_id'  => 1,
         ]);
 
         $student->assignRole('student');
