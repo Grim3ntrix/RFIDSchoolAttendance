@@ -1,8 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
-
-use App\Models\SuperAdmin\PreRegisteredTeacher;
+use App\Http\Controllers\SuperAdmin\PreRegisteredTeacherController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -16,8 +15,8 @@ Route::group(['middleware' => ['auth', 'verified', 'role:superadmin'], 'prefix' 
         return view('layouts.superadmin-layouts.contents.overview');
     })->name('superadmin_overview');
 
-    Route::get('teachers/records', [PreRegisteredTeacher::class, 'getTeacherRecords'])->name('teachers.records');
-    Route::resource('teachers', PreRegisteredTeacher::class)->except([
+    Route::get('pre-registered-teachers/records', [PreRegisteredTeacherController::class, 'getTeacherRecords'])->name('teachers.records');
+    Route::resource('pre_registered_teachers', PreRegisteredTeacherController::class)->except([
         'create', 'show',
     ]);;
 });

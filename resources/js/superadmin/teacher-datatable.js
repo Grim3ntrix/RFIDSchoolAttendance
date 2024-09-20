@@ -16,7 +16,7 @@ export function initializeTeacherDatatable() {
 
         let formData = new FormData(form);
 
-        axios.post('/superadmin/teachers', formData)
+        axios.post('/superadmin/pre_registered_teachers', formData)
             .then(response => {
                 const Toast = Swal.mixin({
                     toast: true,
@@ -37,7 +37,7 @@ export function initializeTeacherDatatable() {
             
                 setTimeout(() => {
                     form.reset();
-                    window.location.href = '/superadmin/teachers';
+                    window.location.href = '/superadmin/pre_registered_teachers';
                 }, 800);
             })
             .catch(error => {
@@ -66,7 +66,7 @@ export function initializeTeacherDatatable() {
 
         /* Axios GET request to populate the datatable */
 
-        axios.get('/superadmin/teachers/records')
+        axios.get('/superadmin/pre-registered-teachers/records')
         .then(response => {
             const teachers = response.data;
 
@@ -296,7 +296,7 @@ export function initializeTeacherDatatable() {
 
                     editTeacherModal.show();
 
-                    axios.get(`/superadmin/teachers/${teacherId}/edit`)
+                    axios.get(`/superadmin/pre_registered_teachers/${teacherId}/edit`)
                     .then(response => {
                         const teacherData = response.data;
                         document.querySelector('#teacher_record_id').value  = teacherData.id;
@@ -328,7 +328,7 @@ export function initializeTeacherDatatable() {
             const teacherId = document.querySelector('#teacher_record_id').value;
             let formData = new FormData(editForm);
         
-            axios.post(`/superadmin/teachers/${teacherId}`, formData, {
+            axios.post(`/superadmin/pre_registered_teachers/${teacherId}`, formData, {
                 headers: {
                     'X-HTTP-Method-Override': 'PUT'
                 }
@@ -353,7 +353,7 @@ export function initializeTeacherDatatable() {
         
                 setTimeout(() => {
                     editForm.reset();
-                    window.location.href = '/superadmin/teachers'; // Redirect or update the UI
+                    window.location.href = '/superadmin/pre_registered_teachers'; // Redirect or update the UI
                 }, 800);
             })
             .catch(error => {
@@ -400,7 +400,7 @@ export function initializeTeacherDatatable() {
                 e.preventDefault();
 
                 if (teacherIdToDelete) {
-                    axios.delete(`/superadmin/teachers/${teacherIdToDelete}`)
+                    axios.delete(`/superadmin/pre_registered_teachers/${teacherIdToDelete}`)
                         .then(response => {
                             const Toast = Swal.mixin({
                                 toast: true,
@@ -420,7 +420,7 @@ export function initializeTeacherDatatable() {
                             });
 
                             setTimeout(() => {
-                                window.location.href = '/superadmin/teachers'; // Redirect or update the UI
+                                window.location.href = '/superadmin/pre_registered_teachers'; // Redirect or update the UI
                             }, 800);
                         })
                         .catch(error => {

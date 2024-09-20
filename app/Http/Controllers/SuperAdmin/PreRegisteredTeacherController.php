@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\SuperAdmin;
 
 use App\Http\Controllers\Controller;
+
 use App\Models\SuperAdmin\PreRegisteredTeacher;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 
 class PreRegisteredTeacherController extends Controller
 {
@@ -28,6 +30,8 @@ class PreRegisteredTeacherController extends Controller
      */
     public function store(Request $request)
     {
+        \Log::info(DB::getQueryLog());
+
         $validated = $request->validate([
             'teacher_id'        => 'required|string|max:255',
             'last_name'         => 'required|string|max:255',
@@ -36,7 +40,7 @@ class PreRegisteredTeacherController extends Controller
             'name_extension'    => 'nullable|string|max:50',
             'sex'               => 'required|string|in:male,female',
             'birth_date'        => 'nullable|date',
-            'email'             => 'nullable|email|max:255|unique:teachers,email'. $request->id, // Add to be unique
+            'email'             => 'nullable|email|max:255|unique:pre_registered_teachers,email'. $request->id, // Add to be unique
             'phone_number'      => 'required|string|max:15',
             'address'           => 'required|string|max:255',
         ]);
@@ -70,7 +74,7 @@ class PreRegisteredTeacherController extends Controller
             'name_extension'    => 'nullable|string|max:50',
             'sex'               => 'required|string|in:male,female',
             'birth_date'        => 'nullable|date',
-            'email'             => 'nullable|email|max:255|unique:teachers,email,' . $id,
+            'email'             => 'nullable|email|max:255|unique:pre_registered_teachers,email,' . $id,
             'phone_number'      => 'required|string|max:15',
             'address'           => 'required|string|max:255',
         ]);

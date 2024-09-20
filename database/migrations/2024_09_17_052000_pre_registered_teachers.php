@@ -20,9 +20,9 @@ return new class extends Migration
             $table->string('name_extension')->nullable();
             $table->string('sex');
             $table->date('birth_date')->nullable();
-            $table->string('address');
             $table->string('email')->nullable();
             $table->string('phone_number', '15');
+            $table->string('address');
             $table->timestamps();
         });
     }

@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('password');
             $table->rememberToken();
             $table->foreignId('status_id')
+                  ->default(1)
                   ->constrained('user_statuses')
                   ->onDelete('cascade');
             $table->timestamps();
