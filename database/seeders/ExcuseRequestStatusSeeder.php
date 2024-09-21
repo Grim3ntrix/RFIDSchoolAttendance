@@ -2,20 +2,20 @@
 
 namespace Database\Seeders;
 
-use App\Models\UserStatus;
+use App\Models\ExcuseRequestStatus;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
-class UserStatusSeeder extends Seeder
+class ExcuseRequestStatusSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
-        UserStatus::insert([
-            ['status' => 'online'],
-            ['status' => 'offline'],
+        ExcuseRequestStatus::insert([
+            ['status' => 'approved'],
+            ['status' => 'rejected'],
         ]);
     }
 }
