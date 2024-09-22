@@ -11,12 +11,12 @@ class Student extends Model
 
     /* Relationship */
 
-    public function sections()
+    public function section()
     {
         return $this->belongsTo(Section::class, 'section_id');
     }
 
-    public function users()
+    public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
     }
@@ -31,7 +31,7 @@ class Student extends Model
         return $this->hasMany(ExcuseRequest::class, 'student_id');
     }
 
-    public function reports()
+    public function report()
     {
         return $this->hasMany(Report::class, 'student_id');
     }

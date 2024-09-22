@@ -11,12 +11,12 @@ class ExcuseRequest extends Model
 
     /* Relationship */
 
-    public function students()
+    public function student()
     {
         return $this->belongsTo(Student::class, 'student_id');
     }
 
-    public function classSchedules()
+    public function classSchedule()
     {
         return $this->belongsTo(ClassSchedule::class, 'class_schedule_id');
     }

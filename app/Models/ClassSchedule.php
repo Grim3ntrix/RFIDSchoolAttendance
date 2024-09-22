@@ -11,12 +11,12 @@ class ClassSchedule extends Model
 
     /* Relationship */
 
-    public function teachers()
+    public function teacher()
     {
         return $this->belongsTo(Teacher::class, 'teacher_id');
     }
 
-    public function sections()
+    public function section()
     {
         return $this->belongsTo(Section::class, 'section_id');
     }
@@ -31,7 +31,7 @@ class ClassSchedule extends Model
         return $this->hasMany(ExcuseRequest::class, 'class_schedule_id');
     }
 
-    public function reports()
+    public function report()
     {
         return $this->hasMany(Report::class, 'class_schedule_id');
     }

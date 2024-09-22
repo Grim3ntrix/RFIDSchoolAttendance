@@ -15,7 +15,7 @@ class UserStatus extends Model
 
     /* Relationship */
 
-    public function users()
+    public function user()
     {
         return $this->hasMany(User::class, 'status_id');
     }

@@ -6,27 +6,36 @@ import { initializeTeacherDatatable } from './superadmin/teacher-datatable';
 import { initializeStudentDatatable } from './teacher/student-page-datatable';
 import { initializeAttendanceDatatable } from './teacher/attendance-page-datatable';
 import { initializeClassScheduleDatatable } from './teacher/class-schedule-page-datatable';
+import { initializeSectionPage } from './teacher/add-section-page';
 
 window.Alpine = Alpine;
 
 Alpine.start();
 
-/* Teacher - Pie Charts */
+document.addEventListener('DOMContentLoaded', () => {
 
-renderPieCharts();
+    /* Teacher - Pie Charts */
 
-/* Teacher - Student Page Datatables */
+    renderPieCharts();
 
-initializeStudentDatatable();
+    /* Teacher - Student Page Datatables */
 
-/* Teacher - Attendance Page Datatables */
+    initializeStudentDatatable();
 
-initializeAttendanceDatatable();
+    /* Teacher - Attendance Page Datatables */
 
-/* Teacher - Class Schedule Page Datatables */
+    initializeAttendanceDatatable();
 
-initializeClassScheduleDatatable();
+    /* Teacher - Class Schedule Page Datatables */
 
-/* SuperAdmin - Teacher Datatable */
+    initializeClassScheduleDatatable();
 
-initializeTeacherDatatable();
+    /* SuperAdmin - Teacher Datatable */
+
+    initializeTeacherDatatable();
+
+    /* Teacher - Section */
+
+    initializeSectionPage()
+
+});

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\Teacher;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
@@ -28,30 +29,33 @@ class RegisteredUserController extends Controller
      * @throws \Illuminate\Validation\ValidationException
      */
     public function store(Request $request): RedirectResponse
-{
-    $request->validate([
-        'name'       => ['required', 'string', 'max:255'],
-        'teacher_id' => ['required', 'string', 'exists:pre_registered_teachers,teacher_id', 'unique:' . User::class],
-        'email'      => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
-        'password'   => ['required', 'confirmed', Rules\Password::defaults()],
-    ], [
-        'teacher_id.exists' => 'The teacher ID is not valid. Please contact the school administrator.',
-    ]);
+    {
+        $request->validate([
+            'name'       => ['required', 'string', 'max:255'],
+            'teacher_id' => ['required', 'string', 'exists:pre_registered_teachers,teacher_id', 'unique:' . User::class],
+            'email'      => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
+            'password'   => ['required', 'confirmed', Rules\Password::defaults()],
+        ], [
+            'teacher_id.exists' => 'The teacher ID is not valid. Please contact the school administrator.',
+        ]);
 
-    $user = User::create([
-        'name'       => $request->name,
-        'teacher_id' => $request->teacher_id,
-        'email'      => $request->email,
-        'password'   => Hash::make($request->password),
-    ]);
+        $user = User::create([
+            'name'       => $request->name,
+            'teacher_id' => $request->teacher_id,
+            'email'      => $request->email,
+            'password'   => Hash::make($request->password),
+        ]);
 
-    $user->assignRole('teacher');
+        Teacher::create([
+            'user_id' => $user->id,
+        ]);
 
-    event(new Registered($user));
+        $user->assignRole('teacher');
 
-    Auth::login($user);
+        event(new Registered($user));
 
-    return redirect(route('teacher_overview', absolute: false));
-}
+        Auth::login($user);
 
+        return redirect(route('teacher_overview', absolute: false));
+    }
 }

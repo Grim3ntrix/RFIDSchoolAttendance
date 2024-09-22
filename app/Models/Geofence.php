@@ -11,7 +11,7 @@ class Geofence extends Model
 
     /* Relationship */
 
-    public function students()
+    public function student()
     {
         return $this->belongsTo(Student::class, 'student_id');
     }

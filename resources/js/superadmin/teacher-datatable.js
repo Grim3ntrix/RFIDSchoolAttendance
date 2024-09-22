@@ -2,20 +2,18 @@ import { DataTable } from "simple-datatables";
 import Swal from 'sweetalert2';
 
 export function initializeTeacherDatatable() {
+    console.log("Pre register teacher page function triggered.");
 
-    /* This is important para dle mag conflict ag uban JS code "EH LOAD SA DOM -> DOMContentLoaded" */
+    /* Add section modal behaviour and prevent Close after submit button is click */
 
-    document.addEventListener('DOMContentLoaded', () => {
+    const form = document.getElementById('add-teacher-form');
 
-        /* Add teacher modal behaviour and prevent Close after submit button is click */
-
-        const form = document.getElementById('add-teacher-form');
-    
+    if (form){
         form.addEventListener('submit', function (e) {
         e.preventDefault(); // Prevent the default form submission
-
+    
         let formData = new FormData(form);
-
+    
         axios.post('/superadmin/pre_registered_teachers', formData)
             .then(response => {
                 const Toast = Swal.mixin({
@@ -42,27 +40,30 @@ export function initializeTeacherDatatable() {
             })
             .catch(error => {
                 if (error.response && error.response.status === 422) {
-
+    
                     const errors = error.response.data.errors;
-
+    
                     document.querySelectorAll('.error-message').forEach(el => el.remove()); // Hide Validation
-
+    
                     for (let key in errors) {
                         let inputElement = document.getElementById(key);
                         let errorMessage = errors[key][0];
-
+    
                         let errorElement = document.createElement('p');
                         errorElement.classList.add('text-red-500', 'text-xs', 'mt-1', 'error-message');
                         errorElement.innerText = errorMessage;
-
+    
                         inputElement.after(errorElement);
                     }
                 }
             });
         });
+    }
 
-        // Show Loading spinner
-        document.getElementById('table-loader').style.display = 'flex';
+    const tableLoader = document.getElementById('table-loader');
+
+    if (tableLoader) {
+        tableLoader.style.display = 'flex';
 
         /* Axios GET request to populate the datatable */
 
@@ -74,75 +75,75 @@ export function initializeTeacherDatatable() {
 
             if (teachers.length > 0) {
                 const tableHTML = `
-                <table id="teacherTable" class="bg-gray-50 dark:bg-gray-800">
-                    <thead>
-                        <tr>
-                            <th>
-                                <span class="flex items-center">
-                                    Teacher ID
-                                    <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4"/>
-                                    </svg>
-                                </span>
-                            </th>
-                            <th>
-                                <span class="flex items-center">
-                                    Name
-                                    <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4"/>
-                                    </svg>
-                                </span>
-                            </th>
-                            <th>
-                                <span class="flex items-center">
-                                    Sex
-                                    <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4"/>
-                                    </svg>
-                                </span>
-                            </th>
-                            <th>
-                                <span class="flex items-center">
-                                    Birthdate
-                                    <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4"/>
-                                    </svg>
-                                </span>
-                            </th>
-                            <th>
-                                <span class="flex items-center">
-                                    Address
-                                    <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4"/>
-                                    </svg>
-                                </span>
-                            </th>
-                            <th>
-                                <span class="flex items-center">
-                                    Email
-                                    <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4"/>
-                                    </svg>
-                                </span>
-                            </th>
-                            <th>
-                                <span class="flex items-center">
-                                    Phone
-                                    <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4"/>
-                                    </svg>
-                                </span>
-                            </th>
-                            <th>
-                                <span class="flex items-center">
-                                    Action
-                                    <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4"/>
-                                    </svg>
-                                </span>
-                            </th>
-                        </tr>
-                    </thead>
+                    <table id="teacherTable" class="bg-gray-50 dark:bg-gray-800">
+                        <thead>
+                            <tr>
+                                <th>
+                                    <span class="flex items-center">
+                                        Teacher ID
+                                        <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4"/>
+                                        </svg>
+                                    </span>
+                                </th>
+                                <th>
+                                    <span class="flex items-center">
+                                        Name
+                                        <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4"/>
+                                        </svg>
+                                    </span>
+                                </th>
+                                <th>
+                                    <span class="flex items-center">
+                                        Sex
+                                        <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4"/>
+                                        </svg>
+                                    </span>
+                                </th>
+                                <th>
+                                    <span class="flex items-center">
+                                        Birthdate
+                                        <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4"/>
+                                        </svg>
+                                    </span>
+                                </th>
+                                <th>
+                                    <span class="flex items-center">
+                                        Address
+                                        <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4"/>
+                                        </svg>
+                                    </span>
+                                </th>
+                                <th>
+                                    <span class="flex items-center">
+                                        Email
+                                        <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4"/>
+                                        </svg>
+                                    </span>
+                                </th>
+                                <th>
+                                    <span class="flex items-center">
+                                        Phone
+                                        <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4"/>
+                                        </svg>
+                                    </span>
+                                </th>
+                                <th>
+                                    <span class="flex items-center">
+                                        Action
+                                        <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4"/>
+                                        </svg>
+                                    </span>
+                                </th>
+                            </tr>
+                        </thead>
                     <tbody></tbody>
                 </table>`;
 
@@ -273,59 +274,61 @@ export function initializeTeacherDatatable() {
 
                 document.getElementById('table-loader').style.display = 'none'; // Hide Loading spinner
             }
-
         })
+            
         .catch(error => {
             console.error('Error fetching teacher data:', error);
             document.getElementById('table-loader').style.display = 'none'; // Hide Loading spinner
         });
+    }
 
-        /* Edit GET Request - Modal Instance */
- 
-        const editTeacherModalEl = document.getElementById('edit-teacher-modal');
+    /* Edit GET Request - Modal Instance */
 
-        if (editTeacherModalEl) {
-            const editTeacherModal = new Modal(editTeacherModalEl);
+    const editTeacherModalEl = document.getElementById('edit-teacher-modal');
 
-            document.addEventListener('click', function (e) {
-                // Ensure the click targets a button with the correct data-modal-toggle attribute
-                if (e.target.closest('[data-modal-toggle="edit-teacher-modal"]')) {
-                    e.preventDefault();
+    let teacherId;
 
-                    const teacherId = e.target.closest('button').getAttribute('data-teacher-id');
+    if (editTeacherModalEl) {
+        const editTeacherModal = new Modal(editTeacherModalEl);
 
-                    editTeacherModal.show();
+        document.addEventListener('click', function (e) {
+            // Ensure the click targets a button with the correct data-modal-toggle attribute
+            if (e.target.closest('[data-modal-toggle="edit-teacher-modal"]')) {
+                e.preventDefault();
 
-                    axios.get(`/superadmin/pre_registered_teachers/${teacherId}/edit`)
-                    .then(response => {
-                        const teacherData = response.data;
-                        document.querySelector('#teacher_record_id').value  = teacherData.id;
-                        document.querySelector('#edit_last_name').value     = teacherData.last_name;
-                        document.querySelector('#edit_first_name').value    = teacherData.first_name;
-                        document.querySelector('#edit_middle_name').value   = teacherData.middle_name;
-                        document.querySelector('#edit_name_extension').value= teacherData.name_extension;
-                        document.querySelector('#edit_teacher_id').value    = teacherData.teacher_id;
-                        document.querySelector('#edit_sex').value           = teacherData.sex;
-                        document.querySelector('#edit_birth_date').value    = teacherData.birth_date;
-                        document.querySelector('#edit_email').value         = teacherData.email;
-                        document.querySelector('#edit_phone_number').value  = teacherData.phone_number;
-                        document.querySelector('#edit_address').value       = teacherData.address;
-                    })
-                    .catch(error => {
-                        console.error('There was an error fetching the teacher data:', error);
-                    });
-                }
-            });
-        }
+                teacherId = e.target.closest('button').getAttribute('data-teacher-id');
 
-        /* Edit PUT Request - FORM */
+                editTeacherModal.show();
 
-        const editForm = document.getElementById('edit-teacher-form');
+                axios.get(`/superadmin/pre_registered_teachers/${teacherId}/edit`)
+                .then(response => {
+                    const teacherData = response.data;
+                    document.querySelector('#edit_last_name').value     = teacherData.last_name;
+                    document.querySelector('#edit_first_name').value    = teacherData.first_name;
+                    document.querySelector('#edit_middle_name').value   = teacherData.middle_name;
+                    document.querySelector('#edit_name_extension').value= teacherData.name_extension;
+                    document.querySelector('#edit_teacher_id').value    = teacherData.teacher_id;
+                    document.querySelector('#edit_sex').value           = teacherData.sex;
+                    document.querySelector('#edit_birth_date').value    = teacherData.birth_date;
+                    document.querySelector('#edit_email').value         = teacherData.email;
+                    document.querySelector('#edit_phone_number').value  = teacherData.phone_number;
+                    document.querySelector('#edit_address').value       = teacherData.address;
+                })
+                .catch(error => {
+                    console.error('There was an error fetching the teacher data:', error);
+                });
+            }
+        });
+    }
 
+    /* Edit PUT Request - FORM */
+
+    const editForm = document.getElementById('edit-teacher-form');
+
+    if (editForm){
         editForm.addEventListener('submit', function (e) {
             e.preventDefault();
         
-            const teacherId = document.querySelector('#teacher_record_id').value;
             let formData = new FormData(editForm);
         
             axios.post(`/superadmin/pre_registered_teachers/${teacherId}`, formData, {
@@ -375,59 +378,59 @@ export function initializeTeacherDatatable() {
                 }
             });
         });
+    }
 
-        /* Delete - Modal Instance */
+    /* Delete - Modal Instance */
 
-        const deleteTeacherModalEl = document.getElementById('delete-teacher-modal');
+    const deleteTeacherModalEl = document.getElementById('delete-teacher-modal');
 
-        if (deleteTeacherModalEl) {
-            const deleteTeacherModal = new Modal(deleteTeacherModalEl);
-            let teacherIdToDelete = null; // Variable to hold the teacher ID to be deleted, so that we can use it in the url
+    if (deleteTeacherModalEl) {
+        const deleteTeacherModal = new Modal(deleteTeacherModalEl);
+        let teacherIdToDelete = null; // Variable to hold the teacher ID to be deleted, so that we can use it in the url
 
-            document.addEventListener('click', function (e) {
-                if (e.target.closest('[data-modal-toggle="delete-teacher-modal"]')) {
-                    e.preventDefault();
-
-                    teacherIdToDelete = e.target.closest('button').getAttribute('data-teacher-id');
-                    console.log('Teacher ID to delete:', teacherIdToDelete);
-
-                    deleteTeacherModal.show();
-                }
-            });
-
-            // Handle confirmation
-            document.querySelector('#delete-teacher-confirm-btn').addEventListener('click', function (e) {
+        document.addEventListener('click', function (e) {
+            if (e.target.closest('[data-modal-toggle="delete-teacher-modal"]')) {
                 e.preventDefault();
 
-                if (teacherIdToDelete) {
-                    axios.delete(`/superadmin/pre_registered_teachers/${teacherIdToDelete}`)
-                        .then(response => {
-                            const Toast = Swal.mixin({
-                                toast: true,
-                                position: "top-end",
-                                showConfirmButton: false,
-                                timer: 800,
-                                timerProgressBar: true,
-                                didOpen: (toast) => {
-                                    toast.onmouseenter = Swal.stopTimer;
-                                    toast.onmouseleave = Swal.resumeTimer;
-                                }
-                            });
+                teacherIdToDelete = e.target.closest('button').getAttribute('data-teacher-id');
+                // console.log('Teacher ID to delete:', teacherIdToDelete);
 
-                            Toast.fire({
-                                icon: "success",
-                                title: "Teacher record deleted successfully!"
-                            });
+                deleteTeacherModal.show();
+            }
+        });
 
-                            setTimeout(() => {
-                                window.location.href = '/superadmin/pre_registered_teachers'; // Redirect or update the UI
-                            }, 800);
-                        })
-                        .catch(error => {
-                            console.error('There was an error deleting the teacher:', error);
-                        });
-                }
-            });
-        }
-    });
+        // Handle confirmation
+        document.querySelector('#delete-teacher-confirm-btn').addEventListener('click', function (e) {
+            e.preventDefault();
+
+            if (teacherIdToDelete) {
+                axios.delete(`/superadmin/pre_registered_teachers/${teacherIdToDelete}`)
+                .then(response => {
+                    const Toast = Swal.mixin({
+                        toast: true,
+                        position: "top-end",
+                        showConfirmButton: false,
+                        timer: 800,
+                        timerProgressBar: true,
+                        didOpen: (toast) => {
+                            toast.onmouseenter = Swal.stopTimer;
+                            toast.onmouseleave = Swal.resumeTimer;
+                        }
+                    });
+
+                    Toast.fire({
+                        icon: "success",
+                        title: "Teacher record deleted successfully!"
+                    });
+
+                    setTimeout(() => {
+                        window.location.href = '/superadmin/pre_registered_teachers'; // Redirect or update the UI
+                    }, 800);
+                })
+                .catch(error => {
+                    console.error('There was an error deleting the teacher:', error);
+                });
+            }
+        });
+    }
 }

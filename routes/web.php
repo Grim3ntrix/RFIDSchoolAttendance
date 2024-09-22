@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SuperAdmin\PreRegisteredTeacherController;
+use App\Http\Controllers\Teacher\SectionController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -18,7 +19,7 @@ Route::group(['middleware' => ['auth', 'verified', 'role:superadmin'], 'prefix' 
     Route::get('pre-registered-teachers/records', [PreRegisteredTeacherController::class, 'getTeacherRecords'])->name('teachers.records');
     Route::resource('pre_registered_teachers', PreRegisteredTeacherController::class)->except([
         'create', 'show',
-    ]);;
+    ]);
 });
 
 /* Teacher Routes */
@@ -32,9 +33,10 @@ Route::group(['middleware' => ['auth', 'verified', 'role:teacher'], 'prefix' => 
         return view('layouts.teacher-layouts.contents.attendance-rfid');
     })->name('attendance_rfid');
     
-    Route::get('/student-management/section/index', function () {
-        return view('layouts.teacher-layouts.contents.student-management.section.index-section');
-    })->name('student_management_section.index');
+    Route::get('sections/records', [SectionController::class, 'getSectionRecords'])->name('sections.records');
+    Route::resource('sections', SectionController::class)->except([
+        'create', 'show',
+    ]);
     
     Route::get('/student-management/section/student/index', function () {
         return view('layouts.teacher-layouts.contents.student-management.student.index-student-table');
