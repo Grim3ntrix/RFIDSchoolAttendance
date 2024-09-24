@@ -21,6 +21,8 @@ return new class extends Migration
             $table->string('slug')
                   ->unique();
             $table->timestamps();
+
+            $table->unique(['section_name', 'grade_or_year_level', 'teacher_id']);
         });
     }
 

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Section;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 
 class SectionController extends Controller
 {
@@ -19,7 +20,9 @@ class SectionController extends Controller
 
     public function getSectionRecords()
     {
-        $sectionRecords = Section::all();
+        $user = Auth::user();
+        $teacher = $user->teacher;
+        $sectionRecords = Section::where('teacher_id', $teacher->id)->get();
         return response()->json($sectionRecords);
     }
 
@@ -36,13 +39,21 @@ class SectionController extends Controller
      */
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'section_name'        => 'required|string|max:255|unique:sections,section_name,' . $request->id,
-            'grade_or_year_level' => 'required|string|max:255|unique:sections,grade_or_year_level,' . $request->id,
-        ]);
-
         $user    = Auth::user();
         $teacher = $user->teacher;
+
+        $validated = $request->validate([
+            'section_name'        => [
+                'required',
+                'string',
+                'max:255',
+                Rule::unique('sections')->where(function ($query) use ($teacher, $request) {
+                    return $query->where('grade_or_year_level', $request->grade_or_year_level)
+                                 ->where('teacher_id', $teacher->id);
+                }),
+            ],
+            'grade_or_year_level' => 'required|string|max:255',
+        ]);
 
         $sectionTable = new Section();
         $sectionTable->teacher_id = $teacher->id;
@@ -74,15 +85,24 @@ class SectionController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        $user    = Auth::user();
+        $teacher = $user->teacher;
+
         $validated = $request->validate([
-            'section_name'        => 'required|string|max:255|unique:sections,section_name,' . $id,
-            'grade_or_year_level' => 'required|string|max:255|unique:sections,grade_or_year_level,' . $id,
+            'section_name' => [
+                'required',
+                'string',
+                'max:255',
+                Rule::unique('sections')->where(function ($query) use ($teacher, $request) {
+                    return $query->where('grade_or_year_level', $request->grade_or_year_level)
+                                 ->where('teacher_id', $teacher->id);
+                })->ignore($id), // Ignore the current record
+            ],
+            'grade_or_year_level' => 'required|string|max:255',
         ]);
 
         $section = Section::findOrFail($id);
-
         $section->fill($validated);
-
         $section->save(); // to trigger slug updating
 
         return response()->json(['success' => true]);

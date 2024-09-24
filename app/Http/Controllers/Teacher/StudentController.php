@@ -22,7 +22,7 @@ class StudentController extends Controller
     {
         $validated = $request->validate([
             'school_id'          => 'nullable|string|max:255',
-            'rfid_serial_number' => 'required|string|max:255',
+            'rfid_serial_number' => 'required|string|max:50|unique:students,rfid_serial_number'. $request->id,
             'batch'              => 'required|string|max:255',
             'last_name'          => 'required|string|max:255',
             'first_name'         => 'required|string|max:255',
@@ -84,7 +84,7 @@ class StudentController extends Controller
     {
         $validated = $request->validate([
             'school_id'          => 'nullable|string|max:255',
-            'rfid_serial_number' => 'required|string|max:255',
+            'rfid_serial_number' => 'required|string|max:50|unique:students,rfid_serial_number'. $request->id,
             'batch'              => 'required|string|max:255',
             'last_name'          => 'required|string|max:255',
             'first_name'         => 'required|string|max:255',

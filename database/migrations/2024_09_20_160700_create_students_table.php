@@ -21,7 +21,8 @@ return new class extends Migration
                   ->onDelete('cascade');
             $table->string('school_id')
                   ->nullable();
-            $table->string('rfid_serial_number');
+            $table->string('rfid_serial_number')
+                  ->unique();
             $table->string('batch');
             $table->string('last_name');
             $table->string('first_name');
