@@ -30,6 +30,10 @@ class AuthenticatedSessionController extends Controller
 
         app(UserStatusController::class)->updateStatusToOnline();
 
+        /**
+         * @var \App\Models\User|null $user
+         */
+
         $user = Auth::user();
 
         if ($user->hasRole('superadmin')){

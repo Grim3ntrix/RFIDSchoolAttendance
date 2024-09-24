@@ -18,6 +18,8 @@ return new class extends Migration
                   ->onDelete('cascade');
             $table->string('section_name');
             $table->string('grade_or_year_level');
+            $table->string('slug')
+                  ->unique();
             $table->timestamps();
         });
     }

@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Student;
 use App\Models\Teacher;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -17,7 +18,6 @@ class DatabaseSeeder extends Seeder
     {
         $superadmin = User::factory()->create([
             'name'      => 'Super Admin',
-            'teacher_id'=> '01',
             'email'     => 'superadmin@gmail.com',
             'password'  => Hash::make('12345678'),
             'status_id'  => 1,
@@ -27,7 +27,6 @@ class DatabaseSeeder extends Seeder
 
         $teacher = User::factory()->create([
             'name'      => 'Teacher',
-            'teacher_id'=> '02',
             'email'     => 'teacher@gmail.com',
             'password'  => Hash::make('12345678'),
             'status_id'  => 1,
@@ -37,16 +36,17 @@ class DatabaseSeeder extends Seeder
 
         Teacher::create([
             'user_id' => $teacher->id,
+            'teacher_id' => 0,
         ]);
 
         $student = User::factory()->create([
             'name'      => 'Student',
-            'teacher_id'=> '03',
             'email'     => 'student@gmail.com',
             'password'  => Hash::make('12345678'),
             'status_id'  => 1,
         ]);
 
         $student->assignRole('student');
+
     }
 }

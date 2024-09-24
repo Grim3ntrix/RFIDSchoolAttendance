@@ -32,7 +32,7 @@ class RegisteredUserController extends Controller
     {
         $request->validate([
             'name'       => ['required', 'string', 'max:255'],
-            'teacher_id' => ['required', 'string', 'exists:pre_registered_teachers,teacher_id', 'unique:' . User::class],
+            'teacher_id' => ['required', 'string', 'exists:pre_registered_teachers,teacher_id', 'unique:' . Teacher::class],
             'email'      => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
             'password'   => ['required', 'confirmed', Rules\Password::defaults()],
         ], [
@@ -41,13 +41,13 @@ class RegisteredUserController extends Controller
 
         $user = User::create([
             'name'       => $request->name,
-            'teacher_id' => $request->teacher_id,
             'email'      => $request->email,
             'password'   => Hash::make($request->password),
         ]);
 
         Teacher::create([
             'user_id' => $user->id,
+            'teacher_id' => $request->teacher_id,
         ]);
 
         $user->assignRole('teacher');

@@ -59,8 +59,8 @@ export const getChartOptions = () => {
 }
 
 export const renderPieCharts = () => {
-  if (document.getElementById("pie-chart") && typeof ApexCharts !== 'undefined') {
-    const chart = new ApexCharts(document.getElementById("pie-chart"), getChartOptions());
+  if (document.getElementById("pie-chart-container") && typeof ApexCharts !== 'undefined') {
+    const chart = new ApexCharts(document.getElementById("pie-chart-container"), getChartOptions());
     chart.render();
   }
 }

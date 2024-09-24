@@ -1,41 +1,45 @@
 import './bootstrap';
 import 'flowbite';
-import { renderPieCharts } from './teacher/pie-chart-design';
 import Alpine from 'alpinejs';
-import { initializeTeacherDatatable } from './superadmin/teacher-datatable';
-import { initializeStudentDatatable } from './teacher/student-page-datatable';
-import { initializeAttendanceDatatable } from './teacher/attendance-page-datatable';
-import { initializeClassScheduleDatatable } from './teacher/class-schedule-page-datatable';
-import { initializeSectionPage } from './teacher/add-section-page';
 
 window.Alpine = Alpine;
-
 Alpine.start();
 
-document.addEventListener('DOMContentLoaded', () => {
-
+document.addEventListener('DOMContentLoaded', async () => {
+    
     /* Teacher - Pie Charts */
-
-    renderPieCharts();
-
-    /* Teacher - Student Page Datatables */
-
-    initializeStudentDatatable();
-
-    /* Teacher - Attendance Page Datatables */
-
-    initializeAttendanceDatatable();
-
-    /* Teacher - Class Schedule Page Datatables */
-
-    initializeClassScheduleDatatable();
+    if (document.querySelector('#pie-chart-container')) {
+        const { renderPieCharts } = await import('./teacher/pie-chart-design');
+        renderPieCharts();
+    }
 
     /* SuperAdmin - Teacher Datatable */
+    if (document.querySelector('#teacher-datatable-container')) {
+        const { initializeTeacherDatatable } = await import('./superadmin/teacher-datatable');
+        initializeTeacherDatatable();
+    }
 
-    initializeTeacherDatatable();
+    /* Teacher - Student Page Datatables */
+    if (document.querySelector('#student-datatable-container')) {
+        const { initializeStudentDatatable } = await import('./teacher/student-page-datatable');
+        initializeStudentDatatable();
+    }
+
+    /* Teacher - Attendance Page Datatables */
+    if (document.querySelector('#attendance-table-container')) {
+        const { initializeAttendanceDatatable } = await import('./teacher/attendance-page-datatable');
+        initializeAttendanceDatatable();
+    }
+
+    /* Teacher - Class Schedule Page Datatables */
+    if (document.querySelector('#class-schedule-datatable-container')) {
+        const { initializeClassScheduleDatatable } = await import('./teacher/class-schedule-page-datatable');
+        initializeClassScheduleDatatable();
+    }
 
     /* Teacher - Section */
-
-    initializeSectionPage()
-
+    if (document.querySelector('#sections-container')) {
+        const { initializeSectionPage } = await import('./teacher/add-section-page');
+        initializeSectionPage();
+    }
 });

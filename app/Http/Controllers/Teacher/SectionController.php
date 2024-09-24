@@ -37,8 +37,8 @@ class SectionController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'section_name'        => 'required|string|max:255',
-            'grade_or_year_level' => 'required|string|max:255',
+            'section_name'        => 'required|string|max:255|unique:sections,section_name,' . $request->id,
+            'grade_or_year_level' => 'required|string|max:255|unique:sections,grade_or_year_level,' . $request->id,
         ]);
 
         $user    = Auth::user();
@@ -75,11 +75,15 @@ class SectionController extends Controller
     public function update(Request $request, string $id)
     {
         $validated = $request->validate([
-            'section_name'        => 'required|string|max:255',
-            'grade_or_year_level' => 'required|string|max:255',
+            'section_name'        => 'required|string|max:255|unique:sections,section_name,' . $id,
+            'grade_or_year_level' => 'required|string|max:255|unique:sections,grade_or_year_level,' . $id,
         ]);
 
-        Section::where('id', $id)->update($validated);
+        $section = Section::findOrFail($id);
+
+        $section->fill($validated);
+
+        $section->save(); // to trigger slug updating
 
         return response()->json(['success' => true]);
     }

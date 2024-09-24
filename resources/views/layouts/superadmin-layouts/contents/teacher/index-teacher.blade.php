@@ -79,7 +79,7 @@
                                  </div>
                                 <div>
                                     <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email</label>
-                                    <input type="text" id="email" name="email" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" autocomplete="off" placeholder="Enter Email" />
+                                    <input type="email" id="email" name="email" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" autocomplete="off" placeholder="Enter Email" />
 
                                  </div>
                                 <div>
@@ -101,122 +101,11 @@
                </div>
             </div>
 
-            <!-- Edit Teacher Modal -->
-            <div id="edit-teacher-modal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
-               <div class="relative p-4 w-full max-w-2xl max-h-full">
-                  <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
-                     <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
-                        <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
-                           Edit Teacher
-                        </h3>
-                        <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="edit-teacher-modal">
-                           <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
-                                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
-                           </svg>
-                        </button>
-                     </div>
-                     <div class="p-4 md:p-5 space-y-4">   
-                        <form method="POST" id="edit-teacher-form">
-                           @csrf
-                           <div class="grid gap-6 mb-6 md:grid-cols-3">
-                              <div>
-                                 <label for="first_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">First Name</label>
-                                 <input type="text" id="edit_first_name" name="first_name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" autocomplete="off" placeholder="Enter First Name" />
-                              </div>
-                              <div>
-                                 <label for="middle_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Middle Name</label>
-                                 <input type="text" id="edit_middle_name" name="middle_name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" autocomplete="off" placeholder="Enter Middle Name" />
-                              </div>
-                              <div>
-                                 <label for="last_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Last Name</label>
-                                 <input type="text" id="edit_last_name" name="last_name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" autocomplete="off" placeholder="Enter Last Name" />
-                              </div>
-                           </div>
-                           <div class="grid gap-6 mb-6 md:grid-cols-3">
-                              <div>
-                                 <label for="name_extension" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Name Extension</label>
-                                 <select id="edit_name_extension" name="name_extension" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                                    <option selected disabled>Open melect menu</option>
-                                    <option value="">None</option>
-                                    <option value="Jr.">Jr.</option>
-                                    <option value="Sr.">Sr.</option>
-                                    <option value="II">II</option>
-                                    <option value="III">III</option>
-                                    <option value="IV">IV</option>
-                                 </select>
-                              </div>
-                              <div>
-                                 <label for="teacher_id" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Teacher ID</label>
-                                 <input type="text" id="edit_teacher_id" name="teacher_id" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" autocomplete="off" placeholder="Enter Teacher ID" />
-                              </div>
+            <!-- Edit & Update Modal Container-->
+            <div id="edit-teacher-modal-container"></div>
 
-                              <div>
-                                 <label for="sex" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Sex</label>
-                                 <select id="edit_sex" name="sex" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                                    <option selected disabled>Open melect menu</option>
-                                    <option value="male">Male</option>
-                                    <option value="female">Female</option>
-                                 </select>
-                              </div>
-                           </div>
-                            <div class="grid gap-6 mb-6 md:grid-cols-3">
-                                <div>
-                                    <label for="birth_date" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Birthdate</label>
-                                    <input type="date" id="edit_birth_date" name="birth_date" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
-
-                                 </div>
-                                <div>
-                                    <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email</label>
-                                    <input type="text" id="edit_email" name="email" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" autocomplete="off" placeholder="Enter Email" />
-
-                                 </div>
-                                <div>
-                                    <label for="phone_number" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Phone Number</label>
-                                    <input type="number" id="edit_phone_number" name="phone_number" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" autocomplete="off" placeholder="Enter Phone Number" />
-
-                                 </div>
-                            </div>
-                            <div class="grid gap-6 mb-6 md:grid-cols-1">
-                              <div>
-                                 <label for="address" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Address</label>
-                                 <input type="text" id="edit_address" name="address" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" autocomplete="off" placeholder="Enter Address" />
-                              </div>
-                            </div>
-                           <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Submit</button>
-                        </form>
-                     </div>
-                  </div>
-               </div>
-            </div>
-
-            <!-- Delete Teacher Modal -->
-            <div id="delete-teacher-modal" tabindex="-1" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 flex justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
-               <div class="relative p-6 w-full max-w-md max-h-full">
-                  <div class="relative bg-white rounded-lg shadow-lg dark:bg-gray-700">
-                     <button type="button" class="absolute top-3 right-3 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="delete-teacher-modal">
-                        <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
-                           <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
-                        </svg>
-                        <span class="sr-only">Close modal</span>
-                     </button>
-                     <div class="p-6 text-center">
-                        <svg class="mx-auto mb-4 text-gray-500 w-12 h-12 dark:text-gray-200" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-                           <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
-                        </svg>
-                        <h3 class="mb-2 text-xl font-semibold text-gray-700 dark:text-gray-300">Delete Teacher?</h3>
-                        <p class="mb-5 text-sm text-gray-500 dark:text-gray-400">The record for this teacher will be permanently removed, and they will no longer be able to register again. This action cannot be undone.</p>
-                        <div class="flex justify-center space-x-3">
-                           <button id="delete-teacher-confirm-btn" data-modal-hide="delete-teacher-modal" type="submit" class="text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-700 font-medium rounded-lg text-sm px-5 py-2.5">
-                              Yes, Delete
-                           </button>
-                           <button data-modal-hide="delete-teacher-modal" type="button" class="px-5 py-2.5 text-sm font-medium text-gray-900 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 dark:hover:bg-gray-700">
-                              No, Cancel
-                           </button>
-                        </div>
-                     </div>
-                  </div>
-               </div>
-            </div>
+            <!-- Delete Modal Container-->
+            <div id="delete-teacher-modal-container"></div>
 
             <div id="table-loader" class="flex justify-center items-center py-10">
                <svg role="status" class="inline w-8 h-8 mr-2 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -226,11 +115,9 @@
                <span>Loading data, please wait...</span>
             </div>
             
+            <!-- Datatable Container-->
             <div id="teacher-datatable-container"></div>
 
-            <div id="custom-alert" class="fixed top-0 right-0 mt-4 mr-4 p-4 bg-green-500 text-white rounded-lg shadow-lg transition-opacity duration-500 opacity-0 hidden">
-               <p id="alert-message" class="font-medium">Teacher record added successfully!</p>
-            </div>
          </div>
       </div>
    </div>

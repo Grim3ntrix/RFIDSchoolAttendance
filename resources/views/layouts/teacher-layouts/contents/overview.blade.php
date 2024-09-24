@@ -95,7 +95,7 @@
                         </div>
                      </div>
                   </div>
-                  <div class="py-6" id="pie-chart"></div>
+                  <div class="py-6" id="pie-chart-container"></div>
                </div>
             </div>
          </div>

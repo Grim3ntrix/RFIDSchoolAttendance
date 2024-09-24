@@ -9,6 +9,23 @@ class Student extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'section_id',
+        'user_id',
+        'school_id',
+        'rfid_serial_number',
+        'batch',
+        'last_name',
+        'first_name',
+        'middle_name',
+        'name_extension',
+        'sex',
+        'birth_date',
+        'email',
+        'phone_number',
+        'address',
+    ];
+
     /* Relationship */
 
     public function section()

@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('students', function (Blueprint $table) {
+      Schema::create('students', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')
                   ->constrained('users')
@@ -26,16 +26,17 @@ return new class extends Migration
             $table->string('last_name');
             $table->string('first_name');
             $table->string('middle_name');
-            $table->string('name_extension');
-            $table->string('sex');
-            $table->string('birth_date')
+            $table->string('name_extension')
                   ->nullable();
+            $table->string('sex');
+            $table->string('birth_date');
             $table->string('email');
             $table->string('phone_number')
                   ->nullable();
-            $table->string('address');
+            $table->string('address')
+                  ->nullable();
             $table->timestamps();
-        });
+      });
     }
 
     /**
