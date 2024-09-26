@@ -44,11 +44,12 @@ class Section extends Model
     public static function generateSlug($sectionName, $gradeOrYearLevel)
     {
         $slug = Str::slug("{$sectionName} {$gradeOrYearLevel}");
+        $originalSlug = $slug;
+        $count = 1;
 
-        $count = static::where('slug', $slug)->count();
-        if ($count > 0) {
-            // Append a unique identifier if the slug already exists
-            $slug .= '-' . ($count + 1);
+        while (static::where('slug', $slug)->exists()) {
+            $slug = "{$originalSlug}-{$count}";
+            $count++;
         }
 
         return $slug;

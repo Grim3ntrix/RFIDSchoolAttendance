@@ -9,6 +9,15 @@ class ClassSchedule extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'teacher_id',
+        'section_id',
+        'subject',
+        'subject_code',
+        'start_time',
+        'end_time',
+    ];
+
     /* Relationship */
 
     public function teacher()
@@ -34,5 +43,11 @@ class ClassSchedule extends Model
     public function report()
     {
         return $this->hasMany(Report::class, 'class_schedule_id');
+    }
+
+    public function daysOfWeek()
+    {
+        return $this->belongsToMany(DaysOfWeek::class, 'class_schedule_days', 'class_schedule_id', 'days_of_week_id')
+                    ->withTimestamps();
     }
 }

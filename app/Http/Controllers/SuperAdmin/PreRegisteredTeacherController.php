@@ -31,7 +31,7 @@ class PreRegisteredTeacherController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'teacher_id'        => 'required|string|max:255',
+            'teacher_id'        => 'required|string|max:255|unique:pre_registered_teachers,teacher_id,' . $request->id,
             'last_name'         => 'required|string|max:255',
             'first_name'        => 'required|string|max:255',
             'middle_name'       => 'required|string|max:255',
@@ -65,7 +65,7 @@ class PreRegisteredTeacherController extends Controller
     public function update(Request $request, string $id)
     {
         $validated = $request->validate([
-            'teacher_id'        => 'required|string|max:255',
+            'teacher_id'        => 'required|string|max:255|unique:pre_registered_teachers,teacher_id,' . $id,
             'last_name'         => 'required|string|max:255',
             'first_name'        => 'required|string|max:255',
             'middle_name'       => 'required|string|max:255',

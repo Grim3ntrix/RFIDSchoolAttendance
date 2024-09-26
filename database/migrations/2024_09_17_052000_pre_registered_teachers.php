@@ -13,14 +13,19 @@ return new class extends Migration
     {
         Schema::create('pre_registered_teachers', function (Blueprint $table) {
             $table->id();
-            $table->string('teacher_id');
+            $table->string('teacher_id')
+                  ->unique();
             $table->string('last_name');
             $table->string('first_name');
             $table->string('middle_name');
-            $table->string('name_extension')->nullable();
+            $table->string('name_extension')
+                  ->nullable();
             $table->string('sex');
-            $table->date('birth_date')->nullable();
-            $table->string('email')->nullable();
+            $table->date('birth_date')
+                  ->nullable();
+            $table->string('email')
+                  ->unique()
+                  ->nullable();
             $table->string('phone_number', '15');
             $table->string('address');
             $table->timestamps();

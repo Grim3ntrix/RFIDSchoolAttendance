@@ -507,8 +507,8 @@ export function initializeStudentDatatable() {
                                     <svg class="mx-auto mb-4 text-gray-500 w-12 h-12 dark:text-gray-200" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
                                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
                                     </svg>
-                                    <h3 class="mb-2 text-xl font-semibold text-gray-700 dark:text-gray-300">Delete Section?</h3>
-                                    <p class="mb-5 text-sm text-gray-500 dark:text-gray-400">All data including student records will be permanently removed. This action cannot be undone.</p>
+                                    <h3 class="mb-2 text-xl font-semibold text-gray-700 dark:text-gray-300">Delete Student?</h3>
+                                    <p class="mb-5 text-sm text-gray-500 dark:text-gray-400">All data including student and attendance records will be permanently removed. This action cannot be undone.</p>
                                     <div class="flex justify-center space-x-3">
                                         <form action="">
                                             <button type="submit" id="delete-student-confirm-btn" data-modal-hide="delete-student-modal" class="text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-700 font-medium rounded-lg text-sm px-5 py-2.5">

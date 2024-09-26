@@ -9,7 +9,6 @@ use App\Models\User;
 use App\Models\UserStatus;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Log;
 
 class StudentController extends Controller
 {
@@ -44,8 +43,6 @@ class StudentController extends Controller
             }
         }
 
-        Log::info("Password: $birthDatePass");
-
         $offlineStatus = UserStatus::where('status', 'offline')->first();
 
         $user = User::create([
@@ -63,12 +60,6 @@ class StudentController extends Controller
         ]));
 
         return response()->json(['success' => true]);
-    }
-
-    public function getStudentsList(Section $section)
-    {
-        $students = $section->student()->get();
-        return response()->json($students);
     }
 
     public function edit(Section $section, Student $student)

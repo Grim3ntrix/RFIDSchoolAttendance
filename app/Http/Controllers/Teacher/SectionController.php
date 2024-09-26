@@ -93,7 +93,8 @@ class SectionController extends Controller
                 'required',
                 'string',
                 'max:255',
-                Rule::unique('sections')->where(function ($query) use ($teacher, $request) {
+                Rule::unique('sections')
+                    ->where(function ($query) use ($teacher, $request) {
                     return $query->where('grade_or_year_level', $request->grade_or_year_level)
                                  ->where('teacher_id', $teacher->id);
                 })->ignore($id), // Ignore the current record

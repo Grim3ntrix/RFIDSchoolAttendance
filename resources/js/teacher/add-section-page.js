@@ -93,6 +93,15 @@ export function initializeSectionPage() {
                                     </svg>
                                 </a>
                             </button>
+
+                            <!-- Manage Class Schedule Button -->
+                            <button type="button" class="w-15 font-medium rounded-md text-sm p-0.5 shadow bg-gray-50 dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition ease-in-out duration-150" data-section-id="${section.id}">
+                                <a href="/teacher/sections/${section.slug}/class-schedules">
+                                    <svg class="w-6 h-5 text-gray-800 dark:text-white hover:text-purple-500 transition-colors duration-150" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                                    <path fill="currentColor" d="M4 9.05H3v2h1v-2Zm16 2h1v-2h-1v2ZM10 14a1 1 0 1 0 0 2v-2Zm4 2a1 1 0 1 0 0-2v2Zm-3 1a1 1 0 1 0 2 0h-2Zm2-4a1 1 0 1 0-2 0h2Zm-2-5.95a1 1 0 1 0 2 0h-2Zm2-3a1 1 0 1 0-2 0h2Zm-7 3a1 1 0 0 0 2 0H6Zm2-3a1 1 0 1 0-2 0h2Zm8 3a1 1 0 1 0 2 0h-2Zm2-3a1 1 0 1 0-2 0h2Zm-13 3h14v-2H5v2Zm14 0v12h2v-12h-2Zm0 12H5v2h14v-2Zm-14 0v-12H3v12h2Zm0 0H3a2 2 0 0 0 2 2v-2Zm14 0v2a2 2 0 0 0 2-2h-2Zm0-12h2a2 2 0 0 0-2-2v2Zm-14-2a2 2 0 0 0-2 2h2v-2Zm-1 6h16v-2H4v2ZM10 16h4v-2h-4v2Zm3 1v-4h-2v4h2Zm0-9.95v-3h-2v3h2Zm-5 0v-3H6v3h2Zm10 0v-3h-2v3h2Z"/>
+                                    </svg>
+                                </a>
+                            </button>
                             
                             <!-- Edit Button -->
                             <button type="button" data-modal-target="edit-section-modal" data-modal-toggle="edit-section-modal" class="w-15 font-medium rounded-md text-sm p-0.5 shadow bg-gray-50 dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition ease-in-out duration-150" data-section-id="${section.id}">
@@ -280,7 +289,7 @@ export function initializeSectionPage() {
                                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
                                     </svg>
                                     <h3 class="mb-2 text-xl font-semibold text-gray-700 dark:text-gray-300">Delete Section?</h3>
-                                    <p class="mb-5 text-sm text-gray-500 dark:text-gray-400">All data including student records will be permanently removed. This action cannot be undone.</p>
+                                    <p class="mb-5 text-sm text-gray-500 dark:text-gray-400">All data including students, class schedules, and attendance records will be permanently removed. This action cannot be undone.</p>
                                     <div class="flex justify-center space-x-3">
                                         <form action="">
                                             <button type="submit" id="delete-section-confirm-btn" data-modal-hide="delete-section-modal" class="text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-700 font-medium rounded-lg text-sm px-5 py-2.5">

@@ -19,11 +19,13 @@ return new class extends Migration
             $table->foreignId('section_id')
                   ->constrained('sections')
                   ->onDelete('cascade');
-            $table->string('subject_code');
             $table->string('subject');
+            $table->string('subject_code');
             $table->time('start_time');
             $table->time('end_time');
             $table->timestamps();
+
+            $table->unique(['subject', 'subject_code', 'start_time', 'end_time']);
         });
     }
 
