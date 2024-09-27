@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Models\UserStatus;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rule;
 
 class StudentController extends Controller
 {
@@ -21,7 +22,7 @@ class StudentController extends Controller
     {
         $validated = $request->validate([
             'school_id'          => 'nullable|string|max:255',
-            'rfid_serial_number' => 'required|string|max:50|unique:students,rfid_serial_number'. $request->id,
+            'rfid_serial_number' => 'required|string|max:50|unique:students,rfid_serial_number,'. $request->id,
             'batch'              => 'required|string|max:255',
             'last_name'          => 'required|string|max:255',
             'first_name'         => 'required|string|max:255',
@@ -75,7 +76,12 @@ class StudentController extends Controller
     {
         $validated = $request->validate([
             'school_id'          => 'nullable|string|max:255',
-            'rfid_serial_number' => 'required|string|max:50|unique:students,rfid_serial_number'. $request->id,
+            'rfid_serial_number' => [
+                'required',
+                'string',
+                'max:50',
+                Rule::unique('students', 'rfid_serial_number')->ignore($student->id),
+            ],
             'batch'              => 'required|string|max:255',
             'last_name'          => 'required|string|max:255',
             'first_name'         => 'required|string|max:255',

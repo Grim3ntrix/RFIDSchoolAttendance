@@ -97,14 +97,14 @@ class SectionController extends Controller
                     ->where(function ($query) use ($teacher, $request) {
                     return $query->where('grade_or_year_level', $request->grade_or_year_level)
                                  ->where('teacher_id', $teacher->id);
-                })->ignore($id), // Ignore the current record
+                })->ignore($id),
             ],
             'grade_or_year_level' => 'required|string|max:255',
         ]);
 
         $section = Section::findOrFail($id);
         $section->fill($validated);
-        $section->save(); // to trigger slug updating
+        $section->save();
 
         return response()->json(['success' => true]);
     }

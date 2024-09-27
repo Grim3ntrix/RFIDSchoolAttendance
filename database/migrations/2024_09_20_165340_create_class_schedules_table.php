@@ -25,7 +25,11 @@ return new class extends Migration
             $table->time('end_time');
             $table->timestamps();
 
-            $table->unique(['subject', 'subject_code', 'start_time', 'end_time']);
+            // Add a shorter name for the unique index
+            $table->unique(
+                ['teacher_id', 'subject', 'subject_code', 'start_time', 'end_time'],
+                'teacher_schedule_unique'
+            );
         });
     }
 
