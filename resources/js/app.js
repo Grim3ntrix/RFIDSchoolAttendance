@@ -42,4 +42,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         const { initializeSectionPage } = await import('./teacher/add-section-page');
         initializeSectionPage();
     }
+
+    /* SuperAdmin - School Geofence Boundary Datatable */
+    if (document.querySelector('#school-geofence-boundary-datatable-container')) {
+        const { initializeGeofenceDatatable } = await import('./superadmin/school-geofence-boundary-datatable');
+        initializeGeofenceDatatable();
+    }
 });

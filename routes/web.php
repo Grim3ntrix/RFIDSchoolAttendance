@@ -5,6 +5,8 @@ use App\Http\Controllers\JsonRequests\DaysOfWeekRequest;
 use App\Http\Controllers\JsonRequests\StudentRequest;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SuperAdmin\PreRegisteredTeacherController;
+use App\Http\Controllers\SuperAdmin\SchoolGeofenceBoundary;
+use App\Http\Controllers\SuperAdmin\SchoolGeofenceBoundaryController;
 use App\Http\Controllers\Teacher\ClassScheduleController;
 use App\Http\Controllers\Teacher\SectionController;
 use App\Http\Controllers\Teacher\StudentController;
@@ -23,6 +25,10 @@ Route::group(['middleware' => ['auth', 'verified', 'role:superadmin'], 'prefix' 
 
     Route::get('pre-registered-teachers/records', [PreRegisteredTeacherController::class, 'getTeacherRecords'])->name('teachers.records');
     Route::resource('pre-registered-teachers', PreRegisteredTeacherController::class)->except([
+        'create', 'show',
+    ]);
+
+    Route::resource('school-geofence-boundaries', SchoolGeofenceBoundaryController::class)->except([
         'create', 'show',
     ]);
 });

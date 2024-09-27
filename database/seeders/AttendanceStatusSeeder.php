@@ -14,10 +14,31 @@ class AttendanceStatusSeeder extends Seeder
     public function run(): void
     {
         AttendanceStatus::insert([
-            ['status' => 'present'],
-            ['status' => 'late'],
-            ['status' => 'absent'],
-            ['status' => 'excuse'],
+            [
+                'status' => 'present',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'status' => 'late',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'status' => 'late',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'status' => 'absent',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'status' => 'excuse',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
         ]);
     }
 }

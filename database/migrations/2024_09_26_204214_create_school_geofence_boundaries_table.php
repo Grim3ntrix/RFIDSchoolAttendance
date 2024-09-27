@@ -11,15 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('geofences', function (Blueprint $table) {
+        Schema::create('school_geofence_boundaries', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('student_id')
-                  ->constrained('students')
+            $table->foreignId('super_admin_id')
+                  ->constrained('super_admins')
                   ->onDelete('cascade');
-            $table->decimal('latitude', 10,8);
-            $table->decimal('longitude', 11,8);
+            $table->string('school_name');
+            $table->string('address');
+            $table->decimal('latitude', 10, 8);
+            $table->decimal('longitude', 11, 8);
+            $table->decimal('radius', 10, 2);
             $table->foreignId('status_id')
-                  ->constrained('geofence_statuses')
+                  ->constrained('school_geofence_boundary_statuses')
                   ->onDelete('cascade');
             $table->timestamps();
         });
@@ -30,6 +33,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('geofences');
+        Schema::dropIfExists('school_geofence_boundaries');
     }
 };

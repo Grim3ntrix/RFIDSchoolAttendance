@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Student;
+use App\Models\SuperAdmin;
 use App\Models\Teacher;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -16,6 +17,8 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        /* Super Admin Seeder */
+
         $superadmin = User::factory()->create([
             'name'      => 'Super Admin',
             'email'     => 'superadmin@gmail.com',
@@ -24,6 +27,10 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $superadmin->assignRole('superadmin');
+
+        SuperAdmin::create(['user_id' => $superadmin->id]);
+
+        /* Teacher Seeder */
 
         $teacher = User::factory()->create([
             'name'      => 'Teacher',
@@ -39,11 +46,13 @@ class DatabaseSeeder extends Seeder
             'teacher_id' => 0,
         ]);
 
+        /* Teacher Seeder */
+
         $student = User::factory()->create([
             'name'      => 'Student',
             'email'     => 'student@gmail.com',
             'password'  => Hash::make('12345678'),
-            'status_id'  => 1,
+            'status_id' => 1,
         ]);
 
         $student->assignRole('student');

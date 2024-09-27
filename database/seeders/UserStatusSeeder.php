@@ -14,8 +14,16 @@ class UserStatusSeeder extends Seeder
     public function run(): void
     {
         UserStatus::insert([
-            ['status' => 'online'],
-            ['status' => 'offline'],
+            [
+                'status' => 'online',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'status' => 'offline',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
         ]);
     }
 }
