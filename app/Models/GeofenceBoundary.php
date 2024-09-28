@@ -16,7 +16,6 @@ class GeofenceBoundary extends Model
         'latitude',
         'longitude',
         'radius',
-        'super_admin_id',
         'status_id',
     ];
 

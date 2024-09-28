@@ -1,11 +1,10 @@
 import { DataTable } from "simple-datatables";
-
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import 'leaflet.fullscreen/Control.FullScreen.js'; 
 import 'leaflet.fullscreen/Control.FullScreen.css'; 
-
 import Swal from 'sweetalert2';
+import axios from "axios";
 
 export function initializeGeofenceDatatable() {
     console.log("School Geofence Boundary page function triggered.");
@@ -15,31 +14,46 @@ export function initializeGeofenceDatatable() {
     const geofenceBoundary = document.getElementById('geofence-boundary-container');
 
     if (geofenceBoundary) {
-        const geofenceBoundaryHTML = `<div id="map" class="h-64 my-8 rounded-lg bg-gray-50 dark:bg-gray-800 shadow p-6 "></div>`;
+        axios.get('/superadmin/geofence-boundaries/map')
+        .then(response => {
+            const geofenceBoundariesMapData = response.data;
 
-        geofenceBoundary.innerHTML = geofenceBoundaryHTML;
+            if (geofenceBoundariesMapData) {
+                const geofenceBoundaryHTML = `<div id="map" class="h-64 my-8 rounded-lg bg-gray-50 dark:bg-gray-800 shadow p-6 "></div>`;
+                
+                geofenceBoundary.innerHTML = geofenceBoundaryHTML;
 
-        // Initialize Leaflet map centered at a sample location (e.g., your custom location) with full-screen control
-        const map = L.map('map', {
-            fullscreenControl: true,
-            fullscreenControlOptions: {
-                position: 'topleft'
+                const latitude  = parseFloat(geofenceBoundariesMapData.latitude);
+                const longitude = parseFloat(geofenceBoundariesMapData.longitude);
+                const radius    = parseFloat(geofenceBoundariesMapData.radius);
+
+                // Leaflet map centered at the given latitude and longitude
+                const map = L.map('map', {
+                    fullscreenControl: true,
+                    fullscreenControlOptions: {
+                        position: 'topleft'
+                    }
+                }).setView([latitude, longitude], 16);
+            
+                // Add a tile layer to the map
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    maxZoom: 18,
+                    attribution: '© OpenStreetMap contributors'
+                }).addTo(map);
+            
+                // Add a geofence boundary (circle)
+                const boundary = L.circle([latitude, longitude], {
+                    color: 'red',
+                    fillColor: '#blue',
+                    fillOpacity: 0.1,
+                    radius: radius,
+                }).addTo(map);
             }
-        }).setView([10.5836663, 124.9618682], 16); // Sample coordinates
-    
-        // Add a tile layer to the map
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 18,
-            attribution: '© OpenStreetMap contributors'
-        }).addTo(map);
-    
-        // Add a sample geofence boundary (circle) around the same center coordinates
-        const boundary = L.circle([10.5836663, 124.9618682], {
-            color: 'blue',
-            fillColor: '#blue',
-            fillOpacity: 0.1,
-            radius: 100 // radius in meters
-        }).addTo(map);
+        })
+        .catch(error => {
+            console.error('Error fetching geofence boundary map data:', error);
+            document.getElementById('table-loader').style.display = 'none'; // Hide Loading spinner
+        });
     }
 
     const addGeofenceBoundaryBtn = document.getElementById('add-geofence-boundary-btn');
@@ -694,5 +708,4 @@ export function initializeGeofenceDatatable() {
             }
         });
     }
-
 }
