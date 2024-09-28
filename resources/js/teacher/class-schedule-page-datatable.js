@@ -34,10 +34,8 @@ console.log("Class Schedule page function triggered.");
                     title: "Class Schedule record added successfully!"
                 });
             
-                setTimeout(() => {
-                    form.reset();
-                    window.location.href = `/teacher/sections/${sectionSlug}/class-schedules`;
-                }, 800);
+                form.reset();
+                window.location.href = `/teacher/sections/${sectionSlug}/class-schedules`;
             })
             .catch(error => {
                 if (error.response && error.response.status === 422) {
@@ -407,37 +405,37 @@ console.log("Class Schedule page function triggered.");
                     
                     // Fetch the class schedule and pre-select the associated days
                     axios.get(`/teacher/sections/${sectionSlug}/class-schedules/${classScheduleId}/edit`)
-                        .then(scheduleResponse => {
-                            const classScheduleData = scheduleResponse.data;
+                    .then(scheduleResponse => {
+                        const classScheduleData = scheduleResponse.data;
 
-                            document.querySelector('#edit_subject').value       = classScheduleData.subject;
-                            document.querySelector('#edit_subject_code').value  = classScheduleData.subject_code;
-                            document.querySelector('#edit_start_time').value    = classScheduleData.start_time;
-                            document.querySelector('#edit_end_time').value      = classScheduleData.end_time;
+                        document.querySelector('#edit_subject').value       = classScheduleData.subject;
+                        document.querySelector('#edit_subject_code').value  = classScheduleData.subject_code;
+                        document.querySelector('#edit_start_time').value    = classScheduleData.start_time;
+                        document.querySelector('#edit_end_time').value      = classScheduleData.end_time;
 
-                            const selectElement = document.querySelector('#edit_days_of_weeks');
-                            selectElement.innerHTML = '';
+                        const selectElement = document.querySelector('#edit_days_of_weeks');
+                        selectElement.innerHTML = '';
 
-                            // Pre-selected days from class schedule
-                            const selectedDaysOfWeeks = classScheduleData.days_of_week.map(d => d.id);
+                        // Pre-selected days from class schedule
+                        const selectedDaysOfWeeks = classScheduleData.days_of_week.map(d => d.id);
 
-                            // Populate all days of week, pre-select the associated ones
-                            allDaysOfWeeks.forEach(daysOfWeek => {
-                                const option = document.createElement('option');
-                                option.value = daysOfWeek.id;
-                                option.text = daysOfWeek.day_name;
+                        // Populate all days of week, pre-select the associated ones
+                        allDaysOfWeeks.forEach(daysOfWeek => {
+                            const option = document.createElement('option');
+                            option.value = daysOfWeek.id;
+                            option.text = daysOfWeek.day_name;
 
-                                // Mark as selected if it's part of the class schedule
-                                if (selectedDaysOfWeeks.includes(daysOfWeek.id)) {
-                                    option.selected = true;
-                                }
+                            // Mark as selected if it's part of the class schedule
+                            if (selectedDaysOfWeeks.includes(daysOfWeek.id)) {
+                                option.selected = true;
+                            }
 
-                                selectElement.appendChild(option);
-                            });
-                        })
-                        .catch(error => {
-                            console.error("Error fetching class schedule data:", error);
+                            selectElement.appendChild(option);
                         });
+                    })
+                    .catch(error => {
+                        console.error("Error fetching class schedule data:", error);
+                    });
                 })
                 .catch(error => {
                     console.error("Error fetching days of the week:", error);
@@ -483,10 +481,8 @@ console.log("Class Schedule page function triggered.");
                     title: "Class Schedule record updated successfully!"
                 });
 
-                setTimeout(() => {
-                    editForm.reset();
-                    window.location.href = `/teacher/sections/${sectionSlug}/class-schedules`; // Redirect or update the UI
-                }, 800);
+                editForm.reset();
+                window.location.href = `/teacher/sections/${sectionSlug}/class-schedules`;
             })
             .catch(error => {
                 if (error.response && error.response.status === 422) {
@@ -586,9 +582,7 @@ console.log("Class Schedule page function triggered.");
                                 title: "Class Schedule record deleted successfully!"
                             });
 
-                            setTimeout(() => {
-                                window.location.href = `/teacher/sections/${sectionSlug}/class-schedules`; // Redirect or update the UI
-                            }, 800);
+                            window.location.href = `/teacher/sections/${sectionSlug}/class-schedules`;
                         })
                         .catch(error => {
                             console.error('There was an error deleting the class schedule:', error);

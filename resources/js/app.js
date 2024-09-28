@@ -44,8 +44,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     /* SuperAdmin - School Geofence Boundary Datatable */
-    if (document.querySelector('#school-geofence-boundary-datatable-container')) {
-        const { initializeGeofenceDatatable } = await import('./superadmin/school-geofence-boundary-datatable');
+    if (document.querySelector('#geofence-boundary-datatable-container')) {
+        const { initializeGeofenceDatatable } = await import('./superadmin/geofence-boundary-datatable');
         initializeGeofenceDatatable();
     }
 });

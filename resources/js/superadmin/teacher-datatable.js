@@ -32,11 +32,9 @@ export function initializeTeacherDatatable() {
                     icon: "success",
                     title: "Teacher record added successfully!"
                 });
-            
-                setTimeout(() => {
-                    form.reset();
-                    window.location.href = '/superadmin/pre-registered-teachers';
-                }, 800);
+        
+                form.reset();
+                window.location.href = '/superadmin/pre-registered-teachers';
             })
             .catch(error => {
                 if (error.response && error.response.status === 422) {
@@ -452,10 +450,8 @@ export function initializeTeacherDatatable() {
                     title: "Teacher record updated successfully!"
                 });
         
-                setTimeout(() => {
-                    editForm.reset();
-                    window.location.href = '/superadmin/pre-registered-teachers'; // Redirect or update the UI
-                }, 800);
+                editForm.reset();
+                window.location.href = '/superadmin/pre-registered-teachers';
             })
             .catch(error => {
                 if (error.response && error.response.status === 422) {
@@ -555,9 +551,7 @@ export function initializeTeacherDatatable() {
                                 title: "Section record deleted successfully!"
                             });
 
-                            setTimeout(() => {
-                                window.location.href = '/superadmin/pre-registered-teachers'; // Redirect or update the UI
-                            }, 800);
+                            window.location.href = '/superadmin/pre-registered-teachers';
                         })
                         .catch(error => {
                             console.error('There was an error deleting the section:', error);

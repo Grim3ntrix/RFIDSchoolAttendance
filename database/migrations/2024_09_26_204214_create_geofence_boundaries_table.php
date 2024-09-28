@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('school_geofence_boundaries', function (Blueprint $table) {
+        Schema::create('geofence_boundaries', function (Blueprint $table) {
             $table->id();
             $table->foreignId('super_admin_id')
                   ->constrained('super_admins')
@@ -22,7 +22,7 @@ return new class extends Migration
             $table->decimal('longitude', 11, 8);
             $table->decimal('radius', 10, 2);
             $table->foreignId('status_id')
-                  ->constrained('school_geofence_boundary_statuses')
+                  ->constrained('geofence_boundary_statuses')
                   ->onDelete('cascade');
             $table->timestamps();
         });
@@ -33,6 +33,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('school_geofence_boundaries');
+        Schema::dropIfExists('geofence_boundaries');
     }
 };

@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class SchoolGeofenceBoundary extends Model
+class GeofenceBoundary extends Model
 {
     use HasFactory;
 
@@ -20,8 +20,8 @@ class SchoolGeofenceBoundary extends Model
         'status_id',
     ];
 
-    public function schoolGeofenceBoundaryStatus()
+    public function geofenceBoundaryStatus()
     {
-        return $this->belongsTo(SchoolGeofenceBoundaryStatus::class, 'status_id');
+        return $this->belongsTo(GeofenceBoundaryStatus::class, 'status_id');
     }
 }

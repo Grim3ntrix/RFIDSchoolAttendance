@@ -2,11 +2,12 @@
 
 use App\Http\Controllers\JsonRequests\ClassScheduleRequest;
 use App\Http\Controllers\JsonRequests\DaysOfWeekRequest;
+use App\Http\Controllers\JsonRequests\GeofenceBoundaryRequest;
+use App\Http\Controllers\JsonRequests\GeofenceBoundaryStatusRequest;
 use App\Http\Controllers\JsonRequests\StudentRequest;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SuperAdmin\PreRegisteredTeacherController;
-use App\Http\Controllers\SuperAdmin\SchoolGeofenceBoundary;
-use App\Http\Controllers\SuperAdmin\SchoolGeofenceBoundaryController;
+use App\Http\Controllers\SuperAdmin\GeofenceBoundaryController;
 use App\Http\Controllers\Teacher\ClassScheduleController;
 use App\Http\Controllers\Teacher\SectionController;
 use App\Http\Controllers\Teacher\StudentController;
@@ -28,7 +29,9 @@ Route::group(['middleware' => ['auth', 'verified', 'role:superadmin'], 'prefix' 
         'create', 'show',
     ]);
 
-    Route::resource('school-geofence-boundaries', SchoolGeofenceBoundaryController::class)->except([
+    Route::get('geofence-boundaries/statuses', [GeofenceBoundaryStatusRequest::class, 'getGeofenceBoundaryStatuses'])->name('geofence_boundary.statuses');
+    Route::get('geofence-boundaries/records', [GeofenceBoundaryRequest::class, 'getGeofenceBoundary'])->name('geofence_boundary.records');
+    Route::resource('geofence-boundaries', GeofenceBoundaryController::class)->except([
         'create', 'show',
     ]);
 });

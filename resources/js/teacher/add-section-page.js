@@ -32,10 +32,8 @@ export function initializeSectionPage() {
                     title: "Section record added successfully!"
                 });
             
-                setTimeout(() => {
-                    form.reset();
-                    window.location.href = '/teacher/sections';
-                }, 800);
+                form.reset();
+                window.location.href = '/teacher/sections';
             })
             .catch(error => {
                 if (error.response && error.response.status === 422) {
@@ -234,10 +232,8 @@ export function initializeSectionPage() {
                     title: "Section record updated successfully!"
                 });
 
-                setTimeout(() => {
-                    editForm.reset();
-                    window.location.href = '/teacher/sections'; // Redirect or update the UI
-                }, 800);
+                editForm.reset();
+                window.location.href = '/teacher/sections';
             })
             .catch(error => {
                 if (error.response && error.response.status === 422) {
@@ -337,9 +333,7 @@ export function initializeSectionPage() {
                                 title: "Section record deleted successfully!"
                             });
 
-                            setTimeout(() => {
-                                window.location.href = '/teacher/sections'; // Redirect or update the UI
-                            }, 800);
+                            window.location.href = '/teacher/sections';
                         })
                         .catch(error => {
                             console.error('There was an error deleting the section:', error);

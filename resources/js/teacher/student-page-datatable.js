@@ -33,10 +33,8 @@ export function initializeStudentDatatable() {
                     title: "Student record added successfully!"
                 });
 
-                setTimeout(() => {
-                    form.reset();
-                    window.location.href = `/teacher/sections/${sectionSlug}/students`;
-                }, 800);
+                form.reset();
+                window.location.href = `/teacher/sections/${sectionSlug}/students`;
             })
             .catch(error => {
                 if (error.response && error.response.status === 422) {
@@ -452,11 +450,8 @@ export function initializeStudentDatatable() {
                     icon: "success",
                     title: "Student record updated successfully!"
                 });
-
-                setTimeout(() => {
-                    editForm.reset();
-                    window.location.href = `/teacher/sections/${sectionSlug}/students`; // Redirect or update the UI
-                }, 800);
+                editForm.reset();
+                window.location.href = `/teacher/sections/${sectionSlug}/students`;
             })
             .catch(error => {
                 if (error.response && error.response.status === 422) {
@@ -556,9 +551,7 @@ export function initializeStudentDatatable() {
                                 title: "Student record deleted successfully!"
                             });
 
-                            setTimeout(() => {
-                                window.location.href = `/teacher/sections/${sectionSlug}/students`; // Redirect or update the UI
-                            }, 800);
+                            window.location.href = `/teacher/sections/${sectionSlug}/students`; 
                         })
                         .catch(error => {
                             console.error('There was an error deleting the section:', error);

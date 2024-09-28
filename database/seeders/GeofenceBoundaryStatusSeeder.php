@@ -2,18 +2,18 @@
 
 namespace Database\Seeders;
 
-use App\Models\SchoolGeofenceBoundaryStatus;
+use App\Models\GeofenceBoundaryStatus;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
-class SchoolGeofenceBoundaryStatusSeeder extends Seeder
+class GeofenceBoundaryStatusSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
-        SchoolGeofenceBoundaryStatus::insert([
+        GeofenceBoundaryStatus::insert([
             [
                 'status' => 'enabled',
                 'created_at' => now(),
