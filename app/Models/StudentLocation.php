@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Geofence extends Model
+class StudentLocation extends Model
 {
     use HasFactory;
 
@@ -16,8 +16,8 @@ class Geofence extends Model
         return $this->belongsTo(Student::class, 'student_id');
     }
 
-    public function geofenceStatus()
+    public function studentLocationStatus()
     {
-        return $this->belongsTo(GeofenceStatus::class, 'status_id');
+        return $this->belongsTo(StudentLocationStatus::class, 'status_id');
     }
 }
