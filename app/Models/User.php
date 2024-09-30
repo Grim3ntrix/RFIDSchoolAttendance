@@ -49,7 +49,7 @@ class User extends Authenticatable
 
     /* Relationship */
 
-    public function status()
+    public function userStatus()
     {
         return $this->belongsTo(UserStatus::class, 'status_id');
     }

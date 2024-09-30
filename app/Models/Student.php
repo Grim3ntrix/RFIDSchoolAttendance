@@ -53,8 +53,8 @@ class Student extends Model
         return $this->hasMany(Report::class, 'student_id');
     }
 
-    public function geofence()
+    public function studentLocation()
     {
-        return $this->hasMany(Geofence::class, 'student_id');
+        return $this->hasMany(StudentLocation::class, 'student_id');
     }
 }

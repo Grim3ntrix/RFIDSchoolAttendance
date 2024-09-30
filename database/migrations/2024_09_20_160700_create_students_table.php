@@ -26,7 +26,8 @@ return new class extends Migration
             $table->string('batch');
             $table->string('last_name');
             $table->string('first_name');
-            $table->string('middle_name');
+            $table->string('middle_name')
+                  ->nullable();
             $table->string('name_extension')
                   ->nullable();
             $table->string('sex');

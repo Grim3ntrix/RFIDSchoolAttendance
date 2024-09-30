@@ -11,11 +11,15 @@ class GeofenceBoundaryMapRequest extends Controller
 {
     public function getGeofenceBoundaryMap()
     {
+        return response()->json($this->getEnabledGeofenceBoundary());
+    }
+
+    public function getEnabledGeofenceBoundary()
+    {
         $status = GeofenceBoundaryStatus::where('status', 'enabled')->first();
 
-        $enabledGeofenceBoundary = GeofenceBoundary::with('geofenceBoundaryStatus')
-                                ->where('status_id', $status->id)
-                                ->first();
-        return response()->json($enabledGeofenceBoundary);
+        return GeofenceBoundary::with('geofenceBoundaryStatus')
+        ->where('status_id', $status->id)
+        ->first();
     }
 }

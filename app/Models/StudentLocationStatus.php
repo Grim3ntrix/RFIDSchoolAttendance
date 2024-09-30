@@ -9,9 +9,13 @@ class StudentLocationStatus extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'status',
+    ];
+
     /* Relationship */
 
-    public function geofence()
+    public function studentLocation()
     {
         return $this->hasMany(StudentLocation::class, 'status_id');
     }

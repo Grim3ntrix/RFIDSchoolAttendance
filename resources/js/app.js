@@ -6,6 +6,12 @@ window.Alpine = Alpine;
 Alpine.start();
 
 document.addEventListener('DOMContentLoaded', async () => {
+
+    /* SuperAdmin - School Geofence Boundary Datatable */
+    if (document.querySelector('#geofence-boundaries-datatable-container')) {
+        const { initializeGeofenceDatatable } = await import('./superadmin/geofence-boundary-datatable');
+        initializeGeofenceDatatable();
+    }
     
     /* Teacher - Pie Charts */
     if (document.querySelector('#pie-chart-container')) {
@@ -43,9 +49,16 @@ document.addEventListener('DOMContentLoaded', async () => {
         initializeSectionPage();
     }
 
-    /* SuperAdmin - School Geofence Boundary Datatable */
-    if (document.querySelector('#geofence-boundary-datatable-container')) {
-        const { initializeGeofenceDatatable } = await import('./superadmin/geofence-boundary-datatable');
-        initializeGeofenceDatatable();
+    /* Teacher - Student Location */
+    if (document.querySelector('#student-locations-datatable-container')) {
+        const { studentLocationPage } = await import('./teacher/student-location');
+        studentLocationPage();
     }
+
+    /* Student - Student Watch Position */
+    if (document.querySelector('#student-watch-position')) {
+        const { studentWatchPosition } = await import('./student/student-watch-position');
+        studentWatchPosition();
+    }
+
 });

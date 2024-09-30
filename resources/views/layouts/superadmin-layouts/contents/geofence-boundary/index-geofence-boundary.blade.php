@@ -70,7 +70,7 @@
             </div>
 
             <!-- School Geofence Boundary Container-->
-            <div id="geofence-boundary-container" ></div>
+            <div id="geofence-boundary-container"></div>
 
             <!-- Edit & Update Modal Container-->
             <div id="edit-geofence-boundary-modal-container"></div>
@@ -87,7 +87,7 @@
             </div>
             
             <!-- Datatable Container-->
-            <div id="geofence-boundary-datatable-container"></div>
+            <div id="geofence-boundaries-datatable-container"></div>
             
          </div>
       </div>

@@ -9,6 +9,13 @@ class StudentLocation extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'student_id',
+        'latitude',
+        'longitude',
+        'status_id',
+    ];
+
     /* Relationship */
 
     public function student()

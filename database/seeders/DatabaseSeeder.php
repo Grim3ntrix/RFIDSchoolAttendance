@@ -46,7 +46,7 @@ class DatabaseSeeder extends Seeder
             'teacher_id' => 0,
         ]);
 
-        /* Teacher Seeder */
+        /* Student Seeder */
 
         $student = User::factory()->create([
             'name'      => 'Student',

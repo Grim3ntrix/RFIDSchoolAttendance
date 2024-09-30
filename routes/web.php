@@ -5,13 +5,17 @@ use App\Http\Controllers\JsonRequests\DaysOfWeekRequest;
 use App\Http\Controllers\JsonRequests\GeofenceBoundaryMapRequest;
 use App\Http\Controllers\JsonRequests\GeofenceBoundaryRequest;
 use App\Http\Controllers\JsonRequests\GeofenceBoundaryStatusRequest;
+use App\Http\Controllers\JsonRequests\StudentLocationByTeacherRequest;
+use App\Http\Controllers\JsonRequests\StudentLocationRequest;
 use App\Http\Controllers\JsonRequests\StudentRequest;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Student\WatchPositionController;
 use App\Http\Controllers\SuperAdmin\PreRegisteredTeacherController;
 use App\Http\Controllers\SuperAdmin\GeofenceBoundaryController;
 use App\Http\Controllers\Teacher\ClassScheduleController;
 use App\Http\Controllers\Teacher\SectionController;
 use App\Http\Controllers\Teacher\StudentController;
+use App\Http\Controllers\Teacher\StudentLocationController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -29,7 +33,8 @@ Route::group(['middleware' => ['auth', 'verified', 'role:superadmin'], 'prefix' 
     Route::resource('pre-registered-teachers', PreRegisteredTeacherController::class)->except([
         'create', 'show',
     ]);
-    Route::get('geofence-boundaries/map', [GeofenceBoundaryMapRequest::class, 'getGeofenceBoundaryMap'])->name('geofence_boundary.map');
+
+    Route::get('geofence-boundaries/map', [GeofenceBoundaryMapRequest::class, 'getGeofenceBoundaryMap'])->name('super_admin_geofence_boundary.map');
     Route::get('geofence-boundaries/statuses', [GeofenceBoundaryStatusRequest::class, 'getGeofenceBoundaryStatuses'])->name('geofence_boundary.statuses');
     Route::get('geofence-boundaries/records', [GeofenceBoundaryRequest::class, 'getGeofenceBoundary'])->name('geofence_boundary.records');
     Route::resource('geofence-boundaries', GeofenceBoundaryController::class)->except([
@@ -83,17 +88,23 @@ Route::group(['middleware' => ['auth', 'verified', 'role:teacher'], 'prefix' => 
         return view('layouts.teacher-layouts.contents.report');
     })->name('report');
     
-    Route::get('geofence', function () {
-        return view('layouts.teacher-layouts.contents.geofence');
-    })->name('geofence');
+    Route::get('/student/{student}/location', [StudentLocationRequest::class, 'getStudentLocation'])->name('student.location');
+    Route::get('geofence-boundaries/map', [GeofenceBoundaryMapRequest::class, 'getGeofenceBoundaryMap'])->name('teacher_geofence_boundary.map');
+    Route::get('student-locations/request', [StudentLocationByTeacherRequest::class, 'getStudentLocationsByTeacher'])->name('student_locations.request');
+    Route::get('student-locations', [StudentLocationController::class, 'index'])->name('student_locations.index');
 });
 
 /* Student Routes */
 
 Route::group(['middleware' => ['auth', 'verified', 'role:student'], 'prefix' => 'student'], function (){
+
+    Route::post('student-locations', [WatchPositionController::class, 'store'])->name('student_locations.store');
+
     Route::get('overview', function () {
         return view('layouts.student-layouts.contents.overview');
     })->name('student_overview');
+
+
 });
 
 Route::middleware('auth')->group(function () {
