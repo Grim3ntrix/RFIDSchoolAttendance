@@ -25,11 +25,6 @@ class AttendanceStatusSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
-                'status' => 'late',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
                 'status' => 'absent',
                 'created_at' => now(),
                 'updated_at' => now(),

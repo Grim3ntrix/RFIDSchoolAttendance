@@ -32,9 +32,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     /* Teacher - Attendance Page Datatables */
-    if (document.querySelector('#attendance-table-container')) {
-        const { initializeAttendanceDatatable } = await import('./teacher/attendance-page-datatable');
-        initializeAttendanceDatatable();
+    if (document.querySelector('#daily-attendance-table-container')) {
+        const { rfidAttendance } = await import('./teacher/rfid-attendance');
+        rfidAttendance();
     }
 
     /* Teacher - Class Schedule Page Datatables */

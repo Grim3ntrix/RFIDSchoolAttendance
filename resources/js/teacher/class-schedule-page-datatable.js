@@ -1,6 +1,5 @@
 import { DataTable } from "simple-datatables";
 import Swal from 'sweetalert2';
-import axios from "axios";
 
 export function initializeClassScheduleDatatable() {
 console.log("Class Schedule page function triggered.");

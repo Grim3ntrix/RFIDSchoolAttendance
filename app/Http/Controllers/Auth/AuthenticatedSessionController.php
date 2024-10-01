@@ -28,13 +28,13 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        app(UserStatusController::class)->updateStatusToOnline();
-
         /**
          * @var \App\Models\User|null $user
-         */
+        */
 
         $user = Auth::user();
+
+        app(UserStatusController::class)->updateStatusToOnline($user);
 
         if ($user->hasRole('superadmin')){
             return redirect()->intended(route('superadmin_overview'));
@@ -52,7 +52,14 @@ class AuthenticatedSessionController extends Controller
      */
     public function destroy(Request $request): RedirectResponse
     {
-        app(UserStatusController::class)->updateStatusToOffline();
+        /**
+         * @var \App\Models\User|null $user
+        */
+        
+        $user = Auth::user();
+
+        // Update status to offline for the authenticated user
+        app(UserStatusController::class)->updateStatusToOffline($user);
 
         Auth::guard('web')->logout();
 

@@ -67,7 +67,7 @@ export function initializeSectionPage() {
         if (sections.length > 0) {
             sections.forEach(section => {
                 const sectionContent = `
-                    <div class="flex justify-between items-center rounded-lg shadow p-4 cursor-pointer bg-white hover:text-white text-gray-800 duration-50 ease-in-out hover:bg-gradient-to-r hover:from-emerald-500 hover:to-lime-500">
+                    <div class="flex justify-between items-center rounded-lg shadow p-4 cursor-pointer bg-gradient-to-r from-lime-200 to-green-400 hover:text-white text-gray-800 duration-50 ease-in-out hover:bg-gradient-to-r hover:from-emerald-500 hover:to-lime-500">
                         
                         <!-- Section Content -->
                         <div class="section-info flex items-center space-x-3">

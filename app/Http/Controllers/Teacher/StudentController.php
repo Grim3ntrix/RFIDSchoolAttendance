@@ -22,11 +22,11 @@ class StudentController extends Controller
     {
         $validated = $request->validate([
             'school_id'          => 'nullable|string|max:255',
-            'rfid_serial_number' => 'required|string|max:50|unique:students,rfid_serial_number,'. $request->id,
+            'rfid_serial_number' => 'required|string|max:50|unique:students,rfid_serial_number,' . $request->id,
             'batch'              => 'required|string|max:255',
             'last_name'          => 'required|string|max:255',
             'first_name'         => 'required|string|max:255',
-            'middle_name'        => 'required|string|max:255',
+            'middle_name'        => 'nullable|string|max:255',
             'name_extension'     => 'nullable|string|max:255',
             'sex'                => 'required|string|max:255',
             'birth_date'         => 'required',
@@ -44,23 +44,30 @@ class StudentController extends Controller
             }
         }
 
+        $studentUser = $this->createStudentUser($request, $birthDatePass);
+
+        $studentUser->assignRole('student');
+
+        $section->student()->create(array_merge($validated, [
+            'user_id'    => $studentUser->id,
+            'section_id' => $section->id,
+        ]));
+
+        return response()->json(['success' => true]);
+    }
+
+    private function createStudentUser(Request $request, $birthDatePass)
+    {
         $offlineStatus = UserStatus::where('status', 'offline')->first();
 
         $user = User::create([
             'name'       => $request->first_name . ' ' . $request->middle_name . ' ' . $request->last_name . ' ' . ($request->name_extension ?? ''),
             'email'      => $request->email,
             'password'   => Hash::make($birthDatePass),
-            'status_id'  => $offlineStatus,
+            'status_id'  => $offlineStatus->id,
         ]);
 
-        $user->assignRole('student');
-
-        $section->student()->create(array_merge($validated, [
-            'user_id'    => $user->id,
-            'section_id' => $section->id,
-        ]));
-
-        return response()->json(['success' => true]);
+        return $user;
     }
 
     public function edit(Section $section, Student $student)
@@ -85,7 +92,7 @@ class StudentController extends Controller
             'batch'              => 'required|string|max:255',
             'last_name'          => 'required|string|max:255',
             'first_name'         => 'required|string|max:255',
-            'middle_name'        => 'required|string|max:255',
+            'middle_name'        => 'nullable|string|max:255',
             'name_extension'     => 'nullable|string|max:255',
             'sex'                => 'required|string|max:255',
             'phone_number'       => 'nullable|string|max:255',

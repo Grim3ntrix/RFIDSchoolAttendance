@@ -1,10 +1,12 @@
 <?php
 
+use App\Http\Controllers\JsonRequests\AttendanceRequest;
 use App\Http\Controllers\JsonRequests\ClassScheduleRequest;
 use App\Http\Controllers\JsonRequests\DaysOfWeekRequest;
 use App\Http\Controllers\JsonRequests\GeofenceBoundaryMapRequest;
 use App\Http\Controllers\JsonRequests\GeofenceBoundaryRequest;
 use App\Http\Controllers\JsonRequests\GeofenceBoundaryStatusRequest;
+use App\Http\Controllers\JsonRequests\SectionRequest;
 use App\Http\Controllers\JsonRequests\StudentLocationByTeacherRequest;
 use App\Http\Controllers\JsonRequests\StudentLocationRequest;
 use App\Http\Controllers\JsonRequests\StudentRequest;
@@ -13,6 +15,7 @@ use App\Http\Controllers\Student\WatchPositionController;
 use App\Http\Controllers\SuperAdmin\PreRegisteredTeacherController;
 use App\Http\Controllers\SuperAdmin\GeofenceBoundaryController;
 use App\Http\Controllers\Teacher\ClassScheduleController;
+use App\Http\Controllers\Teacher\RFIDAttendanceController;
 use App\Http\Controllers\Teacher\SectionController;
 use App\Http\Controllers\Teacher\StudentController;
 use App\Http\Controllers\Teacher\StudentLocationController;
@@ -49,9 +52,17 @@ Route::group(['middleware' => ['auth', 'verified', 'role:teacher'], 'prefix' => 
         return view('layouts.teacher-layouts.contents.overview');
     })->name('teacher_overview');
     
-    Route::get('attendance-rfid', function () {
-        return view('layouts.teacher-layouts.contents.attendance-rfid');
-    })->name('attendance_rfid');
+    /* RFID Atendance Routes */
+
+    Route::get('sections-record', [SectionRequest::class, 'getSections'])->name('sections.record');
+    Route::get('class-schedules/{selectedSectionId}', [ClassScheduleRequest::class, 'getClassScheduleBySection'])->name('class_schedules.bysection');
+    Route::get('students/daily-attendances', [AttendanceRequest::class, 'getDailyAttendanceByTeacher'])->name('student_daily_attendances.bysection');
+    Route::get('students/daily-attendances/counts', [AttendanceRequest::class, 'getAttendanceCountByTeacher'])->name('student_daily_attendances.count');
+
+    Route::resource('rfid-attendances', RFIDAttendanceController::class)->except([
+        'create', 'show',
+    ]);
+
     
     Route::get('sections/records', [SectionController::class, 'getSectionRecords'])->name('sections.records');
     Route::resource('sections', SectionController::class)->except([
