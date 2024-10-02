@@ -1,6 +1,7 @@
 import './bootstrap';
 import 'flowbite';
 import Alpine from 'alpinejs';
+import { reports } from './teacher/report';
 
 window.Alpine = Alpine;
 Alpine.start();
@@ -12,17 +13,17 @@ document.addEventListener('DOMContentLoaded', async () => {
         const { initializeGeofenceDatatable } = await import('./superadmin/geofence-boundary-datatable');
         initializeGeofenceDatatable();
     }
-    
-    /* Teacher - Pie Charts */
-    if (document.querySelector('#pie-chart-container')) {
-        const { renderPieCharts } = await import('./teacher/pie-chart-design');
-        renderPieCharts();
-    }
 
     /* SuperAdmin - Teacher Datatable */
     if (document.querySelector('#teacher-datatable-container')) {
         const { initializeTeacherDatatable } = await import('./superadmin/teacher-datatable');
         initializeTeacherDatatable();
+    }
+
+    /* Teacher - Pie Charts */
+    if (document.querySelector('#pie-chart-container')) {
+        const { renderPieCharts } = await import('./teacher/pie-chart-design');
+        renderPieCharts();
     }
 
     /* Teacher - Student Page Datatables */
@@ -53,6 +54,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (document.querySelector('#student-locations-datatable-container')) {
         const { studentLocationPage } = await import('./teacher/student-location');
         studentLocationPage();
+    }
+
+    /* Teacher - Reports */
+    if (document.querySelector('#reports-container')) {
+        const { reports } = await import('./teacher/report');
+        reports();
     }
 
     /* Student - Student Watch Position */

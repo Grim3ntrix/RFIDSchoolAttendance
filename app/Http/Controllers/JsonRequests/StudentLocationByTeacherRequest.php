@@ -15,11 +15,13 @@ class StudentLocationByTeacherRequest extends Controller
         $user    = Auth::user();
         $teacher = $user->teacher;
 
-        // get sections for the teacher, students, their locations, and user info 
         $sectionsWithStudents = Section::with(['student.user.userstatus', 'student.studentLocation.studentLocationStatus'])
-            ->where('teacher_id', $teacher->id)
-            ->get();
-
+        ->where('teacher_id', $teacher->id)
+        ->whereHas('student.studentLocation', function ($query) {
+            $query->whereDate('created_at', now());
+        })
+        ->get();
+       
         return response()->json($sectionsWithStudents);
     }
 }

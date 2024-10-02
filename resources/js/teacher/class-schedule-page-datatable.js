@@ -2,7 +2,7 @@ import { DataTable } from "simple-datatables";
 import Swal from 'sweetalert2';
 
 export function initializeClassScheduleDatatable() {
-console.log("Class Schedule page function triggered.");
+// console.log("Class Schedule page function triggered.");
 
     /* Submit Class Schedule Modal Form */
 

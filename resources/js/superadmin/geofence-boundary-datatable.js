@@ -6,7 +6,7 @@ import 'leaflet.fullscreen/Control.FullScreen.css';
 import Swal from 'sweetalert2';
 
 export function initializeGeofenceDatatable() {
-    console.log("School Geofence Boundary page function triggered.");
+    // console.log("School Geofence Boundary page function triggered.");
 
     /* Geofence Boundary Map */
 const geofenceBoundary = document.getElementById('geofence-boundary-container');

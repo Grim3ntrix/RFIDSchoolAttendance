@@ -4,7 +4,7 @@ let lastLatitude = null;
 let lastLongitude = null;
 
 export function studentWatchPosition() {
-    console.log("Student Watch Position page function triggered.");
+    // console.log("Student Watch Position page function triggered.");
 
     const geofenceBoundary = document.getElementById('student-watch-position');
     

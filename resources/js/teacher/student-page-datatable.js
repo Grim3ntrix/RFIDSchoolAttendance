@@ -2,7 +2,7 @@ import { DataTable } from "simple-datatables";
 import Swal from 'sweetalert2';
 
 export function initializeStudentDatatable() {
-    console.log("Student page function triggered.");
+    // console.log("Student page function triggered.");
 
     /* Add Students into specific section */
 

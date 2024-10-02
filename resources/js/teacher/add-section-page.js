@@ -1,7 +1,7 @@
 import Swal from 'sweetalert2';
 
 export function initializeSectionPage() {
-    console.log("Add section page function triggered.");
+    // console.log("Add section page function triggered.");
 
     /* Submit Section Modal Form */
 

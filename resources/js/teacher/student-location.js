@@ -5,7 +5,7 @@ import 'leaflet.fullscreen/Control.FullScreen.js';
 import 'leaflet.fullscreen/Control.FullScreen.css'; 
 
 export function studentLocationPage() {
-    console.log("Student location page function triggered.");
+    // console.log("Student location page function triggered.");
 
     /* Get Students Table*/
 

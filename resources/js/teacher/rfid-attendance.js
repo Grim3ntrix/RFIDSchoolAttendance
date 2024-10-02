@@ -2,7 +2,7 @@ import { DataTable } from "simple-datatables";
 import Swal from 'sweetalert2';
 
 export function rfidAttendance() {
-    console.log("Attendance page function triggered.");
+    // console.log("Attendance page function triggered.");
 
     // Display current time and date
     setInterval(function () {

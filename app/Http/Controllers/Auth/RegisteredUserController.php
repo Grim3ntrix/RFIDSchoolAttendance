@@ -36,7 +36,7 @@ class RegisteredUserController extends Controller
             'email'      => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
             'password'   => ['required', 'confirmed', Rules\Password::defaults()],
         ], [
-            'teacher_id.exists' => 'The teacher ID is not valid. Please contact the school administrator.',
+            'teacher_id.exists' => 'Teacher id is not pre-registered. Please contact the school admin.',
         ]);
 
         $user = User::create([

@@ -15,6 +15,7 @@ use App\Http\Controllers\Student\WatchPositionController;
 use App\Http\Controllers\SuperAdmin\PreRegisteredTeacherController;
 use App\Http\Controllers\SuperAdmin\GeofenceBoundaryController;
 use App\Http\Controllers\Teacher\ClassScheduleController;
+use App\Http\Controllers\Teacher\ReportController;
 use App\Http\Controllers\Teacher\RFIDAttendanceController;
 use App\Http\Controllers\Teacher\SectionController;
 use App\Http\Controllers\Teacher\StudentController;
@@ -71,7 +72,7 @@ Route::group(['middleware' => ['auth', 'verified', 'role:teacher'], 'prefix' => 
 
     Route::group(['prefix' => 'sections/{section:slug}'], function () {
 
-        /* Student Routes */
+        /* Section - Student Routes */
 
         Route::get('students/list', [StudentRequest::class, 'getStudents'])->name('sections.students.list');
         
@@ -94,10 +95,12 @@ Route::group(['middleware' => ['auth', 'verified', 'role:teacher'], 'prefix' => 
         Route::put('class-schedules/{class_schedule}', [ClassScheduleController::class, 'update'])->name('sections.class-schedules.update');
         Route::delete('class-schedules/{class_schedule}', [ClassScheduleController::class, 'destroy'])->name('sections.class-schedules.destroy');
     });
+
+    /* Reports Routes */
     
-    Route::get('report', function () {
-        return view('layouts.teacher-layouts.contents.report');
-    })->name('report');
+    Route::get('reports', [ReportController::class, 'index'])->name('reports.index');
+
+    /* Student Location Routes */
     
     Route::get('/student/{student}/location', [StudentLocationRequest::class, 'getStudentLocation'])->name('student.location');
     Route::get('geofence-boundaries/map', [GeofenceBoundaryMapRequest::class, 'getGeofenceBoundaryMap'])->name('teacher_geofence_boundary.map');
@@ -114,7 +117,6 @@ Route::group(['middleware' => ['auth', 'verified', 'role:student'], 'prefix' => 
     Route::get('overview', function () {
         return view('layouts.student-layouts.contents.overview');
     })->name('student_overview');
-
 
 });
 

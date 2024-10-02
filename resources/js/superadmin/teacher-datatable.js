@@ -2,7 +2,7 @@ import { DataTable } from "simple-datatables";
 import Swal from 'sweetalert2';
 
 export function initializeTeacherDatatable() {
-    console.log("Pre register teacher page function triggered.");
+    // console.log("Pre register teacher page function triggered.");
 
     /* Pre-register teacher modal behaviour and prevent Close after submit button is click */
 
