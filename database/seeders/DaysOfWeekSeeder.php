@@ -15,13 +15,14 @@ class DaysOfWeekSeeder extends Seeder
     {
         // Seed the table with days of the week
         DB::table('days_of_weeks')->insert([
+            ['day_name' => 'Sunday'],
             ['day_name' => 'Monday'],
             ['day_name' => 'Tuesday'],
             ['day_name' => 'Wednesday'],
             ['day_name' => 'Thursday'],
             ['day_name' => 'Friday'],
             ['day_name' => 'Saturday'],
-            ['day_name' => 'Sunday'],
+
         ]);
     }
 }

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Events\UserLoggedIn;
+use App\Events\UserLoggedOut;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
 use Illuminate\Http\RedirectResponse;
@@ -34,7 +36,10 @@ class AuthenticatedSessionController extends Controller
 
         $user = Auth::user();
 
-        app(UserStatusController::class)->updateStatusToOnline($user);
+        if ($user) {
+            # Dispatch UserLoggedIn event
+            event(new UserLoggedIn($user));
+        }
 
         if ($user->hasRole('superadmin')){
             return redirect()->intended(route('superadmin_overview'));
@@ -58,8 +63,10 @@ class AuthenticatedSessionController extends Controller
         
         $user = Auth::user();
 
-        // Update status to offline for the authenticated user
-        app(UserStatusController::class)->updateStatusToOffline($user);
+        if ($user) {
+            # Dispatch UserLoggedOut event
+            event(new UserLoggedOut($user));
+        }
 
         Auth::guard('web')->logout();
 

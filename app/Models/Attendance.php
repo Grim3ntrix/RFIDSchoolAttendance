@@ -9,6 +9,13 @@ class Attendance extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'student_id',
+        'class_schedule_id',
+        'rfid_serial_number',
+        'status_id',
+    ];
+
     /* Relationship */
 
     public function attendanceStatus()

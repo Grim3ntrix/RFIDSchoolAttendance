@@ -20,8 +20,7 @@ return new class extends Migration
                   ->constrained('class_schedules')
                   ->onDelete('cascade');
             $table->longText('excuse_message');
-            $table->string('latitude');
-            $table->string('longitude');
+            $table->string('proof');
             $table->foreignId('status_id')
                   ->constrained('excuse_request_statuses')
                   ->onDelete('cascade');

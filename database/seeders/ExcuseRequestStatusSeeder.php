@@ -15,6 +15,11 @@ class ExcuseRequestStatusSeeder extends Seeder
     {
         ExcuseRequestStatus::insert([
             [
+                'status' => 'pending',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
                 'status' => 'approved',
                 'created_at' => now(),
                 'updated_at' => now(),

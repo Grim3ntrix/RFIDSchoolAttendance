@@ -4,7 +4,6 @@ namespace App\Http\Controllers\JsonRequests;
 
 use App\Http\Controllers\Controller;
 use App\Models\Attendance;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class AttendanceRequest extends Controller
@@ -15,11 +14,11 @@ class AttendanceRequest extends Controller
         $teacher = $user->teacher;
 
         $dailyAttendances = Attendance::with('attendanceStatus' ,'student', 'classSchedule.section')
-                  ->whereHas('classSchedule', function ($query) use ($teacher) {
-            $query->where('teacher_id', $teacher->id)
-                  ->whereDate('created_at', now());
-        })->get();
-       
+                      ->whereHas('classSchedule', function ($query) use ($teacher) {
+                $query->where('teacher_id', $teacher->id);
+        })
+        ->whereDate('created_at', now())
+        ->get();
 
         return response()->json($dailyAttendances);
     }
@@ -30,9 +29,10 @@ class AttendanceRequest extends Controller
         $teacher = $user->teacher;
 
         $dailyAttendanceCount = Attendance::whereHas('classSchedule', function ($query) use ($teacher) {
-            $query->where('teacher_id', $teacher->id)
-                  ->whereDate('created_at', now());
-        })->count();
+            $query->where('teacher_id', $teacher->id);     
+        })
+        ->whereDate('created_at', now())
+        ->count();
 
         return response()->json($dailyAttendanceCount);
     }

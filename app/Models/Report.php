@@ -25,4 +25,9 @@ class Report extends Model
     {
         return $this->belongsTo(ClassSchedule::class, 'class_schedule_id');
     }
+
+    public function quarter()
+    {
+        return $this->belongsTo(Quarter::class, 'quarter_id');
+    }
 }

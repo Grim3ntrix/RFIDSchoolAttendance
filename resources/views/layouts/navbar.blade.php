@@ -11,20 +11,29 @@
                 </button>
             </div>
 
-                <!-- Settings Dropdown -->
-                <div class="flex items-center sm:ms-6"> <!-- Added items-center for alignment -->
+            <!-- Settings Dropdown -->
+            <div class="flex items-center sm:ms-6"> <!-- Added items-center for alignment -->
 
-                <img id="avatarButton" type="button" data-dropdown-toggle="userDropdown" data-dropdown-placement="bottom-start" class="w-10 h-10 rounded-full cursor-pointer" src="https://placehold.co/10" alt="User dropdown">
+                <!-- SVG Avatar -->
+                <svg id="avatarButton" type="button" data-dropdown-toggle="userDropdown" data-dropdown-placement="bottom-start" class="w-10 h-10 rounded-full cursor-pointer" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <defs>
+                        <linearGradient id="greenGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#34D399; stop-opacity:1" /> <!-- Tailwind 'emerald-400' -->
+                            <stop offset="100%" style="stop-color:#065F46; stop-opacity:1" /> <!-- Tailwind 'emerald-800' -->
+                        </linearGradient>
+                    </defs>
+                    <path fill="url(#greenGradient)" fill-rule="evenodd" d="M12 20a7.966 7.966 0 0 1-5.002-1.756l.002.001v-.683c0-1.794 1.492-3.25 3.333-3.25h3.334c1.84 0 3.333 1.456 3.333 3.25v.683A7.966 7.966 0 0 1 12 20ZM2 12C2 6.477 6.477 2 12 2s10 4.477 10 10c0 5.5-4.44 9.963-9.932 10h-.138C6.438 21.962 2 17.5 2 12Zm10-5c-1.84 0-3.333 1.455-3.333 3.25S10.159 13.5 12 13.5c1.84 0 3.333-1.455 3.333-3.25S13.841 7 12 7Z" clip-rule="evenodd"/>
+                </svg>
 
                 <!-- Dropdown menu -->
                 <div id="userDropdown" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
                     <div class="px-4 py-3 text-sm text-gray-900 dark:text-white">
-                    <div>{{ Auth::user()->name }}</div>
-                    <div class="font-medium truncate">{{ Auth::user()->email }}</div>
+                        <div>{{ Auth::user()->name }}</div>
+                        <div class="font-medium truncate">{{ Auth::user()->email }}</div>
                     </div>
                     <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="avatarButton">
                         <li>
-                            <a href="{{ route('profile.edit') }}"class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Settings</a>
+                            <a href="{{ route('profile.edit') }}" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Settings</a>
                         </li>
                     </ul>
                 </div>

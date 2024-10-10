@@ -4,7 +4,6 @@ namespace App\Http\Controllers\JsonRequests;
 
 use App\Http\Controllers\Controller;
 use App\Models\Student;
-use Illuminate\Http\Request;
 
 class StudentLocationRequest extends Controller
 {

@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\Teacher;
 
 use App\Http\Controllers\Controller;
-use App\Models\Attendance;
-use App\Models\AttendanceStatus;
-use App\Models\ClassSchedule;
-use App\Models\Student;
+use App\Models\{
+    Attendance,
+    AttendanceStatus,
+    ClassSchedule,
+    Student,
+};
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -21,100 +23,80 @@ class RFIDAttendanceController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
     {
-        $classSchedule  = ClassSchedule::find($request->class_schedule); # Retrieve the class schedule
-        $currentTime    = Carbon::now();                                     # Get the current time and the class start/end times
+        $student       = Student::where('rfid_serial_number', $request->rfid_serial_number)->first();
+        $classSchedule = ClassSchedule::findOrFail($request->class_schedule);
+
+        if (!$classSchedule) {
+            return response()->json([
+                'error' => 'The selected class schedule is invalid.'
+            ], 422);
+        }
+
+        $currentTimeStr = Carbon::now('Asia/Manila')->toTimeString();
         $classStartTime = Carbon::parse($classSchedule->start_time);
         $classEndTime   = Carbon::parse($classSchedule->end_time);
+        $currentTimeObj = Carbon::parse($currentTimeStr);
 
         $validated = $request->validate([
+            'section'            => 'required',
             'class_schedule'     => 'required|exists:class_schedules,id',
             'rfid_serial_number' => [
                 'required',
-                'string',
                 'exists:students,rfid_serial_number',
-                function ($attribute, $value, $fail) use ($currentTime, $classStartTime, $classEndTime) {
-                    if ($currentTime->isBefore($classStartTime)) {
-                        return $fail('Snap! Class time has not started, please try again later!');
+                function ($attribute, $value, $fail) use ($request) {
+                    $attendanceExists = Attendance::where('rfid_serial_number', $value)
+                        ->where('class_schedule_id', $request->class_schedule)
+                        ->whereDate('created_at', now())
+                        ->exists();
+                    
+                    if ($attendanceExists) {
+                        $fail('Oops! You already have an attendance entry for today\'s class schedule.');
                     }
+                },
+                function ($attribute, $value, $fail) use ($classSchedule, $classStartTime, $classEndTime, $currentTimeObj) {
+                    $formattedStartTime = $classStartTime->format('g:i A');
+                    $formattedEndTime   = $classEndTime->format('g:i A');
 
-                    if ($currentTime->isAfter($classEndTime)) {
-                        return $fail('Snap! Class time has ended, please try again later!');
+                    if ($currentTimeObj->isBefore($classStartTime)) {
+                        return $fail('Class hasn\'t started yet! Please come back at ' . $formattedStartTime . '.');
+                    } elseif ($currentTimeObj->isAfter($classEndTime)) {
+                        return $fail('Class has already ended! It finished at ' . $formattedEndTime . '.');
                     }
                 },
             ],
         ], [
-            'rfid_serial_number.exists' => 'Snap! RFID serial number not registered to any student. Please try again!',
+            'rfid_serial_number.exists' => 'Oops! This RFID serial number isn\'t registered to any student. Please double-check and try again.',
         ]);
 
-        $student     = Student::where('rfid_serial_number', $request->rfid_serial_number)->first();
-        $currentTime = now(); // Get the current time
+        $attendanceStatus = null;
 
-        $presentStatusId = AttendanceStatus::where('status', 'present')->first()->id; # Retrieve status IDs for later use
-        $lateStatusId    = AttendanceStatus::where('status', 'late')->first()->id;
-        $absentStatusId  = AttendanceStatus::where('status', 'absent')->first()->id; 
-
-        # Determine the status based on time comparisons
-        if ($currentTime->isBefore($classStartTime)) {
-            $statusId = $absentStatusId;                    # Before the start time (absent)
-        } elseif ($currentTime->isBetween($classStartTime->subMinutes(15), $classStartTime)) {
-            $statusId = $lateStatusId;                      # Within 15 minutes before the start time (marked as late)
-        } elseif ($currentTime->isBetween($classStartTime, $classEndTime)) {
-            $statusId = $presentStatusId;                   # During class time (present)
+        if ($currentTimeObj->isBetween($classStartTime->copy()->addMinutes(16), $classStartTime)) {
+            $attendanceStatus = AttendanceStatus::where('status', 'present')->first();
         } else {
-            $statusId = $absentStatusId;                    # After the end time (absent)
+            $attendanceStatus = AttendanceStatus::where('status', 'late')->first();
         }
 
-        $attendance = new Attendance();
-        $attendance->class_schedule_id  = $classSchedule->id;
-        $attendance->student_id         = $student->id; 
-        $attendance->rfid_serial_number = $request->rfid_serial_number;
-        $attendance->status_id          = $statusId;
-        $attendance->save();
+        if ($attendanceStatus) {
+            $attendance = new Attendance([
+                'student_id'         => $student->id,
+                'class_schedule_id'  => $request->class_schedule,
+                'rfid_serial_number' => $validated['rfid_serial_number'],
+                'status_id'          => $attendanceStatus->id,
+            ]);
 
-        return response()->json(['message' => 'Attendance saved successfully'], 200);
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+            $attendance->save();
+        
+            return response()->json([
+                'message' => 'Attendance saved successfully',
+            ], 200);
+        } else {
+            return response()->json([
+                'error' => 'Attendance status could not be determined.',
+            ], 422);
+        }
     }
 }

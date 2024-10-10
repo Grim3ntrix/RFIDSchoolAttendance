@@ -22,7 +22,9 @@ return new class extends Migration
             $table->foreignId('class_schedule_id')
                   ->constrained('class_schedules')
                   ->onDelete('cascade');
-            $table->string('quarter');
+            $table->foreignId('quarter_id')
+                  ->constrained('quarters')
+                  ->onDelete('cascade');
             $table->decimal('attendance_percentage');
             $table->integer('total_classes');
             $table->integer('attended_classes');

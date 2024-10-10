@@ -1,7 +1,7 @@
 import './bootstrap';
 import 'flowbite';
 import Alpine from 'alpinejs';
-import { reports } from './teacher/report';
+
 
 window.Alpine = Alpine;
 Alpine.start();
@@ -20,10 +20,16 @@ document.addEventListener('DOMContentLoaded', async () => {
         initializeTeacherDatatable();
     }
 
-    /* Teacher - Pie Charts */
-    if (document.querySelector('#pie-chart-container')) {
+     /* Teacher - Pie Charts */
+     if (document.querySelector('#pie-chart-container')) {
         const { renderPieCharts } = await import('./teacher/pie-chart-design');
         renderPieCharts();
+    }
+
+    /* Teacher - Total Section */
+    if (document.querySelector('#total-section')) {
+        const { overview } = await import('./teacher/overview');
+        overview();
     }
 
     /* Teacher - Student Page Datatables */
@@ -62,10 +68,22 @@ document.addEventListener('DOMContentLoaded', async () => {
         reports();
     }
 
+    /* Teacher - Reports */
+    if (document.querySelector('#student-excuse-request-to-review-container')) {
+        const { studentExcuseRequestToReview } = await import('./teacher/excuse-request-to-review');
+        studentExcuseRequestToReview();
+    }
+
     /* Student - Student Watch Position */
     if (document.querySelector('#student-watch-position')) {
         const { studentWatchPosition } = await import('./student/student-watch-position');
         studentWatchPosition();
+    }
+
+    /* Student - Excuse Request */
+    if (document.querySelector('#student-excuse-request-container')) {
+        const { studentExcuse } = await import('./student/excuse');
+        studentExcuse();
     }
 
 });

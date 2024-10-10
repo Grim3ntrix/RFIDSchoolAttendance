@@ -1,25 +1,42 @@
 <?php
 
-use App\Http\Controllers\JsonRequests\AttendanceRequest;
-use App\Http\Controllers\JsonRequests\ClassScheduleRequest;
-use App\Http\Controllers\JsonRequests\DaysOfWeekRequest;
-use App\Http\Controllers\JsonRequests\GeofenceBoundaryMapRequest;
-use App\Http\Controllers\JsonRequests\GeofenceBoundaryRequest;
-use App\Http\Controllers\JsonRequests\GeofenceBoundaryStatusRequest;
-use App\Http\Controllers\JsonRequests\SectionRequest;
-use App\Http\Controllers\JsonRequests\StudentLocationByTeacherRequest;
-use App\Http\Controllers\JsonRequests\StudentLocationRequest;
-use App\Http\Controllers\JsonRequests\StudentRequest;
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\Student\WatchPositionController;
-use App\Http\Controllers\SuperAdmin\PreRegisteredTeacherController;
-use App\Http\Controllers\SuperAdmin\GeofenceBoundaryController;
-use App\Http\Controllers\Teacher\ClassScheduleController;
-use App\Http\Controllers\Teacher\ReportController;
-use App\Http\Controllers\Teacher\RFIDAttendanceController;
-use App\Http\Controllers\Teacher\SectionController;
-use App\Http\Controllers\Teacher\StudentController;
-use App\Http\Controllers\Teacher\StudentLocationController;
+use App\Http\Controllers\JsonRequests\{
+    AttendanceRequest,
+    ClassScheduleRequest,
+    DaysOfWeekRequest,
+    ExcuseMessageRequest,
+    ExcuseStudentRequest,
+    GeofenceBoundaryMapRequest,
+    GeofenceBoundaryRequest,
+    GeofenceBoundaryStatusRequest,
+    ReviewExcuseStudentRequest,
+    SectionRequest,
+    StudentBySectionRequest,
+    StudentLocationByTeacherRequest,
+    StudentLocationRequest,
+    StudentRequest,
+    TeacherOverviewRequest
+};
+use App\Http\Controllers\{
+    ProfileController
+};
+use App\Http\Controllers\Student\{
+    ExcuseController as StudentExcuseController,
+    WatchPositionController
+};
+use App\Http\Controllers\SuperAdmin\{
+    PreRegisteredTeacherController,
+    GeofenceBoundaryController
+};
+use App\Http\Controllers\Teacher\{
+    ClassScheduleController,
+    ExcuseController as TeacherExcuseController,
+    ReportController,
+    RFIDAttendanceController,
+    SectionController,
+    StudentController,
+    StudentLocationController
+};
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -49,6 +66,14 @@ Route::group(['middleware' => ['auth', 'verified', 'role:superadmin'], 'prefix' 
 /* Teacher Routes */
 
 Route::group(['middleware' => ['auth', 'verified', 'role:teacher'], 'prefix' => 'teacher'], function (){
+    
+    /* Overview Routes */
+
+    Route::get('total-sections', [TeacherOverviewRequest::class, 'getTotalSections'])->name('total.sections');
+    Route::get('total-subjects', [TeacherOverviewRequest::class, 'getTotalSubjects'])->name('total.subjects');
+    Route::get('total-students', [TeacherOverviewRequest::class, 'getTotalStudents'])->name('total.students');
+    Route::get('ongoing-class-schedule', [TeacherOverviewRequest::class, 'getOnGoingClassSchedule'])->name('ongoing_class_schedule');
+
     Route::get('overview', function () {
         return view('layouts.teacher-layouts.contents.overview');
     })->name('teacher_overview');
@@ -60,8 +85,8 @@ Route::group(['middleware' => ['auth', 'verified', 'role:teacher'], 'prefix' => 
     Route::get('students/daily-attendances', [AttendanceRequest::class, 'getDailyAttendanceByTeacher'])->name('student_daily_attendances.bysection');
     Route::get('students/daily-attendances/counts', [AttendanceRequest::class, 'getAttendanceCountByTeacher'])->name('student_daily_attendances.count');
 
-    Route::resource('rfid-attendances', RFIDAttendanceController::class)->except([
-        'create', 'show',
+    Route::resource('rfid-attendances', RFIDAttendanceController::class)->only([
+        'index', 'store',
     ]);
 
     
@@ -84,8 +109,8 @@ Route::group(['middleware' => ['auth', 'verified', 'role:teacher'], 'prefix' => 
 
         /* Class Schedule Routes */
         
-        Route::get('class-schedules/list', [ClassScheduleRequest::class, 'getClassSchedules'])->name('sections.class-schedules.list');
-        Route::get('days-of-weeks/list', [DaysOfWeekRequest::class, 'getDaysOfWeeks'])->name('sections.days-of-weeks.list');
+        Route::get('class-schedules-list', [ClassScheduleRequest::class, 'getClassSchedules'])->name('sections.class-schedules.list');
+        Route::get('days-of-weeks-list', [DaysOfWeekRequest::class, 'getDaysOfWeeks'])->name('sections.days-of-weeks.list');
 
         Route::get('class-schedules', [ClassScheduleController::class, 'index'])->name('sections.class-schedules.index');
         Route::post('class-schedules', [ClassScheduleController::class, 'store'])->name('sections.class-schedules.store');
@@ -98,14 +123,27 @@ Route::group(['middleware' => ['auth', 'verified', 'role:teacher'], 'prefix' => 
 
     /* Reports Routes */
     
+    Route::get('students/{section}', [StudentBySectionRequest::class, 'getStudentBySection'])->name('students.bysection');
     Route::get('reports', [ReportController::class, 'index'])->name('reports.index');
 
     /* Student Location Routes */
     
-    Route::get('/student/{student}/location', [StudentLocationRequest::class, 'getStudentLocation'])->name('student.location');
+    Route::get('student/{student}/location', [StudentLocationRequest::class, 'getStudentLocation'])->name('student.location');
     Route::get('geofence-boundaries/map', [GeofenceBoundaryMapRequest::class, 'getGeofenceBoundaryMap'])->name('teacher_geofence_boundary.map');
     Route::get('student-locations/request', [StudentLocationByTeacherRequest::class, 'getStudentLocationsByTeacher'])->name('student_locations.request');
     Route::get('student-locations', [StudentLocationController::class, 'index'])->name('student_locations.index');
+
+    /* Teacher Excuse */
+
+    Route::get('/get-excuse-request-by-student-to-review', [ReviewExcuseStudentRequest::class, 'getStudentExcuseRequestToReview'])->name('get_excuse_request_by_student_to_review.get');
+
+    Route::resource('excuses', TeacherExcuseController::class)->names([
+        'index'     => 'teacher.excuses.index',
+        'store'     => 'teacher.excuses.store',
+        'destroy'   => 'teacher.excuses.destroy'
+    ])->only([
+        'index', 'store', 'destroy'
+    ]);
 });
 
 /* Student Routes */
@@ -117,6 +155,20 @@ Route::group(['middleware' => ['auth', 'verified', 'role:student'], 'prefix' => 
     Route::get('overview', function () {
         return view('layouts.student-layouts.contents.overview');
     })->name('student_overview');
+
+    /* Student Excuse */
+
+    Route::get('/get-class-schedule-by-student', [ExcuseStudentRequest::class, 'getClassScheduleByStudent'])->name('class_schedule_by_student.get');
+    Route::get('/get-excuse-request-by-student', [ExcuseStudentRequest::class, 'getExcuseRequestByStudent'])->name('get_excuse_request_by_student.get');
+    Route::get('/get-excuse-request-message/{id}', [ExcuseMessageRequest::class, 'getExcuseMessageRequest'])->name('get_excuse_message_request.get');
+
+    Route::resource('excuses', StudentExcuseController::class)->names([
+        'index'     => 'student.excuses.index',
+        'store'     => 'student.excuses.store',
+        'destroy'   => 'student.excuses.destroy'
+    ])->only([
+        'index', 'store', 'destroy'
+    ]);
 
 });
 

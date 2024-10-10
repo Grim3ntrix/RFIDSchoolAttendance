@@ -1,10 +1,15 @@
 import { DataTable } from "simple-datatables";
 import Swal from 'sweetalert2';
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 export function rfidAttendance() {
     // console.log("Attendance page function triggered.");
 
-    // Display current time and date
     setInterval(function () {
         const now = new Date();
         const timeString = now.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: true });
@@ -41,7 +46,6 @@ export function rfidAttendance() {
         defaultSectionOption.selected = true;
         sectionElement.appendChild(defaultSectionOption); 
 
-        // Fetch sections data from API
         axios.get(`/teacher/sections-record`)
         .then(response => {
             const sectionsData = response.data;
@@ -87,7 +91,6 @@ export function rfidAttendance() {
                         return `${adjustedHours}:${minutes} ${suffix}`;
                     }
 
-                    // Day abbreviation mapping
                     const dayAbbreviations = {
                         "Monday":   "M",
                         "Tuesday":  "T",
@@ -282,23 +285,25 @@ export function rfidAttendance() {
                         'absent': 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-400 border border-gray-500',
                         'late': 'bg-red-100 text-red-800 dark:bg-gray-700 dark:text-red-400 border border-red-400',
                     };
+
+                    function convertToAsiaManilaTime(datetime) {
+                        return dayjs(datetime).tz('Asia/Manila').format('h:mm A'); // Convert to Asia/Manila and format to 12-hour
+                    }
                     
                     dailyAttendances.forEach(attendance => {
                         const row = document.createElement('tr');
 
-                        // Get student and class schedule details
-                        const student = attendance.student;
+                        const student       = attendance.student;
                         const classSchedule = attendance.class_schedule;
+                        const attendanceCreatedAt = convertToAsiaManilaTime(attendance.created_at);
                         
-                        // Format start and end times to AM/PM
                         const startTime = convertToAmPm(classSchedule.start_time);
-                        const endTime = convertToAmPm(classSchedule.end_time);
-                        
+                        const endTime   = convertToAmPm(classSchedule.end_time);
+
                         // Create badge for attendance status
-                        const badgeClass = attendanceBadgeMap[attendance.attendance_status.status] || 'bg-gray-100 text-gray-800'; // Default to gray if status is not found
+                        const badgeClass  = attendanceBadgeMap[attendance.attendance_status.status] || 'bg-gray-100 text-gray-800'; // Default to gray if status is not found
                         const statusBadge = `<span class="text-xs font-medium px-2.5 py-0.5 rounded-full ${badgeClass}">${attendance.attendance_status.status}</span>`;
 
-                        // Create table row
                         row.innerHTML = `
                             <td>${student.school_id ?? 'N/A'}</td>
                             <td>${student.rfid_serial_number}</td>
@@ -306,10 +311,9 @@ export function rfidAttendance() {
                             <td>${classSchedule.section.section_name}</td>
                             <td>${classSchedule.subject} (${classSchedule.subject_code}) - (${startTime} - ${endTime})</td>
                             <td>${statusBadge}</td> <!-- Updated to include the badge -->
-                            <td>${convertToAmPm(attendance.created_at)}</td>
+                            <td>${attendanceCreatedAt}</td>
                         `;
                         
-                        // Append the row to the table body
                         tbody.appendChild(row);
                     });
 

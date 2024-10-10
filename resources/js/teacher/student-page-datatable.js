@@ -156,7 +156,7 @@ export function initializeStudentDatatable() {
                         <td>${student.school_id ?? 'N/A'}</td>
                         <td>${student.rfid_serial_number}</td>
                         <td>${student.batch}</td>
-                        <td>${student.first_name} ${student.middle_name} ${student.last_name} ${student.name_extension ?? ''}</td>
+                        <td>${student.first_name} ${student.middle_name ?? ''} ${student.last_name} ${student.name_extension ?? ''}</td>
                         <td>${student.sex}</td>
                         <td>${student.phone_number ?? 'N/A'}</td>
                         <td>${student.address ?? 'N/A' }</td>

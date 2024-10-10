@@ -8,53 +8,58 @@ export function initializeClassScheduleDatatable() {
 
     const form = document.getElementById('add-class-schedule-form');
 
-    if (form){
+    if (form) {
         form.addEventListener('submit', function (e) {
-        e.preventDefault(); // Prevent the default form submission
+            e.preventDefault();
 
-        let formData = new FormData(form);
+            let formData = new FormData(form);
 
-        axios.post(`/teacher/sections/${sectionSlug}/class-schedules`, formData)
-            .then(response => {
-                const Toast = Swal.mixin({
-                    toast: true,
-                    position: "top-end",
-                    showConfirmButton: false,
-                    timer: 800,
-                    timerProgressBar: true,
-                    didOpen: (toast) => {
-                        toast.onmouseenter = Swal.stopTimer;
-                        toast.onmouseleave = Swal.resumeTimer;
+            axios.post(`/teacher/sections/${sectionSlug}/class-schedules`, formData)
+                .then(response => {
+                    const Toast = Swal.mixin({
+                        toast: true,
+                        position: "top-end",
+                        showConfirmButton: false,
+                        timer: 800,
+                        timerProgressBar: true,
+                        didOpen: (toast) => {
+                            toast.onmouseenter = Swal.stopTimer;
+                            toast.onmouseleave = Swal.resumeTimer;
+                        }
+                    });
+
+                    Toast.fire({
+                        icon: "success",
+                        title: "Class Schedule record added successfully!"
+                    });
+
+                    form.reset();
+                    window.location.href = `/teacher/sections/${sectionSlug}/class-schedules`;
+                })
+                .catch(error => {
+                    if (error.response && error.response.status === 422) {
+                        const errors = error.response.data.errors;
+
+                        document.querySelectorAll('.error-message').forEach(el => el.remove());
+
+                        for (let key in errors) {
+                            let inputElement = document.getElementById(key);
+
+                            // In case no matching input is found, continue to the next error
+                            if (!inputElement) {
+                                continue;
+                            }
+
+                            let errorMessage = errors[key];
+
+                            let errorElement = document.createElement('p');
+                            errorElement.classList.add('text-red-500', 'text-xs', 'mt-1', 'error-message');
+                            errorElement.innerText = errorMessage;
+
+                            inputElement.after(errorElement); // Insert error message after the input field
+                        }
                     }
                 });
-            
-                Toast.fire({
-                    icon: "success",
-                    title: "Class Schedule record added successfully!"
-                });
-            
-                form.reset();
-                window.location.href = `/teacher/sections/${sectionSlug}/class-schedules`;
-            })
-            .catch(error => {
-                if (error.response && error.response.status === 422) {
-
-                    const errors = error.response.data.errors;
-
-                    document.querySelectorAll('.error-message').forEach(el => el.remove()); // Hide Validation
-
-                    for (let key in errors) {
-                        let inputElement = document.getElementById(key);
-                        let errorMessage = errors[key][0];
-
-                        let errorElement = document.createElement('p');
-                        errorElement.classList.add('text-red-500', 'text-xs', 'mt-1', 'error-message');
-                        errorElement.innerText = errorMessage;
-
-                        inputElement.after(errorElement);
-                    }
-                }
-            });
         });
     }
 
@@ -67,7 +72,7 @@ export function initializeClassScheduleDatatable() {
 
         /* Axios GET request to populate the datatable */
 
-        axios.get(`/teacher/sections/${sectionSlug}/class-schedules/list`)
+        axios.get(`/teacher/sections/${sectionSlug}/class-schedules-list`)
         .then(response => {
             const classSchedules = response.data;
 
@@ -167,7 +172,7 @@ export function initializeClassScheduleDatatable() {
                         const badgeClass = dayColorMap[day.day_name] || 'bg-gray-100 text-gray-800'; // Default to gray if day is not found
                         
                         // Assign class and add text inside the badge
-                        span.className = `text-xs font-medium px-2.5 py-0.5 rounded-full ${badgeClass}`;
+                        span.className   = `text-xs font-medium px-2.5 py-0.5 rounded-full ${badgeClass}`;
                         span.textContent = day.day_name; // This ensures the text is inside the badge
                         return span.outerHTML;
                     }).join(' ')
@@ -286,7 +291,7 @@ export function initializeClassScheduleDatatable() {
 
         /* Get Days of Weeks data */
 
-        axios.get(`/teacher/sections/${sectionSlug}/days-of-weeks/list`)
+        axios.get(`/teacher/sections/${sectionSlug}/days-of-weeks-list`)
         .then(response => {
             const daysOfWeeks = response.data;
     
@@ -350,7 +355,7 @@ export function initializeClassScheduleDatatable() {
                                             <path fill-rule="evenodd" d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm11-4a1 1 0 1 0-2 0v4a1 1 0 0 0 .293.707l3 3a1 1 0 0 0 1.414-1.414L13 11.586V8Z" clip-rule="evenodd"/>
                                         </svg>
                                     </div>
-                                    <input type="time" id="edit_start_time" name="start_time" class="bg-gray-50 border leading-none border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" min="07:00" max="18:00" />
+                                    <input type="time" id="edit_start_time" name="start_time" class="bg-gray-50 border leading-none border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" min="07:00" max="17:00" />
                                 </div>
                             </div>
                             <div>
@@ -361,7 +366,7 @@ export function initializeClassScheduleDatatable() {
                                             <path fill-rule="evenodd" d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm11-4a1 1 0 1 0-2 0v4a1 1 0 0 0 .293.707l3 3a1 1 0 0 0 1.414-1.414L13 11.586V8Z" clip-rule="evenodd"/>
                                         </svg>
                                     </div>
-                                    <input type="time" id="edit_end_time" name="end_time" class="bg-gray-50 border leading-none border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" min="08:00" max="18:00" />
+                                    <input type="time" id="edit_end_time" name="end_time" class="bg-gray-50 border leading-none border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" min="07:00" max="17:00" />
                                 </div>
                             </div>
                         </div>
@@ -398,7 +403,7 @@ export function initializeClassScheduleDatatable() {
 
                 editClassScheduleModal.show();
 
-                axios.get(`/teacher/sections/${sectionSlug}/days-of-weeks/list`)
+                axios.get(`/teacher/sections/${sectionSlug}/days-of-weeks-list`)
                 .then(response => {
                     const allDaysOfWeeks = response.data;  // Fetch predefined days of week
                     
@@ -491,7 +496,7 @@ export function initializeClassScheduleDatatable() {
 
                     for (let key in errors) {
                         let inputElement = document.getElementById(`edit_${key}`);
-                        let errorMessage = errors[key][0];
+                        let errorMessage = errors[key];
 
                         let errorElement = document.createElement('p');
                         errorElement.classList.add('text-red-500', 'text-xs', 'mt-1', 'error-message');

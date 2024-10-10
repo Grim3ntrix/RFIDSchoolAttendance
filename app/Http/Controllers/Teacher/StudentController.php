@@ -3,10 +3,13 @@
 namespace App\Http\Controllers\Teacher;
 
 use App\Http\Controllers\Controller;
-use App\Models\Section;
-use App\Models\Student;
-use App\Models\User;
-use App\Models\UserStatus;
+use App\Models\{
+    Section,
+    Student,
+    User,
+    UserStatus,
+
+};
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
@@ -46,6 +49,10 @@ class StudentController extends Controller
 
         $studentUser = $this->createStudentUser($request, $birthDatePass);
 
+        $offlineStatus = UserStatus::where('status', 'offline')->first();
+        $studentUser->status_id = $offlineStatus->id;
+        $studentUser->save();
+
         $studentUser->assignRole('student');
 
         $section->student()->create(array_merge($validated, [
@@ -58,13 +65,11 @@ class StudentController extends Controller
 
     private function createStudentUser(Request $request, $birthDatePass)
     {
-        $offlineStatus = UserStatus::where('status', 'offline')->first();
 
         $user = User::create([
             'name'       => $request->first_name . ' ' . $request->middle_name . ' ' . $request->last_name . ' ' . ($request->name_extension ?? ''),
             'email'      => $request->email,
             'password'   => Hash::make($birthDatePass),
-            'status_id'  => $offlineStatus->id,
         ]);
 
         return $user;

@@ -9,6 +9,14 @@ class ExcuseRequest extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'student_id',
+        'class_schedule_id',
+        'excuse_message',
+        'proof',
+        'status_id',
+    ];
+
     /* Relationship */
 
     public function student()

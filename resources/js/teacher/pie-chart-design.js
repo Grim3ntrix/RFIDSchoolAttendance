@@ -2,10 +2,10 @@ import ApexCharts from 'apexcharts';
 
 export const getChartOptions = () => {
   return {
-    series: [52.8, 26.8, 20.4],
+    series: [ 52.8, 26.8, 10.4],
     colors: ["#3F83F8", "#E02424", "#6B7280"],
     chart: {
-      height: 420,
+      height: 350,
       width: "100%",
       type: "pie",
     },
