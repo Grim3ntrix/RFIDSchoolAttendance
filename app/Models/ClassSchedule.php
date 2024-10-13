@@ -40,10 +40,10 @@ class ClassSchedule extends Model
         return $this->hasMany(ExcuseRequest::class, 'class_schedule_id');
     }
 
-    public function report()
-    {
-        return $this->hasMany(Report::class, 'class_schedule_id');
-    }
+    // public function report()
+    // {
+    //     return $this->hasMany(Report::class, 'class_schedule_id');
+    // }
 
     public function daysOfWeek()
     {

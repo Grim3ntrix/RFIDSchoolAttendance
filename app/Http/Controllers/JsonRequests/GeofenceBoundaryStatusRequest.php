@@ -9,7 +9,7 @@ class GeofenceBoundaryStatusRequest extends Controller
 {
     public function getGeofenceBoundaryStatuses()
     {
-        $status = GeofenceBoundaryStatus::get();
+        $status = GeofenceBoundaryStatus::all();
         return response()->json($status);
     }
 }

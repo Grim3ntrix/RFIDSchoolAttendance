@@ -10,7 +10,7 @@ class DaysOfWeekRequest extends Controller
 {
     public function getDaysOfWeeks(Section $section)
     {
-        $daysOfWeeks = DaysOfWeek::get();
+        $daysOfWeeks = DaysOfWeek::all();
         return response()->json($daysOfWeeks);
     }
 }

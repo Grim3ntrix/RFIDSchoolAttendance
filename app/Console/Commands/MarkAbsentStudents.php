@@ -5,25 +5,15 @@ namespace App\Console\Commands;
 use App\Models\{
     Attendance,
     AttendanceStatus,
-    ClassSchedule,
+    ClassSchedule
 };
 use Carbon\Carbon;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 
 class MarkAbsentStudents extends Command
 {
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
     protected $signature = 'app:mark-absent-students';
-
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
     protected $description = 'Mark absent students who have not attended class for the day';
 
     public function __construct()
@@ -31,45 +21,72 @@ class MarkAbsentStudents extends Command
         parent::__construct();
     }
 
-    /**
-     * Execute the console command.
-     */
     public function handle()
     {
-        $currentTime = Carbon::now()->format('H:i:s'); # Extracts current time as '14:45:00'
-        
-        $classSchedules = ClassSchedule::where('end_time', '<=', $currentTime)->get();
+        $currentTime = Carbon::now('Asia/Manila')->format('H:i:s'); // Match timezone
+        $currentDayId = $this->getCurrentDayId(); // Get current day ID (1-7)
+
+        Log::info("MarkAbsentStudents command started at {$currentTime}.");
+
+        // Find class schedules that end before or at the current time and match today's day
+        $classSchedules = ClassSchedule::where('end_time', '<=', $currentTime)
+            ->whereHas('daysOfWeek', function ($query) use ($currentDayId) {
+                $query->where('days_of_weeks.id', $currentDayId);
+            })
+            ->get();
+
+        Log::info('Class schedules retrieved for processing.', ['count' => $classSchedules->count()]);
 
         foreach ($classSchedules as $classSchedule) {
+            Log::info("Processing class schedule", ['class_schedule_id' => $classSchedule->id]);
             $this->markAbsentStudentsForClassSchedule($classSchedule->id);
         }
+
+        Log::info('MarkAbsentStudents command completed.');
+    }
+
+    private function getCurrentDayId()
+    {
+        $dayMapping = [
+            0 => 1, // Sunday
+            1 => 2, // Monday
+            2 => 3, // Tuesday
+            3 => 4, // Wednesday
+            4 => 5, // Thursday
+            5 => 6, // Friday
+            6 => 7  // Saturday
+        ];
+
+        // Map the current day of the week to the 'days_of_weeks' table
+        return $dayMapping[Carbon::now('Asia/Manila')->dayOfWeek];
     }
 
     public function markAbsentStudentsForClassSchedule($classScheduleId)
     {
-        $classSchedule = ClassSchedule::findOrFail($classScheduleId);
-
+        $classSchedule = ClassSchedule::find($classScheduleId);
         if (!$classSchedule) {
-            return; # If the class schedule is invalid, exit the function.
+            Log::warning("Class schedule not found", ['class_schedule_id' => $classScheduleId]);
+            return;
         }
 
         $currentDate = Carbon::now()->format('Y-m-d');
-
         $attendanceStatus = AttendanceStatus::where('status', 'absent')->first();
 
         if (!$attendanceStatus) {
-            return; # If the attendance status is invalid, exit the function.
+            Log::error("Attendance status 'absent' not found.");
+            return;
         }
 
         $classSchedule->section->student()->chunk(100, function ($students) use ($classScheduleId, $attendanceStatus, $currentDate) {
+            Log::info("Processing students chunk", ['class_schedule_id' => $classScheduleId, 'student_count' => count($students)]);
             
             $attendancesToCreate = [];
-            
+
             foreach ($students as $student) {
                 $attendanceExists = Attendance::where('student_id', $student->id)
-                                ->where('class_schedule_id', $classScheduleId)
-                                ->whereDate('created_at', $currentDate)
-                                ->exists();
+                    ->where('class_schedule_id', $classScheduleId)
+                    ->whereDate('created_at', $currentDate)
+                    ->exists();
 
                 if (!$attendanceExists) {
                     $attendancesToCreate[] = [
@@ -84,10 +101,9 @@ class MarkAbsentStudents extends Command
             }
 
             if (!empty($attendancesToCreate)) {
-                // Bulk insert attendance records
                 Attendance::insert($attendancesToCreate);
+                Log::info('Attendance records inserted', ['record_count' => count($attendancesToCreate)]);
             }
-            
         });
     }
 }

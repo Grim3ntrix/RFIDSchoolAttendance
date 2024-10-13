@@ -20,6 +20,7 @@ class ClassScheduleRequest extends Controller
     {
         $classSchedules = ClassSchedule::with('daysOfWeek')
         ->where('section_id', $id)
+        ->orderBy('start_time', 'asc')
         ->get();
         return response()->json($classSchedules);
     }

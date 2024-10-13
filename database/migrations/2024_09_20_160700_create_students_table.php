@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Validation\Rules\Unique;
 
 return new class extends Migration
 {
@@ -20,7 +21,8 @@ return new class extends Migration
                   ->constrained('sections')
                   ->onDelete('cascade');
             $table->string('school_id')
-                  ->nullable();
+                  ->nullable()
+                  ->unique();
             $table->string('rfid_serial_number')
                   ->unique();
             $table->string('batch');

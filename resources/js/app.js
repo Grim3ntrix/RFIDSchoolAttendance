@@ -68,10 +68,16 @@ document.addEventListener('DOMContentLoaded', async () => {
         reports();
     }
 
-    /* Teacher - Reports */
+    /* Teacher - Student Excuse Request to Review */
     if (document.querySelector('#student-excuse-request-to-review-container')) {
-        const { studentExcuseRequestToReview } = await import('./teacher/excuse-request-to-review');
-        studentExcuseRequestToReview();
+        const { studentClassScheduleToReview } = await import('./teacher/excuse-request-to-review');
+        studentClassScheduleToReview();
+    }
+
+    /* Teacher - Pending Excuse Request Count */
+    if (document.querySelector('#teacher-excuse-request-pending-count')) {
+        const { pendingExcuseRequestCount } = await import('./teacher/pending-excuse-request-count');
+        pendingExcuseRequestCount();
     }
 
     /* Student - Student Watch Position */
@@ -84,6 +90,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (document.querySelector('#student-excuse-request-container')) {
         const { studentExcuse } = await import('./student/excuse');
         studentExcuse();
+    }
+
+    /* Student - Pending Excuse Request Count */
+    if (document.querySelector('#student-excuse-request-pending-count')) {
+        const { StudentPendingExcuseRequestCount } = await import('./student/pending-excuse-request-count');
+        StudentPendingExcuseRequestCount();
     }
 
 });

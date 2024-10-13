@@ -5,7 +5,7 @@
             
             <div id="reports-container" class="relative bg-gradient-to-l from-lime-100 to-green-200 rounded-lg shadow dark:bg-gray-700 p-6">
                <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between border-b border-green-300 pb-4 mb-4">
-                  <h3 class="text-xl font-medium text-gray-900 dark:text-white">Customize Attendance Reports</h3>
+                  <h3 class="text-xl font-medium text-gray-900 dark:text-white">Quarterly Attendance Reports</h3>
             
                   <div>
                   <button type="submit" class="inline-flex items-center px-4 py-2 bg-white border border-gray-400 rounded-md font-semibold text-xs text-dark hover:text-white dark:text-gray-800 uppercase tracking-widest hover:bg-green-700 dark:hover:bg-white focus:bg-green-700 dark:focus:bg-white active:bg-green-900 dark:active:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition ease-in-out duration-150">
@@ -25,15 +25,15 @@
 
                </div>
                <form id="reports-form" class="space-y-4">
-                  <div class="grid gap-4 mb-6 md:grid-cols-4">
+                  <div class="grid gap-4 mb-6 md:grid-cols-3">
                      <div>
                         <select id="section" name="section" class="w-full px-4 py-2 border border-dark rounded-md font-semibold text-xs uppercase tracking-widest focus:ring-indigo-500 disabled:opacity-2">
                         </select>
                      </div>
-                     <div>
+                     <!-- <div>
                         <select id="class_schedule" name="class_schedule" class="w-full px-4 py-2 border border-dark rounded-md font-semibold text-xs uppercase tracking-widest focus:ring-indigo-500 disabled:opacity-2">
                         </select>
-                     </div>
+                     </div> -->
                      <div>
                         <select id="student" name="student" class="w-full px-4 py-2 border border-dark rounded-md font-semibold text-xs uppercase tracking-widest focus:ring-indigo-500 disabled:opacity-2">
                         </select>

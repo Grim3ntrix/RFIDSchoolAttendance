@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Teacher;
 
 use App\Http\Controllers\Controller;
 use App\Models\Section;
+use App\Models\Student;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
@@ -114,8 +116,12 @@ class SectionController extends Controller
      */
     public function destroy(string $id)
     {
-        $sectionData = Section::findOrFail($id);
-        $sectionData->delete();
+        $user = Student::where('section_id', $id)->first();
+        $deleted = User::findOrFail($user->user_id)->delete();
+
+        if ($deleted) {
+        Section::findOrFail($id)->delete();
+        }
 
         return response()->json(['success' => true]);
     }

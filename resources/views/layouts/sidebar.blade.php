@@ -88,7 +88,8 @@
                   </svg>
                   <span class="flex-1 ms-3 whitespace-nowrap">{{ __('Excuse') }}</span>
                   <!-- Badge -->
-                  <span class="absolute right-2 inline-flex items-center justify-center px-2 py-1 leading-none text-xs font-bold text-white bg-red-500 border-1 border-white rounded-full">2</span>
+                  <div></div>
+                  <span id="teacher-excuse-request-pending-count" class="hidden absolute right-2 inline-flex items-center justify-center px-2 py-1 leading-none text-xs font-bold text-white bg-red-500 border-1 border-white rounded-full">0</span>
                </a>
             </li>
          @endrole
@@ -109,7 +110,7 @@
                   </svg>
                   <span class="flex-1 ms-3 whitespace-nowrap">{{ __('Excuse') }}</span>
                   <!-- Badge -->
-                  <span class="absolute right-2 inline-flex items-center justify-center px-2 py-1 leading-none text-xs font-bold text-white bg-red-500 border-1 border-white rounded-full">2</span>
+                  <span id="student-excuse-request-pending-count" class="hidden absolute right-2 inline-flex items-center justify-center px-2 py-1 leading-none text-xs font-bold text-white bg-red-500 border-1 border-white rounded-full">-</span>
                </a>
             </li>
          @endrole

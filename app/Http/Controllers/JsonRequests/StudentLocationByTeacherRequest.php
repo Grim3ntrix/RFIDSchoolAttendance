@@ -9,15 +9,22 @@ use Illuminate\Support\Facades\Auth;
 
 class StudentLocationByTeacherRequest extends Controller
 {
-    public function getStudentLocationsByTeacher()
+    public function getStudentLocationsByTeacher() 
     {
         $user    = Auth::user();
         $teacher = $user->teacher;
 
-        $sectionsWithStudents = Section::with(['student.user.userstatus', 'student.studentLocation.studentLocationStatus'])
-                            ->where('teacher_id', $teacher->id)
-                            ->get();
-       
+        $sectionsWithStudents = Section::with([
+                                    'student.user.userstatus', 
+                                    'student.studentLocation.studentLocationStatus'
+                                ])
+                                ->where('teacher_id', $teacher->id)
+                                // Order by user status, prioritizing 'online'
+                                ->whereHas('student.user.userstatus', function($query) {
+                                    $query->orderByRaw("CASE WHEN status = 'online' THEN 1 ELSE 0 END DESC");
+                                })
+                                ->get();
+
         return response()->json($sectionsWithStudents);
     }
 }

@@ -24,7 +24,7 @@ class StudentController extends Controller
     public function store(Request $request, Section $section)
     {
         $validated = $request->validate([
-            'school_id'          => 'nullable|string|max:255',
+            'school_id'          => 'nullable|string|max:255|unique:students,school_id,' . $request->id,
             'rfid_serial_number' => 'required|string|max:50|unique:students,rfid_serial_number,' . $request->id,
             'batch'              => 'required|string|max:255',
             'last_name'          => 'required|string|max:255',
@@ -87,7 +87,12 @@ class StudentController extends Controller
     public function update(Request $request, Section $section, Student $student)
     {
         $validated = $request->validate([
-            'school_id'          => 'nullable|string|max:255',
+            'school_id'          => [
+            'nullable',
+            'string',
+            'max:255',
+            Rule::unique('students', 'school_id')->ignore($student->id),
+            ],
             'rfid_serial_number' => [
                 'required',
                 'string',
@@ -111,7 +116,7 @@ class StudentController extends Controller
 
     public function destroy(Section $section, Student $student)
     {
-        $student->delete();
+        $student->user()->delete();
         return response()->json(['success' => true]);
     }
     

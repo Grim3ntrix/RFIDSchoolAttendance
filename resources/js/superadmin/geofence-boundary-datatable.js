@@ -9,52 +9,51 @@ export function initializeGeofenceDatatable() {
     // console.log("School Geofence Boundary page function triggered.");
 
     /* Geofence Boundary Map */
-const geofenceBoundary = document.getElementById('geofence-boundary-container');
+    const geofenceBoundary = document.getElementById('geofence-boundary-container');
 
-if (geofenceBoundary) {
-    axios.get('/superadmin/geofence-boundaries/map')
-    .then(response => {
-        const geofenceBoundariesMapData = response.data;
+    if (geofenceBoundary) {
+        axios.get('/superadmin/geofence-boundaries/map')
+        .then(response => {
+            const geofenceBoundariesMapData = response.data;
 
-        if (geofenceBoundariesMapData) {
-            const geofenceBoundaryHTML = `
-                <div id="map" class="h-80 my-8 rounded-lg bg-gradient-to-br from-gray-100 via-gray-300 to-gray-500 dark:bg-gray-800 shadow-lg p-6"></div>
-            `;
-            geofenceBoundary.innerHTML = geofenceBoundaryHTML;
+            if (geofenceBoundariesMapData) {
+                const geofenceBoundaryHTML = `
+                    <div id="map" class="h-80 my-8 rounded-lg bg-gradient-to-br from-gray-100 via-gray-300 to-gray-500 dark:bg-gray-800 shadow-lg p-6"></div>
+                `;
+                geofenceBoundary.innerHTML = geofenceBoundaryHTML;
 
-            const latitude = parseFloat(geofenceBoundariesMapData.latitude);
-            const longitude = parseFloat(geofenceBoundariesMapData.longitude);
-            const radius = parseFloat(geofenceBoundariesMapData.radius);
+                const latitude = parseFloat(geofenceBoundariesMapData.latitude);
+                const longitude = parseFloat(geofenceBoundariesMapData.longitude);
+                const radius = parseFloat(geofenceBoundariesMapData.radius);
 
-            // Leaflet map centered at the given latitude and longitude
-            const map = L.map('map', {
-                fullscreenControl: true,
-                fullscreenControlOptions: {
-                    position: 'topleft'
-                }
-            }).setView([latitude, longitude], 16);
+                // Leaflet map centered at the given latitude and longitude
+                const map = L.map('map', {
+                    fullscreenControl: true,
+                    fullscreenControlOptions: {
+                        position: 'topleft'
+                    }
+                }).setView([latitude, longitude], 16);
 
-            // Add a tile layer to the map
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                maxZoom: 18,
-                attribution: '© OpenStreetMap contributors'
-            }).addTo(map);
+                // Add a tile layer to the map
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    maxZoom: 18,
+                    attribution: '© OpenStreetMap contributors'
+                }).addTo(map);
 
-            // Add a geofence boundary (circle)
-            const boundary = L.circle([latitude, longitude], {
-                color: 'red',
-                fillColor: '#blue',
-                fillOpacity: 0.1,
-                radius: radius,
-            }).addTo(map);
-        }
-    })
-    .catch(error => {
-        console.error('Error fetching geofence boundary map data:', error);
-        document.getElementById('table-loader').style.display = 'none'; // Hide Loading spinner
-    });
-}
-
+                // Add a geofence boundary (circle)
+                const boundary = L.circle([latitude, longitude], {
+                    color: 'red',
+                    fillColor: '#blue',
+                    fillOpacity: 0.1,
+                    radius: radius,
+                }).addTo(map);
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching geofence boundary map data:', error);
+            document.getElementById('table-loader').style.display = 'none'; // Hide Loading spinner
+        });
+    }
 
     const addGeofenceBoundaryBtn = document.getElementById('add-geofence-boundary-btn');
 

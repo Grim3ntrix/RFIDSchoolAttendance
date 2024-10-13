@@ -10,8 +10,9 @@
                   Important Notice
                </h2>
                <p class="text-blue-700">
-                  This location is reserved for today only and is restricted to students in the assigned sections.
-                  Please ensure that all activities are conducted with respect to this arrangement.
+                  This location is active while the student is online. Access is limited to assigned sections. 
+                  Please note, location data may occasionally be inaccurate due to GPS or network limitations. 
+                  Ensure all activities adhere to this arrangement and are conducted accordingly.
                </p>
             </div>
 

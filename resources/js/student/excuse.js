@@ -8,7 +8,7 @@ dayjs.extend(utc);
 dayjs.extend(timezone);
 
 export function studentExcuse() {
-    console.log("Student excuse page function triggered.");
+    // console.log("Student excuse page function triggered.");
 
     const studentExcuseRequestContainer = document.getElementById('student-excuse-request-container');
     
@@ -172,6 +172,14 @@ function ExcuseRequestDatatable()
                         <tr>
                             <th>
                                 <span class="flex items-center">
+                                    Msg.
+                                    <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4"/>
+                                    </svg>
+                                </span>
+                            </th>
+                            <th>
+                                <span class="flex items-center">
                                     Grade/Yr. & Section
                                     <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4"/>
@@ -256,7 +264,7 @@ function ExcuseRequestDatatable()
 
                 excuseRequestByStudent.forEach(excuseRequest => {
                     const row = document.createElement('tr');
-
+                
                     const attendanceCreatedAt = convertToAsiaManilaTime(excuseRequest.created_at);
                     
                     // Destructure data safely
@@ -264,22 +272,34 @@ function ExcuseRequestDatatable()
                     const { section: sectionData } = studentData || {};
                     const { teacher: teacherData = {} } = classScheduleData || {}; // Provide an empty object as fallback
                     const daysOfWeekData = classScheduleData?.days_of_week || [];
-                    
+                
+                    const teacherUserData = teacherData?.user || {}; // Destructure user from teacher data
+                     
                     // Convert start and end time to AM/PM format
                     const startTime = convertToAmPm(classScheduleData?.start_time);
                     const endTime = convertToAmPm(classScheduleData?.end_time);
-                
-                    // Handle missing teacher data with nullish coalescing
-                    const teacherFullName = `${teacherData.first_name ?? ''} ${teacherData.middle_name ?? ''} ${teacherData.last_name ?? ''} ${teacherData.name_extension ?? ''}`.trim();
+                    
+                    // Handle teacher full name, prioritizing teacher data, falling back to user data
+                    const teacherFullName = 
+                        `${teacherData.first_name ?? teacherUserData.name ?? 'Unknown Teacher'} ${teacherData.middle_name ?? ''} ${teacherData.last_name ?? ''} ${teacherData.name_extension ?? ''}`.trim();
                 
                     // Ensure student data exists before accessing properties
                     const studentFullName = `${studentData.first_name ?? ''} ${studentData.middle_name ?? ''} ${studentData.last_name ?? ''} ${studentData.name_extension ?? ''}`.trim();
-                
+                    
                     // Days of the week handling
                     const days = daysOfWeekData.map(day => day.day_name).join(', ');
                 
                     // Populate the table row
                     row.innerHTML = `
+                        <td class="text-center">
+                            <div class="flex justify-center">
+                                <button type="button" data-modal-target="excuse-request-message-modal" data-modal-toggle="excuse-request-message-modal" class="text-blue-500 hover:underline" data-excuse-request-message-id="${excuseRequest.id}">
+                                    <svg class="w-6 h-5 text-gray-800 dark:text-white hover:text-purple-500 transition-colors duration-150" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                                        <path fill-rule="evenodd" d="M5 3a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h11.5c.07 0 .14-.007.207-.021.095.014.193.021.293.021h2a2 2 0 0 0 2-2V7a1 1 0 0 0-1-1h-1a1 1 0 1 0 0 2v11h-2V5a2 2 0 0 0-2-2H5Zm7 4a1 1 0 0 1 1-1h.5a1 1 0 1 1 0 2H13a1 1 0 0 1-1-1Zm0 3a1 1 0 0 1 1-1h.5a1 1 0 1 1 0 2H13a1 1 0 0 1-1-1Zm-6 4a1 1 0 0 1 1-1h6a1 1 0 1 1 0 2H7a1 1 0 0 1-1-1Zm0 3a1 1 0 0 1 1-1h6a1 1 0 1 1 0 2H7a1 1 0 0 1-1-1ZM7 6a1 1 0 0 0-1 1v3a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1H7Zm1 3V8h1v1H8Z" clip-rule="evenodd"/>
+                                    </svg>
+                                </button>
+                            </div>
+                        </td>
                         <td>${sectionData?.grade_or_year_level ?? 'N/A'}-${sectionData?.section_name ?? 'N/A'}</td>
                         <td>${classScheduleData?.subject ?? 'No Subject'} (${classScheduleData?.subject_code ?? ''}) - ${startTime ?? 'N/A'}-${endTime ?? 'N/A'} (${days || 'No Days'})</td>
                         <td>${studentFullName}</td>
@@ -293,17 +313,14 @@ function ExcuseRequestDatatable()
                         </td>
                         <td>${excuseRequestStatusData?.status ?? 'No Status'}</td>
                         <td>${attendanceCreatedAt}</td>
-                        <td>
-                            <button type="button" data-modal-target="excuse-request-message-modal" data-modal-toggle="excuse-request-message-modal" class="text-blue-500 hover:underline" data-excuse-message-request-id="${excuseRequest.id}">
-                                <svg class="w-6 h-5 text-gray-800 dark:text-white hover:text-purple-500 transition-colors duration-150" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
-                                    <path fill-rule="evenodd" d="M5 3a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h11.5c.07 0 .14-.007.207-.021.095.014.193.021.293.021h2a2 2 0 0 0 2-2V7a1 1 0 0 0-1-1h-1a1 1 0 1 0 0 2v11h-2V5a2 2 0 0 0-2-2H5Zm7 4a1 1 0 0 1 1-1h.5a1 1 0 1 1 0 2H13a1 1 0 0 1-1-1Zm0 3a1 1 0 0 1 1-1h.5a1 1 0 1 1 0 2H13a1 1 0 0 1-1-1Zm-6 4a1 1 0 0 1 1-1h6a1 1 0 1 1 0 2H7a1 1 0 0 1-1-1Zm0 3a1 1 0 0 1 1-1h6a1 1 0 1 1 0 2H7a1 1 0 0 1-1-1ZM7 6a1 1 0 0 0-1 1v3a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1H7Zm1 3V8h1v1H8Z" clip-rule="evenodd"/>
-                                </svg>
-                            </button>
-                            <button type="button" data-modal-target="delete-excuse-message-request-modal" data-modal-toggle="delete-excuse-message-request-modal" class="text-red-500 hover:underline" data-excuse-message-request-id="${excuseRequest.id}">
-                                <svg class="w-6 h-5 text-gray-800 dark:text-white hover:text-red-500 transition-colors duration-150" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
-                                    <path fill-rule="evenodd" d="M8.586 2.586A2 2 0 0 1 10 2h4a2 2 0 0 1 2 2v2h3a1 1 0 1 1 0 2v12a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V8a1 1 0 0 1 0-2h3V4a2 2 0 0 1 .586-1.414ZM10 6h4V4h-4v2Zm1 4a1 1 0 1 0-2 0v8a1 1 0 1 0 2 0v-8Zm4 0a1 1 0 1 0-2 0v8a1 1 0 1 0 2 0v-8Z" clip-rule="evenodd"/>
-                                </svg>
-                            </button>
+                        <td class="text-center">
+                            <div class="flex justify-center">
+                                <button type="button" data-modal-target="delete-excuse-message-request-modal" data-modal-toggle="delete-excuse-message-request-modal" class="text-red-500 hover:underline" data-excuse-request-message-id="${excuseRequest.id}">
+                                    <svg class="w-6 h-5 text-gray-800 dark:text-white hover:text-red-500 transition-colors duration-150" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                                        <path fill-rule="evenodd" d="M8.586 2.586A2 2 0 0 1 10 2h4a2 2 0 0 1 2 2v2h3a1 1 0 1 1 0 2v12a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V8a1 1 0 0 1 0-2h3V4a2 2 0 0 1 .586-1.414ZM10 6h4V4h-4v2Zm1 4a1 1 0 1 0-2 0v8a1 1 0 1 0 2 0v-8Zm4 0a1 1 0 1 0-2 0v8a1 1 0 1 0 2 0v-8Z" clip-rule="evenodd"/>
+                                    </svg>
+                                </button>
+                            </div>
                         </td>
                     `;
                 
@@ -321,82 +338,87 @@ function ExcuseRequestDatatable()
                 
                 // Hide the loader after rendering the table
                 document.getElementById('table-loader').style.display = 'none';
-                
-                
-
-                new DataTable('#excuseRequestByStudentTable', {
-                    searchable: true,
-                    fixedHeight: true,
-                    sortable: true,
-                    perPage: 5,
-                });
-
-                document.getElementById('table-loader').style.display = 'none';
 
             } else {
                 const tableHTML = `
                     <table id="excuseRequestByStudentTable" class="bg-gray-50 dark:bg-gray-800">
-                        <thead>
-                            <tr>
-                                <th>
-                                    <span class="flex items-center">
-                                        Grade/Yr. & Section
-                                        <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4"/>
-                                        </svg>
-                                    </span>
-                                </th>
-                                <th>
-                                    <span class="flex items-center">
-                                        Class Schedule
-                                        <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4"/>
-                                        </svg>
-                                    </span>
-                                </th>
-                                <th>
-                                    <span class="flex items-center">
-                                        From
-                                        <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4"/>
-                                        </svg>
-                                    </span>
-                                </th>
-                                <th>
-                                    <span class="flex items-center">
-                                    To
-                                        <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4"/>
-                                        </svg>
-                                    </span>
-                                </th>
-                                <th>
-                                    <span class="flex items-center">
-                                        Proof (Link)
-                                        <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4"/>
-                                        </svg>
-                                    </span>
-                                </th>
-                                <th>
-                                    <span class="flex items-center">
-                                        Status
-                                        <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4"/>
-                                        </svg>
-                                    </span>
-                                </th>
-                                <th>
-                                    <span class="flex items-center">
-                                        Action
-                                        <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4"/>
-                                        </svg>
-                                    </span>
-                                </th>
-                            </tr>
-                        </thead>
-                    <tbody></tbody>
+                    <thead>
+                        <tr>
+                            <th>
+                                <span class="flex items-center">
+                                    Msg.
+                                    <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4"/>
+                                    </svg>
+                                </span>
+                            </th>
+                            <th>
+                                <span class="flex items-center">
+                                    Grade/Yr. & Section
+                                    <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4"/>
+                                    </svg>
+                                </span>
+                            </th>
+                            <th>
+                                <span class="flex items-center">
+                                    Class Schedule
+                                    <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4"/>
+                                    </svg>
+                                </span>
+                            </th>
+                            <th>
+                                <span class="flex items-center">
+                                    From
+                                    <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4"/>
+                                    </svg>
+                                </span>
+                            </th>
+                            <th>
+                                <span class="flex items-center">
+                                   To
+                                    <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4"/>
+                                    </svg>
+                                </span>
+                            </th>
+                            <th>
+                                <span class="flex items-center">
+                                    Proof (Link)
+                                    <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4"/>
+                                    </svg>
+                                </span>
+                            </th>
+                            <th>
+                                <span class="flex items-center">
+                                    Status
+                                    <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4"/>
+                                    </svg>
+                                </span>
+                            </th>
+                            <th>
+                                <span class="flex items-center">
+                                    Created
+                                    <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4"/>
+                                    </svg>
+                                </span>
+                            </th>
+                            <th>
+                                <span class="flex items-center">
+                                    Action
+                                    <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4"/>
+                                    </svg>
+                                </span>
+                            </th>
+                        </tr>
+                    </thead>
+                <tbody></tbody>
                 </table>`;
 
                 document.getElementById('student-excuse-request-container').innerHTML = tableHTML;
@@ -422,40 +444,42 @@ function ExcuseRequestDatatable()
 
     /* Excuse Request Message - Modal Instance */
 
-    const ExcuseMessageRequestModalContainer = document.getElementById('excuse-request-message-modal-container');
+    const excuseMessageRequestModalContainer = document.getElementById('excuse-request-message-modal-container');
 
-    if (ExcuseMessageRequestModalContainer) {
-        let excuseMessgaeRequestId; // To hold the ID of the excuse request
+    if (excuseMessageRequestModalContainer) {
+        let excuseRequestMessageId; // To hold the ID of the excuse request
 
         document.addEventListener('click', function (e) {
             if (e.target.closest('[data-modal-toggle="excuse-request-message-modal"]')) {
                 e.preventDefault();
 
                 // Get the excuse request ID
-                excuseMessgaeRequestId = e.target.closest('button').getAttribute('data-excuse-message-request-id');
+                excuseRequestMessageId = e.target.closest('button').getAttribute('data-excuse-request-message-id');
 
                 // Create modal HTML
                 const modalHTML = `
-                    <div id="excuse-request-message-modal" tabindex="-1" class="overflow-y-auto overflow-x-hidden fixed inset-0 z-50 flex justify-center items-center w-full h-full bg-gray-800 bg-opacity-50">
-                        <div class="relative p-4 w-full max-w-lg">
-                            <div class="relative bg-white rounded-lg shadow-lg border border-gray-200 bg-opacity-80 dark:bg-gray-800 dark:bg-opacity-90 transform scale-105 p-6" style="background-image: url('https://www.transparenttextures.com/patterns/white-paper.png');">
-                                <button type="button" class="absolute top-3 right-3 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-full w-8 h-8 flex justify-center items-center" data-modal-hide="excuse-request-message-modal">
-                                    <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
-                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
-                                    </svg>
-                                    <span class="sr-only">Close modal</span>
-                                </button>
-                                <div class="p-6 text-left">
-                                    <div id="excuse-message-details" class="bg-white p-6 rounded-lg shadow-sm font-light text-gray-700 dark:text-gray-200" style="font-family: 'Cursive', serif; line-height: 1.6; border: 1px dashed gray;">
-                                        <!-- Excuse message details will be injected here -->
-                                    </div>
+                <div id="excuse-request-message-modal" tabindex="-1" class="overflow-y-auto overflow-x-hidden fixed inset-0 z-50 flex justify-center items-center w-full h-full bg-gray-800 bg-opacity-50">
+                    <div class="relative p-4 w-full max-w-lg">
+                        <div class="relative bg-white rounded-lg shadow-lg border border-gray-200 bg-opacity-80 dark:bg-gray-800 dark:bg-opacity-90 transform scale-105 p-6"
+                            style="background-color: #ffffff; background-image: url('https://www.transparenttextures.com/patterns/lined-paper.png'); background-repeat: repeat;">
+                            <button type="button" class="absolute top-3 right-3 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-full w-8 h-8 flex justify-center items-center" data-modal-hide="excuse-request-message-modal">
+                                <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                                </svg>
+                                <span class="sr-only">Close modal</span>
+                            </button>
+                            <div class="p-6 text-left">
+                                <div id="excuse-message-details" class="bg-white p-6 rounded-lg shadow-sm font-light text-gray-700 dark:text-gray-200" 
+                                    style="font-family: 'Cursive', serif; line-height: 1.6; border: 1px dashed gray;">
+                                    <!-- Excuse message details will be injected here -->
                                 </div>
                             </div>
                         </div>
-                    </div>`;
+                    </div>
+                </div>`;
 
                 // Inject the modal into the container
-                ExcuseMessageRequestModalContainer.innerHTML = modalHTML;
+                excuseMessageRequestModalContainer.innerHTML = modalHTML;
 
                 // Show the modal
                 const excuseRequestModalEl = document.getElementById('excuse-request-message-modal');
@@ -463,7 +487,7 @@ function ExcuseRequestDatatable()
                 excuseRequestModal.show();
 
                 // Handle fetching excuse request details
-                axios.get(`/student/get-excuse-request-message/${excuseMessgaeRequestId}`)
+                axios.get(`/student/get-excuse-request-message/${excuseRequestMessageId}`)
                     .then(response => {
                         const excuseRequest = response.data; // Assuming the response structure
                         const excuseMessageDetailsContainer = document.getElementById('excuse-message-details');
@@ -482,7 +506,7 @@ function ExcuseRequestDatatable()
                 // Handle modal close
                 document.querySelector('[data-modal-hide="excuse-request-message-modal"]').addEventListener('click', function () {
                     excuseRequestModal.hide();
-                    ExcuseMessageRequestModalContainer.innerHTML = ''; // Clear modal content
+                    excuseMessageRequestModalContainer.innerHTML = ''; // Clear modal content
                 });
             }
         });
@@ -499,14 +523,14 @@ function ExcuseRequestDatatable()
             if (e.target.closest('[data-modal-toggle="delete-excuse-message-request-modal"]')) {
                 e.preventDefault();
                 
-                deleteExcuseRequestId = e.target.closest('button').getAttribute('data-excuse-message-request-id');
+                deleteExcuseRequestId = e.target.closest('button').getAttribute('data-excuse-request-message-id');
 
                 // Create modal HTML
                 const modalHTML = `
                     <div id="delete-excuse-message-request-modal" tabindex="-1" class="overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 flex justify-center items-center w-full h-full">
                         <div class="relative p-6 w-full max-w-md max-h-full">
                             <div class="relative bg-white rounded-lg shadow-lg dark:bg-gray-700">
-                                <button type="button" class="absolute top-3 right-3 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 flex justify-center items-center" data-modal-hide="delete-excuse-message-request-modal">
+                                <button type="button" class="absolute top-3 right-3 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-full text-sm w-8 h-8 flex justify-center items-center" data-modal-hide="delete-excuse-message-request-modal">
                                     <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
                                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
                                     </svg>

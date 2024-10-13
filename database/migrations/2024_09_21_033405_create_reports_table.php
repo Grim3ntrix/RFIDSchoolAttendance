@@ -19,18 +19,18 @@ return new class extends Migration
             $table->foreignId('student_id')
                   ->constrained('students')
                   ->onDelete('cascade');
-            $table->foreignId('class_schedule_id')
-                  ->constrained('class_schedules')
-                  ->onDelete('cascade');
+            // $table->foreignId('class_schedule_id')
+            //       ->constrained('class_schedules')
+            //       ->onDelete('cascade');
             $table->foreignId('quarter_id')
                   ->constrained('quarters')
                   ->onDelete('cascade');
-            $table->decimal('attendance_percentage');
-            $table->integer('total_classes');
-            $table->integer('attended_classes');
-            $table->integer('absent_classes');
-            $table->integer('late_classes');
-            $table->integer('excuse_classes');
+
+            $table->integer('total_classes')->default(0);
+            $table->integer('attended_classes')->default(0);
+            $table->integer('absent_classes')->default(0);
+            $table->integer('late_classes')->default(0);
+            $table->integer('excuse_classes')->nullable()->default(0);
             $table->date('start_date');
             $table->date('end_date');
             $table->timestamps();

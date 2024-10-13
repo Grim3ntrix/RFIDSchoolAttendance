@@ -21,10 +21,10 @@ class Report extends Model
         return $this->belongsTo(Student::class, 'student_id');
     }
 
-    public function classSchedule()
-    {
-        return $this->belongsTo(ClassSchedule::class, 'class_schedule_id');
-    }
+    // public function classSchedule()
+    // {
+    //     return $this->belongsTo(ClassSchedule::class, 'class_schedule_id');
+    // }
 
     public function quarter()
     {

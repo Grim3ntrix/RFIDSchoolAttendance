@@ -1,7 +1,7 @@
 import { DataTable } from "simple-datatables";
 
 export function overview() {
-    console.log("Overview initialized!");
+    // console.log("Overview initialized!");
 
     const totalSectionElement   = document.getElementById('total-section');
     const totalSubjectElement   = document.getElementById('total-subject');

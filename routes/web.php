@@ -5,17 +5,21 @@ use App\Http\Controllers\JsonRequests\{
     ClassScheduleRequest,
     DaysOfWeekRequest,
     ExcuseMessageRequest,
-    ExcuseStudentRequest,
+    StudentExcuseRequest,
     GeofenceBoundaryMapRequest,
     GeofenceBoundaryRequest,
     GeofenceBoundaryStatusRequest,
-    ReviewExcuseStudentRequest,
+    QuarterRequest,
+    ReviewStudentExcuseRequest,
     SectionRequest,
     StudentBySectionRequest,
+    StudentClassScheduleExcuseRequest,
     StudentLocationByTeacherRequest,
     StudentLocationRequest,
+    StudentPendingExcuseRequestCount,
     StudentRequest,
-    TeacherOverviewRequest
+    TeacherOverviewRequest,
+    TeacherPendingExcuseRequestCount
 };
 use App\Http\Controllers\{
     ProfileController
@@ -29,7 +33,10 @@ use App\Http\Controllers\SuperAdmin\{
     GeofenceBoundaryController
 };
 use App\Http\Controllers\Teacher\{
+    ApproveStudentExcuseRequestController,
+    AttendanceReportController,
     ClassScheduleController,
+    DeclineStudentExcuseRequestController,
     ExcuseController as TeacherExcuseController,
     ReportController,
     RFIDAttendanceController,
@@ -124,7 +131,9 @@ Route::group(['middleware' => ['auth', 'verified', 'role:teacher'], 'prefix' => 
     /* Reports Routes */
     
     Route::get('students/{section}', [StudentBySectionRequest::class, 'getStudentBySection'])->name('students.bysection');
+    Route::get('quarters', [QuarterRequest::class, 'getQuarters'])->name('quarters.get');
     Route::get('reports', [ReportController::class, 'index'])->name('reports.index');
+    Route::get('/attendance-quarterly-report', [AttendanceReportController::class, 'generateReport']);
 
     /* Student Location Routes */
     
@@ -133,16 +142,19 @@ Route::group(['middleware' => ['auth', 'verified', 'role:teacher'], 'prefix' => 
     Route::get('student-locations/request', [StudentLocationByTeacherRequest::class, 'getStudentLocationsByTeacher'])->name('student_locations.request');
     Route::get('student-locations', [StudentLocationController::class, 'index'])->name('student_locations.index');
 
-    /* Teacher Excuse */
+    /* Teacher Excuse to Review*/
 
-    Route::get('/get-excuse-request-by-student-to-review', [ReviewExcuseStudentRequest::class, 'getStudentExcuseRequestToReview'])->name('get_excuse_request_by_student_to_review.get');
+    Route::get('/get-excuse-request-by-student-to-review', [ReviewStudentExcuseRequest::class, 'getStudentExcuseRequestToReview'])->name('get_excuse_request_by_student_to_review.get');
+    Route::get('/get-excuse-request-message/{id}', [ExcuseMessageRequest::class, 'getExcuseMessageRequest'])->name('get_teacher_excuse_message_request.get');
+    Route::get('/get-excuse-request-class-schedule-attendance/{classSchdeuleId}', [StudentClassScheduleExcuseRequest::class, 'getExcuseRequestClassScheduleAttendance'])->name('get_teacher_excuse_request_class_scheule_attendance.get');
+    Route::post('/mark-excuse-student-attendances/{attendanceId}', [ApproveStudentExcuseRequestController::class, 'attendanceMarkExcuse'])->name('stuudent_mark_excuse.update');
+    Route::get('/count-pending-excuse-request', [TeacherPendingExcuseRequestCount::class, 'countPendingExcuseRequests'])->name('teacher_count_pending_excuse_requests.get');
+    Route::post('/decline-excuse-request/{classScheduleId}', [DeclineStudentExcuseRequestController::class, 'declineStudentExcuseRequest'])->name('decline_student_excuse_request.update');
 
     Route::resource('excuses', TeacherExcuseController::class)->names([
         'index'     => 'teacher.excuses.index',
-        'store'     => 'teacher.excuses.store',
-        'destroy'   => 'teacher.excuses.destroy'
     ])->only([
-        'index', 'store', 'destroy'
+        'index'
     ]);
 });
 
@@ -158,9 +170,10 @@ Route::group(['middleware' => ['auth', 'verified', 'role:student'], 'prefix' => 
 
     /* Student Excuse */
 
-    Route::get('/get-class-schedule-by-student', [ExcuseStudentRequest::class, 'getClassScheduleByStudent'])->name('class_schedule_by_student.get');
-    Route::get('/get-excuse-request-by-student', [ExcuseStudentRequest::class, 'getExcuseRequestByStudent'])->name('get_excuse_request_by_student.get');
-    Route::get('/get-excuse-request-message/{id}', [ExcuseMessageRequest::class, 'getExcuseMessageRequest'])->name('get_excuse_message_request.get');
+    Route::get('/get-class-schedule-by-student', [StudentExcuseRequest::class, 'getClassScheduleByStudent'])->name('class_schedule_by_student.get');
+    Route::get('/get-excuse-request-by-student', [StudentExcuseRequest::class, 'getExcuseRequestByStudent'])->name('get_excuse_request_by_student.get');
+    Route::get('/get-excuse-request-message/{id}', [ExcuseMessageRequest::class, 'getExcuseMessageRequest'])->name('get_student_excuse_message_requestt.get');
+    Route::get('/count-pending-excuse-request', [StudentPendingExcuseRequestCount::class, 'countPendingExcuseRequests'])->name('student_count_pending_excuse_requests.get');
 
     Route::resource('excuses', StudentExcuseController::class)->names([
         'index'     => 'student.excuses.index',

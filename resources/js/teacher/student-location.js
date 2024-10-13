@@ -108,15 +108,20 @@ export function studentLocationPage() {
                         const user = student.user;
                         const userStatus = user.userstatus ? user.userstatus.status : 'N/A';
 
-                        // Check if the student has any locations and their statuses
+                        // Initialize student location status as 'unavailable'
                         let studentLocationStatus = 'unavailable';
-                        if (student.student_location.length > 0) {
-                            // Get the most recent location status
-                            const recentLocation = student.student_location[student.student_location.length - 1];
-                            studentLocationStatus = recentLocation.student_location_status ? 
-                                recentLocation.student_location_status.status : 'unknown'; // Set status or default to unknown
+
+                        // If user is online, check if the student has any locations and their statuses
+                        if (userStatus !== 'offline') {
+                            if (student.student_location.length > 0) {
+                                // Get the most recent location status
+                                const recentLocation = student.student_location[student.student_location.length - 1];
+                                studentLocationStatus = recentLocation.student_location_status ? 
+                                    recentLocation.student_location_status.status : 'unknown'; // Set status or default to unknown
+                            }
                         }
 
+                        const buttonDisabled = userStatus === 'offline' ? 'disabled cursor-not-allowed text-gray-400' : 'text-blue-500 hover:underline';
                         const row = document.createElement('tr');
                         row.innerHTML = `
                             <td>${student.school_id}</td>
@@ -125,16 +130,15 @@ export function studentLocationPage() {
                             <td>${sectionName}</td>
                             <td>${gradeOrYearLevel}</td>
                             <td>${userStatus}</td>
-                            <td>${studentLocationStatus}</td> <!-- Updated this line -->
+                            <td>${studentLocationStatus}</td>
                             <td>
-                                <button type="button" data-modal-target="student-location-modal" data-modal-toggle="student-location-modal" class="text-blue-500 hover:underline" data-student-id="${student.id}">
-                                    <svg class="w-7 h-6 text-gray-800 dark:text-white hover:text-blue-500 transition-colors duration-150" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                                <button type="button" ${userStatus === 'offline' ? 'disabled' : ''} data-modal-target="student-location-modal" data-modal-toggle="student-location-modal" class="${buttonDisabled}" data-student-id="${student.id}">
+                                    <svg class="w-7 h-6 ${userStatus === 'offline' ? 'text-gray-400' : 'text-gray-800 dark:text-white hover:text-blue-500'} transition-colors duration-150" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
                                         <path fill-rule="evenodd" d="M11.906 1.994a8.002 8.002 0 0 1 8.09 8.421 7.996 7.996 0 0 1-1.297 3.957.996.996 0 0 1-.133.204l-.108.129c-.178.243-.37.477-.573.699l-5.112 6.224a1 1 0 0 1-1.545 0L5.982 15.26l-.002-.002a18.146 18.146 0 0 1-.309-.38l-.133-.163a.999.999 0 0 1-.13-.202 7.995 7.995 0 0 1 6.498-12.518ZM15 9.997a3 3 0 1 1-5.999 0 3 3 0 0 1 5.999 0Z" clip-rule="evenodd"/>
                                     </svg>
                                 </button>
                             </td>
                         `;
-                
                         tbody.appendChild(row);
                     });
                 });
@@ -260,7 +264,7 @@ if (studentLocationModalContainer) {
                 <div id="student-location-modal" tabindex="-1" class="overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 flex justify-center items-center w-full h-full">
                     <div class="relative p-6 w-full max-w-4xl max-h-full">
                         <div class="relative bg-white rounded-lg shadow-lg dark:bg-gray-700">
-                            <button type="button" class="absolute top-3 right-3 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 flex justify-center items-center" data-modal-hide="student-location-modal">
+                            <button type="button" class="absolute top-3 right-3 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-full text-sm w-8 h-8 flex justify-center items-center" data-modal-hide="student-location-modal">
                                 <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
                                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
                                 </svg>
@@ -323,8 +327,17 @@ if (studentLocationModalContainer) {
                         const studentLat = parseFloat(studentLocation.latitude);
                         const studentLng = parseFloat(studentLocation.longitude);
 
-                        // Create a marker for the student's location
-                        const studentMarker = L.marker([studentLat, studentLng])
+                        const customIcon = L.icon({
+                            iconUrl: '/images/marker-icon.png',
+                            shadowUrl: '/images/marker-shadow.png',
+                            iconSize: [25, 41], // Default size
+                            iconAnchor: [12, 41], // Point of the icon which will correspond to marker's location
+                            popupAnchor: [1, -34], // Point from which the popup should open relative to the iconAnchor
+                            shadowSize: [41, 41]  // Size of the shadow
+                        });
+                        
+                        // Use the custom icon for the marker
+                        const studentMarker = L.marker([studentLat, studentLng], { icon: customIcon })
                             .addTo(map);
 
                         // Check if the student is within the boundary
