@@ -15,6 +15,7 @@
         <meta name="author" content="Richard K. Samberi">
 
         <!-- Open Graph Meta Tags -->
+        <meta property="fb:app_id" content="1025642422577106" />
         <meta property="og:title" content="{{ config('app.name', 'RFID School Attendance') }}" />
         <meta property="og:description" content="Manage school attendance and track student locations using RFID technology and OpenStreetMap." />
         <meta property="og:image" content="{{ asset('images/mnhs.png') }}" />
