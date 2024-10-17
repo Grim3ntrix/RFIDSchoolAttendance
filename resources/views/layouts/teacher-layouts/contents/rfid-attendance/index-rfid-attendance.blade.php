@@ -4,9 +4,9 @@
             <!-- Time Counting Div -->
             <div class="p-4">
                <div class="flex items-center justify-center h-32 p-4 rounded-lg bg-gradient-to-r from-green-500 via-emerald-500 to-teal-500 shadow-lg">
-                  <div class="text-center">
-                  <p id="current-time" class="font-bold text-6xl text-white">00:00:00 --</p>
-                  <p id="current-date" class="font-normal text-lg text-white mt-2">-- -- --</p>
+                  <div class="text-center w-full sm:w-auto">
+                     <p id="current-time" class="font-bold text-5xl sm:text-6xl md:text-6xl text-white truncate">00:00:00 --</p>
+                     <p id="current-date" class="font-normal text-base sm:text-lg md:text-xl text-white mt-2 truncate">-- -- --</p>
                   </div>
                </div>
 

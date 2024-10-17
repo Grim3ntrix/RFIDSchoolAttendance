@@ -13,8 +13,8 @@ class Quarter extends Model
         'quarter_name'
     ];
 
-    public function reports()
-    {
-        return $this->hasMany(Report::class, 'quarter_id');
-    }
+    // public function reports()
+    // {
+    //     return $this->hasMany(Report::class, 'quarter_id');
+    // }
 }

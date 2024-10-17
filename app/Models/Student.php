@@ -48,10 +48,10 @@ class Student extends Model
         return $this->hasMany(ExcuseRequest::class, 'student_id');
     }
 
-    public function report()
-    {
-        return $this->hasMany(Report::class, 'student_id');
-    }
+    // public function report()
+    // {
+    //     return $this->hasMany(Report::class, 'student_id');
+    // }
 
     public function studentLocation()
     {

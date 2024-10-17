@@ -116,12 +116,16 @@ class SectionController extends Controller
      */
     public function destroy(string $id)
     {
-        $user = Student::where('section_id', $id)->first();
-        $deleted = User::findOrFail($user->user_id)->delete();
+        # Check if any student is associated with this section
+        $student = Student::where('section_id', $id)->first();
 
-        if ($deleted) {
-        Section::findOrFail($id)->delete();
+        # If a student is found, delete the associated user account
+        if ($student) {
+            User::find($student->user_id)->delete();
         }
+
+        # Proceed to delete the section regardless of whether a student was found
+        Section::findOrFail($id)->delete();
 
         return response()->json(['success' => true]);
     }

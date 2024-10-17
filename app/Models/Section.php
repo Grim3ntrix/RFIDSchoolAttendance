@@ -72,8 +72,8 @@ class Section extends Model
         return $this->hasMany(ClassSchedule::class, 'section_id');
     }
 
-    public function report()
-    {
-        return $this->hasMany(Report::class, 'section_id');
-    }
+    // public function report()
+    // {
+    //     return $this->hasMany(Report::class, 'section_id');
+    // }
 }

@@ -153,7 +153,7 @@ export function initializeTeacherDatatable() {
                     const row = document.createElement('tr');
                     row.innerHTML = `
                         <td>${teacher.teacher_id}</td>
-                        <td>${teacher.first_name} ${teacher.middle_name} ${teacher.last_name} ${teacher.name_extension ?? ''}</td>
+                        <td>${teacher.first_name} ${teacher.middle_name ?? ''} ${teacher.last_name} ${teacher.name_extension ?? ''}</td>
                         <td>${teacher.sex}</td>
                         <td>${teacher.birth_date ?? 'N/A'}</td>
                         <td>${teacher.address}</td>

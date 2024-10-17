@@ -281,7 +281,7 @@ export function rfidAttendance() {
                     // Map attendance statuses to specific badge color classes
                     const attendanceBadgeMap = {
                         'present': 'bg-green-100 text-green-800 dark:bg-gray-700 dark:text-green-400 border border-green-400',
-                        'excused': 'bg-yellow-100 text-yellow-800 dark:bg-gray-700 dark:text-yellow-300 border border-yellow-300',
+                        'excuse': 'bg-yellow-100 text-yellow-800 dark:bg-gray-700 dark:text-yellow-300 border border-yellow-300',
                         'absent': 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-400 border border-gray-500',
                         'late': 'bg-red-100 text-red-800 dark:bg-gray-700 dark:text-red-400 border border-red-400',
                     };
@@ -321,7 +321,7 @@ export function rfidAttendance() {
                         searchable: true,
                         fixedHeight: true,
                         sortable: true,
-                        perPage: 5,
+                        perPage: 10,
                     });
 
                     document.getElementById('table-loader').style.display = 'none';
@@ -400,7 +400,7 @@ export function rfidAttendance() {
                         searchable: true,
                         fixedHeight: true,
                         sortable: true,
-                        perPage: 5,
+                        perPage: 10,
                     });
 
                     document.getElementById('table-loader').style.display = 'none';

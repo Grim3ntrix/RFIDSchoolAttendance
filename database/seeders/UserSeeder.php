@@ -22,7 +22,7 @@ class UserSeeder extends Seeder
             'name'      => 'Super Admin',
             'email'     => 'superadmin@gmail.com',
             'password'  => Hash::make('rfidschoolattendance@superadmin.0nline'),
-            'status_id' => 1,
+            'status_id' => 2,
         ]);
 
         $superadmin->assignRole('superadmin');
@@ -31,29 +31,29 @@ class UserSeeder extends Seeder
 
         /* Teacher Seeder */
 
-        $teacher = User::factory()->create([
-            'name'      => 'Teacher',
-            'email'     => 'teacher@gmail.com',
-            'password'  => Hash::make('rfidschoolattendance@teacher.0nline'),
-            'status_id' => 1,
-        ]);
+        // $teacher = User::factory()->create([
+        //     'name'      => 'Teacher',
+        //     'email'     => 'teacher@gmail.com',
+        //     'password'  => Hash::make('rfidschoolattendance@teacher.0nline'),
+        //     'status_id' => 1,
+        // ]);
 
-        $teacher->assignRole('teacher');
+        // $teacher->assignRole('teacher');
 
-        Teacher::create([
-            'user_id' => $teacher->id,
-            'teacher_id' => 0,
-        ]);
+        // Teacher::create([
+        //     'user_id' => $teacher->id,
+        //     'teacher_id' => 0,
+        // ]);
 
         /* Student Seeder */
 
-        $student = User::factory()->create([
-            'name'      => 'Student',
-            'email'     => 'student@gmail.com',
-            'password'  => Hash::make('rfidschoolattendance@student.0nline'),
-            'status_id' => 1,
-        ]);
+        // $student = User::factory()->create([
+        //     'name'      => 'Student',
+        //     'email'     => 'student@gmail.com',
+        //     'password'  => Hash::make('rfidschoolattendance@student.0nline'),
+        //     'status_id' => 1,
+        // ]);
 
-        $student->assignRole('student');
+        // $student->assignRole('student');
     }
 }

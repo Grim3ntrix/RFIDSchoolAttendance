@@ -21,8 +21,8 @@ export function studentWatchPosition() {
                         
                         const formattedTime = dayjs(position.timestamp).format('YYYY-MM-DD HH:mm:ss');
                         
-                        console.log(`Current Position: Latitude: ${latitude}, Longitude: ${longitude}, Accuracy: ${accuracy} meters`);
-                        console.log(`Timestamp: ${formattedTime}`);
+                        // console.log(`Current Position: Latitude: ${latitude}, Longitude: ${longitude}, Accuracy: ${accuracy} meters`);
+                        // console.log(`Timestamp: ${formattedTime}`);
 
                         // Make the Axios request to store the location in the backend
                         axios.post('/student/student-locations', {
@@ -30,7 +30,7 @@ export function studentWatchPosition() {
                             longitude: longitude,
                         })
                         .then(response => {
-                            console.log('Location stored successfully:', response.data);
+                            // console.log('Location stored successfully:', response.data);
                         })
                         .catch(error => {
                             console.error('Error storing location:', error);

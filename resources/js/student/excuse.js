@@ -333,7 +333,7 @@ function ExcuseRequestDatatable()
                     searchable: true,
                     fixedHeight: true,
                     sortable: true,
-                    perPage: 5,
+                    perPage: 10,
                 });
                 
                 // Hide the loader after rendering the table
@@ -429,7 +429,7 @@ function ExcuseRequestDatatable()
                     searchable: true,
                     fixedHeight: true,
                     sortable: true,
-                    perPage: 5,
+                    perPage: 10,
                 });
 
                 document.getElementById('table-loader').style.display = 'none';

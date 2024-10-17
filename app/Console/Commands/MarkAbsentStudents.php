@@ -47,6 +47,10 @@ class MarkAbsentStudents extends Command
 
     private function getCurrentDayId()
     {
+        # Info: 
+            # 1. dayOfWeek() means, 0 (for Sunday) through 6 (for Saturday).
+            # 2. dayOfWeekIso() means, 1 (for Monday) through 7 (for Sunday).
+
         $dayMapping = [
             0 => 1, // Sunday
             1 => 2, // Monday
@@ -102,7 +106,10 @@ class MarkAbsentStudents extends Command
 
             if (!empty($attendancesToCreate)) {
                 Attendance::insert($attendancesToCreate);
-                Log::info('Attendance records inserted', ['record_count' => count($attendancesToCreate)]);
+                Log::info('Attendance records inserted successfully.', ['record_count' => count($attendancesToCreate)]);
+                $this->info('Successfully inserted attendance records for absent students.');
+            } else {
+                $this->warn('No attendance records were provided for insertion.');
             }
         });
     }

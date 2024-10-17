@@ -52,26 +52,26 @@
 
     <div style="padding: 20px; max-width: 1000px;">
         <header style="text-align: center; margin-bottom: 10px;">
-            <h1>Quarterly Attendance Report</h1>
-            <p>Matalom National High School</p>
-            <!-- <p>School Year: 2023-2024</p> -->
+            <p style="background-color: #1877F2; border-radius: 20px; font-weight: 500; padding: 2px 6px; color: white; font-family: Arial; font-size: 12px; text-align: center; display: inline-flex; align-items: center; margin: 0;">
+                rfidschoolattendance.online
+            </p>
+            <h1 style="font-size: 24px; font-family: Arial; margin: 10px 0;">Quarterly Attendance Report</h1>
+            <p style="font-size: 14px">Matalom National High School</p>
         </header>
 
         <section style="margin-bottom: 10px;">
             <h2>Student Information</h2>
             <div style="display: flex; justify-content: space-between;">
                 <div>
-                    <p><strong>Name:</strong> {{ $student['name'] }}</p>
-                    <p><strong>Grade Level:</strong> {{ $student['grade_level'] }}</p>
-                    <p><strong>Section:</strong> {{ $student['section'] }}</p>
+                    <p><strong>Name:</strong> {{ $generatedReports['student']->first_name }} {{ $generatedReports['student']->last_name }}</p>
+                    <p><strong>Grade Level:</strong> {{ $generatedReports['section']->grade_or_year_level }}</p>
+                    <p><strong>Section:</strong> {{ $generatedReports['section']->section_name }}</p>
                 </div>
                 <div>
-                    <p><strong>Teacher:</strong> {{ $student['teacher'] }}</p>
-                    <!-- <p><strong>School:</strong> {{ $student['school'] }}</p> -->
-                    <!-- <p><strong>School Year:</strong> 2023-2024</p> -->
-                    <p><strong>Quarter:</strong> </p>
-                    <p><strong>Start Date:</strong> </p>
-                    <p><strong>End Date:</strong> </p>
+                    <p><strong>Teacher:</strong> {{ $generatedReports['teacher']->name }}</p>
+                    <p><strong>Quarter:</strong> {{ $generatedReports['quarter'] }}</p>
+                    <p><strong>Start Date:</strong> {{ $generatedReports['quarter_start'] }}</p>
+                    <p><strong>End Date:</strong> {{ $generatedReports['quarter_end'] }}</p>
                 </div>
             </div>
         </section>
@@ -81,47 +81,34 @@
             <table>
                 <thead>
                     <tr>
-                        <!-- <th>Quarter</th> -->
                         <th>Class Schedule</th>
                         <th>Days Present</th>
                         <th>Days Absent</th>
                         <th>Late Classes</th>
                         <th>Excused Classes</th>
-                        <!-- <th>Attendance Percentage</th> -->
-                        <!-- <th>Remarks</th> -->
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($student['attendance'] as $record)
+                    @foreach ($generatedReports['attendance_counts'] as $classSchedule => $attendanceCount)
                         <tr>
-                            <!-- <td>{{ $record['quarter'] }}</td> -->
-                            <td>English (Eng-101) - MTh (07:00 AM - 08:00 AM)</td>
-                            <td>{{ $record['days_present'] }}</td>
-                            <td>{{ $record['days_absent'] }}</td>
-                            <td>{{ $record['late_classes'] }}</td>
-                            <td>{{ $record['excused_classes'] }}</td>
-                            <!-- <td>{{ $record['attendance_percentage'] }}%</td> -->
-                            <!-- <td>{{ $record['remarks'] }}</td> -->
+                            <td>{{ $classSchedule }}</td>
+                            <td>{{ $attendanceCount['total_present'] }}</td>
+                            <td>{{ $attendanceCount['total_absent'] }}</td>
+                            <td>{{ $attendanceCount['total_late'] }}</td>
+                            <td>{{ $attendanceCount['total_excuse'] }}</td>
                         </tr>
                     @endforeach
                 </tbody>
             </table>
         </section>
 
-        <!-- <section style="margin-top: 10px;">
-            <h2>Summary</h2>
-            <div style="display: flex; justify-content: space-between;" class="summary">
+        <section style="margin-top: 5px;">
+            <div style="display: flex; justify-content: space-between;">
                 <div>
-                    <p><strong>Total Days Present:</strong> {{ $student['total_present'] }}</p>
-                    <p><strong>Total Days Absent:</strong> {{ $student['total_absent'] }}</p>
-                    <p><strong>Total Late Classes:</strong> {{ $student['total_late'] }}</p>
-                    <p><strong>Total Excused Classes:</strong> {{ $student['total_excused'] }}</p>
-                </div>
-                <div>
-                    <p><strong>Final Remarks:</strong> {{ $student['final_remarks'] }}</p>
+                    <p><strong>Final Remarks:</strong> </p>
                 </div>
             </div>
-        </section> -->
+        </section>
 
         <section style="margin-top: 10px; display: flex; justify-content: space-between;">
             <div>
@@ -133,8 +120,8 @@
                 <p style="font-size: 10px;">Parent's/Guardian's Signature</p>
             </div>
         </section>
-    </div>
-    <div class="page-break"></div>
 
+    </div>
+    <!-- <div class="page-break"></div> -->
 </body>
 </html>

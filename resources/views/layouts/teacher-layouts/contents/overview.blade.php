@@ -60,12 +60,10 @@
                               </svg>
                            </div>
                            <div class="flex justify-between items-center pt-5">
-                              <button class="text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-gray-900 inline-flex items-center dark:hover:text-white">
-                                 Section
-                                 <svg class="w-2.5 m-2.5 ms-1.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 10 6">
-                                    <path d="m1 1 4 4 4-4"/>
-                                 </svg>
-                              </button>
+                              <div>
+                                 <select id="section-piechart" class="w-full px-4 py-2 border border-dark rounded-md font-semibold text-xs uppercase tracking-widest focus:ring-indigo-500 disabled:opacity-2">
+                                 </select>
+                              </div>
                            </div>
 
                            <div data-popover id="chart-info" role="tooltip" class="absolute z-10 invisible text-sm text-gray-500 bg-white border border-gray-200 rounded-lg shadow-lg-sm opacity-0 w-72 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-400">

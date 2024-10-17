@@ -57,6 +57,10 @@ class TeacherOverviewRequest extends Controller
     {
         $classSchedules = [];
 
+        # Info: 
+            # 1. dayOfWeek() means, 0 (for Sunday) through 6 (for Saturday).
+            # 2. dayOfWeekIso() means, 1 (for Monday) through 7 (for Sunday).
+            
         $dayMapping = [
             0 => 1, # Sunday
             1 => 2, # Monday

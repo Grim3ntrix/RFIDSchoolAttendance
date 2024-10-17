@@ -16,8 +16,10 @@ use App\Http\Controllers\JsonRequests\{
     StudentClassScheduleExcuseRequest,
     StudentLocationByTeacherRequest,
     StudentLocationRequest,
+    StudentOverviewRequest,
     StudentPendingExcuseRequestCount,
     StudentRequest,
+    SuperAdminOverviewRequest,
     TeacherOverviewRequest,
     TeacherPendingExcuseRequestCount
 };
@@ -53,9 +55,14 @@ Route::get('/', function () {
 /* Super Admin Routes */
 
 Route::group(['middleware' => ['auth', 'verified', 'role:superadmin'], 'prefix' => 'superadmin'], function (){
+
     Route::get('overview', function () {
         return view('layouts.superadmin-layouts.contents.overview');
     })->name('superadmin_overview');
+
+    Route::get('total-pre-registered', [SuperAdminOverviewRequest::class, 'getTotalPreRegistered'])->name('total.pre_registered');
+    Route::get('total-registered', [SuperAdminOverviewRequest::class, 'getTotalRegistered'])->name('total.registered');
+    Route::get('total-teachers', [SuperAdminOverviewRequest::class, 'getTotalTeachers'])->name('total.teachers');
 
     Route::get('pre-registered-teachers/records', [PreRegisteredTeacherController::class, 'getTeacherRecords'])->name('teachers.records');
     Route::resource('pre-registered-teachers', PreRegisteredTeacherController::class)->except([
@@ -84,6 +91,8 @@ Route::group(['middleware' => ['auth', 'verified', 'role:teacher'], 'prefix' => 
     Route::get('overview', function () {
         return view('layouts.teacher-layouts.contents.overview');
     })->name('teacher_overview');
+
+    Route::get('get-section/{sectionId}', [AttendanceRequest::class, 'getDailyAttendanceForPieChart'])->name('section.get');
     
     /* RFID Atendance Routes */
 
@@ -132,8 +141,11 @@ Route::group(['middleware' => ['auth', 'verified', 'role:teacher'], 'prefix' => 
     
     Route::get('students/{section}', [StudentBySectionRequest::class, 'getStudentBySection'])->name('students.bysection');
     Route::get('quarters', [QuarterRequest::class, 'getQuarters'])->name('quarters.get');
-    Route::get('reports', [ReportController::class, 'index'])->name('reports.index');
     Route::get('/attendance-quarterly-report', [AttendanceReportController::class, 'generateReport']);
+
+    Route::get('reports', [ReportController::class, 'index'])->name('reports.index');
+    Route::post('reports-to-generate', [AttendanceReportController::class, 'reportsToGenerate'])->name('reports_to_generate');
+    // Route::get('reports-to-download', [AttendanceReportController::class, 'reportsToDownload'])->name('reports_to_download');
 
     /* Student Location Routes */
     
@@ -167,6 +179,9 @@ Route::group(['middleware' => ['auth', 'verified', 'role:student'], 'prefix' => 
     Route::get('overview', function () {
         return view('layouts.student-layouts.contents.overview');
     })->name('student_overview');
+
+    Route::get('class-schedule-select-for-overview', [StudentOverviewRequest::class, 'getStudentClassSchedules'])->name('student_class_schedules.get');
+    Route::get('get-attendance-status-totals-by-student-overview', [StudentOverviewRequest::class, 'getAttendanceStatusTotals'])->name('attendance_status_totals.get');
 
     /* Student Excuse */
 

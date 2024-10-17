@@ -1,56 +1,47 @@
 export function reports() {
-    const sectionElement       = document.getElementById('section');
-    // const classScheduleElement = document.getElementById('class_schedule');
-    const studentElement       = document.getElementById('student');
-    const quarterElement       = document.getElementById('quarter');
+    const sectionElement              = document.getElementById('section');
+    const studentElement              = document.getElementById('student');
+    const quarterElement              = document.getElementById('quarter');
 
     function setDefaultOptions() {
-        // classScheduleElement.innerHTML          = '';
-        // const defaultClassScheduleOption        = document.createElement('option');
-        // defaultClassScheduleOption.value        = '';
-        // defaultClassScheduleOption.textContent  = 'Select Class Schedule';
-        // defaultClassScheduleOption.disabled     = true;
-        // defaultClassScheduleOption.selected     = true;
-        // classScheduleElement.appendChild(defaultClassScheduleOption);
 
-        studentElement.innerHTML         = '';
-        const defaultStudentOption       = document.createElement('option');
-        defaultStudentOption.value       = '';
+        // Reset students and quarters
+        studentElement.innerHTML = '';
+        const defaultStudentOption = document.createElement('option');
+        defaultStudentOption.value = '';
         defaultStudentOption.textContent = 'Select Student';
-        defaultStudentOption.disabled    = true;
-        defaultStudentOption.selected    = true;
+        defaultStudentOption.disabled = true;
+        defaultStudentOption.selected = true;
         studentElement.appendChild(defaultStudentOption);
 
-        quarterElement.innerHTML                = '';
-        const defaultquarterElementOption       = document.createElement('option');
-        defaultquarterElementOption.value       = '';
-        defaultquarterElementOption.textContent = 'Select Quarter';
-        defaultquarterElementOption.disabled    = true;
-        defaultquarterElementOption.selected    = true;
-        quarterElement.appendChild(defaultquarterElementOption);
+        quarterElement.innerHTML = '';
+        const defaultQuarterOption = document.createElement('option');
+        defaultQuarterOption.value = '';
+        defaultQuarterOption.textContent = 'Select Quarter';
+        defaultQuarterOption.disabled = true;
+        defaultQuarterOption.selected = true;
+        quarterElement.appendChild(defaultQuarterOption);
     }
 
     setDefaultOptions();
 
+    const defaultSectionOption          = document.createElement('option');
+    defaultSectionOption.value          = '';
+    defaultSectionOption.textContent    = 'Select Section';
+    defaultSectionOption.disabled       = true;
+    defaultSectionOption.selected       = true;
+    sectionElement.appendChild(defaultSectionOption);
+
     if (sectionElement) {
-        sectionElement.innerHTML            = '';
-        const defaultSectionOption          = document.createElement('option');
-        defaultSectionOption.value          = '';
-        defaultSectionOption.textContent    = 'Select Section';
-        defaultSectionOption.disabled       = true;
-        defaultSectionOption.selected       = true;
-        sectionElement.appendChild(defaultSectionOption);
-
-        // Sections
-
+        // Fetch Sections
         axios.get(`/teacher/sections-record`)
         .then(response => {
-            const sectionsData = response.data;
 
+            const sectionsData = response.data;
             sectionsData.forEach(sectionData => {
-                const option        = document.createElement('option');
-                option.value        = sectionData.id;
-                option.textContent  = sectionData.section_name;
+                const option = document.createElement('option');
+                option.value = sectionData.id;
+                option.textContent = sectionData.section_name;
                 sectionElement.appendChild(option);
             });
         })
@@ -58,49 +49,20 @@ export function reports() {
             console.error('Error fetching sections:', error);
         });
 
-        sectionElement.addEventListener('change', function() {
+        sectionElement.addEventListener('change', function () {
             const selectedSectionId = this.value;
+            // Reset students and quarters only when a new section is selected
             setDefaultOptions();
 
             if (selectedSectionId) {
-                // axios.get(`/teacher/class-schedules/${selectedSectionId}`)
-                // .then(response => {
-                //     const classSchedules = response.data;
-
-                //     classSchedules.forEach(scheduleData => {
-                //         const option = document.createElement('option');
-                //         option.value = scheduleData.id;
-
-                //         const formattedStartTime = convertToAmPm(scheduleData.start_time);
-                //         const formattedEndTime   = convertToAmPm(scheduleData.end_time);
-                //         const abbreviatedDays    = getAbbreviatedDays(scheduleData.days_of_week);
-
-                //         option.textContent = `${scheduleData.subject} (${scheduleData.subject_code}) - ${abbreviatedDays} (${formattedStartTime} - ${formattedEndTime})`;
-                //         classScheduleElement.appendChild(option);
-                //     });
-                // })
-                // .catch(error => {
-                //     console.error('Error fetching class schedules:', error);
-                // });
-
-                // Students
-
+                // Fetch Students based on the selected section
                 axios.get(`/teacher/students/${selectedSectionId}`)
                 .then(response => {
                     const students = response.data;
-
-                    studentElement.innerHTML         = '';
-                    const defaultStudentOption       = document.createElement('option');
-                    defaultStudentOption.value       = '';
-                    defaultStudentOption.textContent = 'Select Student';
-                    defaultStudentOption.disabled    = true;
-                    defaultStudentOption.selected    = true;
-                    studentElement.appendChild(defaultStudentOption);
-
                     students.forEach(student => {
                         const option = document.createElement('option');
                         option.value = student.id;
-                        option.textContent = `${student.first_name} ${student.last_name} ${student.middle_name ?? ''} ${student.name_extension ?? ''}`;
+                        option.textContent = `${student.first_name} ${student.last_name}`;
                         studentElement.appendChild(option);
                     });
                 })
@@ -108,47 +70,75 @@ export function reports() {
                     console.error('Error fetching students:', error);
                 });
 
-                // Quarters
-
+                // Fetch Quarters
                 axios.get(`/teacher/quarters`)
                 .then(response => {
                     const quarters = response.data.quarters;
-
                     quarters.forEach(quarter => {
                         const option = document.createElement('option');
-                        option.value = student.id;
-                        option.textContent = `${quarter.quarter_name}`;
+                        option.value = quarter.id;
+                        option.textContent = quarter.quarter_name;
                         quarterElement.appendChild(option);
                     });
                 })
                 .catch(error => {
-                    console.error('Error fetching students:', error);
+                    console.error('Error fetching quarters:', error);
                 });
-
             }
         });
-
-
     }
 
-    // function convertToAmPm(time) {
-    //     const [hours, minutes] = time.split(':');
-    //     const suffix = hours >= 12 ? 'PM' : 'AM';
-    //     const adjustedHours = hours % 12 || 12; // Convert to 12-hour format
-    //     return `${adjustedHours}:${minutes} ${suffix}`;
-    // }
 
-    // const dayAbbreviations = {
-    //     "Monday": "M",
-    //     "Tuesday": "T",
-    //     "Wednesday": "Wed",
-    //     "Thursday": "Th",
-    //     "Friday": "F",
-    //     "Saturday": "Sat",
-    //     "Sunday": "Sun"
-    // };
+    const generateReportFormEl = document.getElementById('reports-form');
+    if (generateReportFormEl) {
+        reportsToGenerate();
+    }
+}
 
-    // function getAbbreviatedDays(daysOfWeek) {
-    //     return daysOfWeek.map(day => dayAbbreviations[day.day_name]).join('');
-    // }
+function reportsToGenerate() {
+    // Select elements
+    const sectionSelect     = document.getElementById('section');
+    const studentSelect     = document.getElementById('student');
+    const quarterSelect     = document.getElementById('quarter');
+    const quarterStartInput = document.getElementById('quarter_start');
+    const quarterEndInput   = document.getElementById('quarter_end');
+    const generateReportBtn = document.getElementById('generate-report-btn');
+
+    // Function to send data to the server
+    const sendData = () => {
+        // Validate inputs (optional but recommended)
+        if (!sectionSelect.value || !studentSelect.value || !quarterSelect.value || !quarterStartInput.value || !quarterEndInput.value) {
+            console.error('All fields must be filled.');
+            alert('Please fill all the required fields.');
+            return;
+        }
+
+        const data = {
+            section: sectionSelect.value,
+            student: studentSelect.value,
+            quarter: quarterSelect.value,
+            quarter_start: quarterStartInput.value,
+            quarter_end: quarterEndInput.value
+        };
+
+        // Send POST request
+        axios.post('/teacher/reports-to-generate', data)
+        .then(response => {
+            // Check if the response contains the correct pdf_url
+            if (response.data && response.data.pdf_url) {
+                // Redirect to the PDF URL to stream it
+                window.open(response.data.pdf_url, '_blank'); // Opens the PDF in a new tab
+            } else {
+                console.error('No PDF URL returned from server.');
+                alert('Failed to generate the report. Please try again.');
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching PDF:', error);
+            alert('An error occurred while generating the report.');
+        });
+    };
+
+    // Attach event listener to the button click
+    generateReportBtn.addEventListener('click', sendData);
 }

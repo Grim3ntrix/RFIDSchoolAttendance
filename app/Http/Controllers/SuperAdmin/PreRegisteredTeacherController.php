@@ -32,7 +32,7 @@ class PreRegisteredTeacherController extends Controller
             'teacher_id'        => 'required|string|max:255|unique:pre_registered_teachers,teacher_id,' . $request->id,
             'last_name'         => 'required|string|max:255',
             'first_name'        => 'required|string|max:255',
-            'middle_name'       => 'required|string|max:255',
+            'middle_name'       => 'nullable|string|max:50',
             'name_extension'    => 'nullable|string|max:50',
             'sex'               => 'required|string|in:male,female',
             'birth_date'        => 'nullable|date',

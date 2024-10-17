@@ -9,6 +9,24 @@
 
         <title>{{ config('app.name', 'Laravel') }}</title>
 
+        <!-- SEO Meta Tags -->
+        <meta name="description" content="Manage school attendance and track student locations using RFID technology and OpenStreetMap.">
+        <meta name="keywords" content="RFID, School Attendance, Student Tracking, OpenStreetMap, Geolocation API">
+        <meta name="author" content="Richard K. Samberi">
+
+        <!-- Open Graph Meta Tags -->
+        <meta property="og:title" content="{{ config('app.name', 'RFID School Attendance') }}" />
+        <meta property="og:description" content="Manage school attendance and track student locations using RFID technology and OpenStreetMap." />
+        <meta property="og:image" content="{{ asset('images/mnhs.png') }}" />
+        <meta property="og:url" content="{{ url()->current() }}" />
+        <meta property="og:type" content="website" />
+
+        <!-- Twitter Card Meta Tags -->
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="{{ config('app.name', 'RFID School Attendance') }}" />
+        <meta name="twitter:description" content="Manage school attendance and track student locations using RFID technology and OpenStreetMap." />
+        <meta name="twitter:image" content="{{ asset('images/mnhs.png') }}" />
+
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />

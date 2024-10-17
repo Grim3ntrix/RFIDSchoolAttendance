@@ -41,12 +41,61 @@ class RFIDAttendanceController extends Controller
         $classEndTime   = Carbon::parse($classSchedule->end_time);
         $currentTimeObj = Carbon::parse($currentTimeStr);
 
+        # Info: 
+            # 1. dayOfWeek() means, 0 (for Sunday) through 6 (for Saturday).
+            # 2. dayOfWeekIso() means, 1 (for Monday) through 7 (for Sunday).
+
+        $dayMapping = [
+            0 => 1, # Sunday
+            1 => 2, # Monday
+            2 => 3, # Tuesday
+            3 => 4, # Wednesday
+            4 => 5, # Thursday
+            5 => 6, # Friday
+            6 => 7  # Saturday
+        ];
+        
+        $currentDayId = $dayMapping[now()->setTimezone('Asia/Manila')->dayOfWeek];
+
         $validated = $request->validate([
             'section'            => 'required',
             'class_schedule'     => 'required|exists:class_schedules,id',
             'rfid_serial_number' => [
                 'required',
                 'exists:students,rfid_serial_number',
+                // Check if the current day matches the class schedule's days
+                function ($attribute, $value, $fail) use ($classSchedule, $currentDayId) {
+
+                    # This query cause an issue "Column 'id' in field list is ambiguous, it is because you are in two tables and both of them have a column "id" nako po!
+                    // $scheduleDays = $classSchedule->daysOfWeek()->pluck('id')->toArray();
+
+                    $scheduleDays = $classSchedule->daysOfWeek()->pluck('days_of_weeks.id')->toArray();
+
+                    // Day names mapping for display purposes
+                    $dayNamesMapping = [
+                        1 => 'Sunday',
+                        2 => 'Monday',
+                        3 => 'Tuesday',
+                        4 => 'Wednesday',
+                        5 => 'Thursday',
+                        6 => 'Friday',
+                        7 => 'Saturday',
+                    ];
+                    
+                    // Convert scheduled day IDs to their names
+                    $assignedDays = array_map(function($dayId) use ($dayNamesMapping) {
+                        return $dayNamesMapping[$dayId];
+                    }, $scheduleDays);
+
+                    // Create a comma-separated string of the assigned days
+                    $formattedDays = implode(', ', $assignedDays);
+
+                    // Check if the current day matches any of the scheduled days
+                    if (!in_array($currentDayId, $scheduleDays)) {
+                        // Fail with a message including the assigned days
+                        $fail('Attendance is only acceptable on the scheduled class days: ' . $formattedDays . '.');
+                    }
+                },
                 function ($attribute, $value, $fail) use ($request) {
                     $attendanceExists = Attendance::where('rfid_serial_number', $value)
                         ->where('class_schedule_id', $request->class_schedule)

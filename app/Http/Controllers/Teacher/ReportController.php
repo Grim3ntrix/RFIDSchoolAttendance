@@ -10,5 +10,4 @@ class ReportController extends Controller
     {
         return view('layouts.teacher-layouts.contents.report.index-report');
     }
-    
 }

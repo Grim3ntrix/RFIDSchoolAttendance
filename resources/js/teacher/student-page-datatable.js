@@ -181,7 +181,7 @@ export function initializeStudentDatatable() {
                     searchable: true,
                     fixedHeight: true,
                     sortable: true,
-                    perPage: 5,
+                    perPage: 10,
                 });
 
                 document.getElementById('table-loader').style.display = 'none';
@@ -268,7 +268,7 @@ export function initializeStudentDatatable() {
                     searchable: true,
                     fixedHeight: true,
                     sortable: true,
-                    perPage: 5,
+                    perPage: 10,
                 });
 
                 document.getElementById('table-loader').style.display = 'none'; // Hide Loading spinner
