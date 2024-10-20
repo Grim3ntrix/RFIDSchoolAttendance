@@ -105,36 +105,25 @@ Route::group(['middleware' => ['auth', 'verified', 'role:teacher'], 'prefix' => 
         'index', 'store',
     ]);
 
-    
     Route::get('sections/records', [SectionController::class, 'getSectionRecords'])->name('sections.records');
     Route::resource('sections', SectionController::class)->except([
         'create', 'show',
     ]);
 
-    Route::group(['prefix' => 'sections/{section:slug}'], function () {
+    Route::group(['middleware' => ['ensure_teacher_section_ownership'], 'prefix' => 'sections/{section:slug}'], function () {
 
         /* Section - Student Routes */
 
         Route::get('students/list', [StudentRequest::class, 'getStudents'])->name('sections.students.list');
         
-        Route::get('students', [StudentController::class, 'index'])->name('sections.students.index');
-        Route::post('students', [StudentController::class, 'store'])->name('sections.students.store');
-        Route::get('students/{student}/edit', [StudentController::class, 'edit'])->name('sections.students.edit');
-        Route::put('students/{student}', [StudentController::class, 'update'])->name('sections.students.update');
-        Route::delete('students/{student}', [StudentController::class, 'destroy'])->name('sections.students.destroy');
+        Route::resource('students', StudentController::class)->except(['show']);
 
         /* Class Schedule Routes */
         
         Route::get('class-schedules-list', [ClassScheduleRequest::class, 'getClassSchedules'])->name('sections.class-schedules.list');
         Route::get('days-of-weeks-list', [DaysOfWeekRequest::class, 'getDaysOfWeeks'])->name('sections.days-of-weeks.list');
 
-        Route::get('class-schedules', [ClassScheduleController::class, 'index'])->name('sections.class-schedules.index');
-        Route::post('class-schedules', [ClassScheduleController::class, 'store'])->name('sections.class-schedules.store');
-        Route::get('class-schedules/create', [ClassScheduleController::class, 'create'])->name('sections.class-schedules.create');
-        Route::get('/', [ClassScheduleController::class, 'show'])->name('sections.class-schedules.show');
-        Route::get('class-schedules/{class_schedule}/edit', [ClassScheduleController::class, 'edit'])->name('sections.class-schedules.edit');
-        Route::put('class-schedules/{class_schedule}', [ClassScheduleController::class, 'update'])->name('sections.class-schedules.update');
-        Route::delete('class-schedules/{class_schedule}', [ClassScheduleController::class, 'destroy'])->name('sections.class-schedules.destroy');
+        Route::resource('class-schedules', ClassScheduleController::class);
     });
 
     /* Reports Routes */

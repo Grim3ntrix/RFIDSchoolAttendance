@@ -14,12 +14,12 @@ class StudentLocationByTeacherRequest extends Controller
         $user    = Auth::user();
         $teacher = $user->teacher;
 
+        # Display student Locations in the table
         $sectionsWithStudents = Section::with([
                                     'student.user.userstatus', 
                                     'student.studentLocation.studentLocationStatus'
                                 ])
                                 ->where('teacher_id', $teacher->id)
-                                // Order by user status, prioritizing 'online'
                                 ->whereHas('student.user.userstatus', function($query) {
                                     $query->orderByRaw("CASE WHEN status = 'online' THEN 1 ELSE 0 END DESC");
                                 })

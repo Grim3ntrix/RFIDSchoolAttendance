@@ -87,7 +87,7 @@ function classScheduleJsonRequest() {
 
     axios.get(`/student/get-class-schedule-by-student`)
     .then(response => {
-        const classScheduleByStudent = response.data;
+        const classScheduleByStudent = response.data.classSchedules;
 
         // Clear out any existing options before populating
         const selectElement = document.getElementById('class_schedule');
@@ -128,7 +128,7 @@ function classScheduleJsonRequest() {
                 // Auto-fill section and recipient fields with the first class schedule's data
                 if (classScheduleByStudent.length === 1) {
                     sectionElement.value = `${classSchedule.section.section_name} (${classSchedule.section.grade_or_year_level})`;
-                    recipientElement.value = `${classSchedule.teacher.first_name ?? 'N/A'} ${classSchedule.teacher.middle_name ?? 'N/A'} ${classSchedule.teacher.last_name ?? 'N/A'} ${classSchedule.teacher.name_extenion ?? 'N/A'}`;
+                    recipientElement.value = `${classSchedule.teacher.first_name ?? classSchedule.teacher.user.name ?? 'Teacher profile not updated'} ${classSchedule.teacher.middle_name ?? ''} ${classSchedule.teacher.last_name ?? ''} ${classSchedule.teacher.name_extenion ?? ''}`;
                 }
             });
 
@@ -138,7 +138,7 @@ function classScheduleJsonRequest() {
 
                 if (selectedClassSchedule) {
                     sectionElement.value = `${selectedClassSchedule.section.section_name} (${selectedClassSchedule.section.grade_or_year_level})`;
-                    recipientElement.value = `${selectedClassSchedule.teacher.first_name ?? 'N/A'} ${selectedClassSchedule.teacher.middle_name ?? 'N/A'} ${selectedClassSchedule.teacher.last_name ?? 'N/A'} ${selectedClassSchedule.teacher.name_extenion ?? 'N/A'}`;
+                    recipientElement.value = `${selectedClassSchedule.teacher.first_name ?? selectedClassSchedule.teacher.user.name ?? 'Teacher profile not updated'} ${selectedClassSchedule.teacher.middle_name ?? ''} ${selectedClassSchedule.teacher.last_name ?? ''} ${selectedClassSchedule.teacher.name_extenion ?? ''}`;
                 }
             });
         }

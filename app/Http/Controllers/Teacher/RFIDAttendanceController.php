@@ -63,6 +63,26 @@ class RFIDAttendanceController extends Controller
             'rfid_serial_number' => [
                 'required',
                 'exists:students,rfid_serial_number',
+                function ($attribute, $value, $fail) use ($classSchedule, $classStartTime, $classEndTime, $currentTimeObj) {
+                    $formattedStartTime = $classStartTime->format('g:i A');
+                    $formattedEndTime   = $classEndTime->format('g:i A');
+
+                    if ($currentTimeObj->isBefore($classStartTime)) {
+                        return $fail('Class hasn\'t started yet! Please come back at ' . $formattedStartTime . '.');
+                    } elseif ($currentTimeObj->isAfter($classEndTime)) {
+                        return $fail('Class has already ended! It finished at ' . $formattedEndTime . '.');
+                    }
+                },
+                function ($attribute, $value, $fail) use ($request) {
+                    $attendanceExists = Attendance::where('rfid_serial_number', $value)
+                        ->where('class_schedule_id', $request->class_schedule)
+                        ->whereDate('created_at', now())
+                        ->exists();
+                    
+                    if ($attendanceExists) {
+                        $fail('Oops! You already have an attendance entry for today\'s class schedule.');
+                    }
+                },
                 // Check if the current day matches the class schedule's days
                 function ($attribute, $value, $fail) use ($classSchedule, $currentDayId) {
 
@@ -94,26 +114,6 @@ class RFIDAttendanceController extends Controller
                     if (!in_array($currentDayId, $scheduleDays)) {
                         // Fail with a message including the assigned days
                         $fail('Attendance is only acceptable on the scheduled class days: ' . $formattedDays . '.');
-                    }
-                },
-                function ($attribute, $value, $fail) use ($request) {
-                    $attendanceExists = Attendance::where('rfid_serial_number', $value)
-                        ->where('class_schedule_id', $request->class_schedule)
-                        ->whereDate('created_at', now())
-                        ->exists();
-                    
-                    if ($attendanceExists) {
-                        $fail('Oops! You already have an attendance entry for today\'s class schedule.');
-                    }
-                },
-                function ($attribute, $value, $fail) use ($classSchedule, $classStartTime, $classEndTime, $currentTimeObj) {
-                    $formattedStartTime = $classStartTime->format('g:i A');
-                    $formattedEndTime   = $classEndTime->format('g:i A');
-
-                    if ($currentTimeObj->isBefore($classStartTime)) {
-                        return $fail('Class hasn\'t started yet! Please come back at ' . $formattedStartTime . '.');
-                    } elseif ($currentTimeObj->isAfter($classEndTime)) {
-                        return $fail('Class has already ended! It finished at ' . $formattedEndTime . '.');
                     }
                 },
             ],

@@ -16,9 +16,12 @@ class RedirectIfAuthenticated
      */
     public function handle(Request $request, Closure $next): Response
     {
-
         if (Auth::check()) {
             $user = Auth::user();
+
+            /**
+             * @var \App\Models\User|null $user
+            */
     
             if ($user->hasRole('superadmin')){
                 return redirect()->intended(route('superadmin_overview'));

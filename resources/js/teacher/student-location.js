@@ -330,10 +330,10 @@ if (studentLocationModalContainer) {
                         const customIcon = L.icon({
                             iconUrl: '/images/marker-icon.png',
                             shadowUrl: '/images/marker-shadow.png',
-                            iconSize: [25, 41], // Default size
-                            iconAnchor: [12, 41], // Point of the icon which will correspond to marker's location
-                            popupAnchor: [1, -34], // Point from which the popup should open relative to the iconAnchor
-                            shadowSize: [41, 41]  // Size of the shadow
+                            iconSize: [25, 41],     // Default size
+                            iconAnchor: [12, 41],   // Point of the icon which will correspond to marker's location
+                            popupAnchor: [1, -34],  // Point from which the popup should open relative to the iconAnchor
+                            shadowSize: [41, 41]    // Size of the shadow
                         });
                         
                         // Use the custom icon for the marker

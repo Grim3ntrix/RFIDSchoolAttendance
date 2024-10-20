@@ -143,7 +143,7 @@ function studentClassScheduleToReviewDataTable()
                         
                         const teacherUserData = classSchedule.teacher?.user || {};
 
-                        const teacherFullName = `${classSchedule.teacher.first_name ?? teacherUserData.name ?? 'Unknown Teacher'} ${classSchedule.teacher.middle_name ?? ''} ${classSchedule.teacher.last_name ?? ''}`.trim() || 'Personal details not updated';
+                        const teacherFullName = `${classSchedule.teacher.first_name ?? teacherUserData.name ?? 'Teacher profile not updated'} ${classSchedule.teacher.middle_name ?? ''} ${classSchedule.teacher.last_name ?? ''}`.trim() || 'Personal details not updated';
 
                         const proof = excuse.proof;
                         const excuseStatus = excuse.excuse_request_status?.status ?? 'No Status';

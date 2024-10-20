@@ -1,10 +1,15 @@
 <footer class="static bottom-0 left-0 z-20 p-4 mt-6 border-gray-200 dark:border-gray-700 sm:ml-64 border-t border-gray-200 shadow md:flex md:items-center md:justify-between md:p-6 dark:bg-gray-800 dark:border-gray-600">
-    <span class="text-sm text-gray-500 sm:text-center dark:text-gray-400">
-        @if ( '2024' ===  \Carbon\Carbon::now()->format('Y'))
-        © 2024
-        @else
-        © 2024-{{ \Carbon\Carbon::now()->format('Y') }} 
-        @endif
-        <a href="https://www.rfidschoolattendance.online" target="_blank" rel="noopener noreferrer" class="hover:underline">RFID School Attendance</a>. All Rights Reserved.
+    <span class="flex justify-between w-full text-sm text-gray-500 sm:text-center dark:text-gray-400">
+        <div>
+            @if ('2024' === \Carbon\Carbon::now()->format('Y'))
+                © 2024
+            @else
+                © 2024-{{ \Carbon\Carbon::now()->format('Y') }} 
+            @endif
+            <a href="https://www.rfidschoolattendance.online" target="_blank" rel="noopener noreferrer" class="hover:underline">RFID School Attendance</a>. All Rights Reserved.
+        </div>
+        <div>
+            Version: {{ env('APP_VERSION', '1.0.0-beta') }}
+        </div>
     </span>
 </footer>

@@ -18,11 +18,11 @@ class StudentExcuseRequest extends Controller
     {
         $classSchedules = $this->user->student
             ? optional($this->user->student->section)->classSchedule()
-                ->with('section', 'teacher')
+                ->with('section', 'teacher', 'teacher.user')
                 ->get() ?? [] 
             : [];
 
-        return response()->json($classSchedules);
+        return response()->json(['classSchedules' => $classSchedules]);
     }
 
     public function getExcuseRequestByStudent()

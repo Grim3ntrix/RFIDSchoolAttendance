@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Models\Student;
+use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -46,7 +48,28 @@ class ProfileController extends Controller
             'password' => ['required', 'current_password'],
         ]);
 
-        $user = $request->user();
+        $user = Auth::user();
+
+        /**
+         * @var \App\Models\User|null $user
+        */
+
+        if ($user->hasRole('teacher')) 
+        {
+            $students = Student::all();
+
+            if ($students) {
+                foreach ($students as $student) {
+                    User::where('id', $student->user_id)
+                    ->delete();
+                }
+
+                $user = $request->user();
+            }
+
+        } else {
+            $user = $request->user();
+        }
 
         Auth::logout();
 
