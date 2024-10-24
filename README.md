@@ -74,3 +74,7 @@ RFIDSchoolAttendance is a comprehensive attendance system designed for schools. 
 ## Release Notes
 
 For detailed version changes, refer to the [Release Notes](./RELEASE_NOTES.md).
+
+## Changelog
+
+For detailed changelog, see the [CHANGELOG.md](./CHANGELOG.md).

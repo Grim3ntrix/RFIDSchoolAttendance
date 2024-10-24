@@ -21,6 +21,22 @@ export function rfidAttendance() {
 
     const sectionElement       = document.getElementById('section');
     const classScheduleElement = document.getElementById('class_schedule');
+    const rfidScanElement      = document.getElementById('rfid_serial_number');
+    rfidScanElement.focus();
+
+    // Add a click event listener to the document
+    document.addEventListener('click', function(event) {
+        const target = event.target;
+
+         // List of interactive elements where focus should not be forced back to RFID input
+         const interactiveElements = ['INPUT', 'TEXTAREA', 'BUTTON', 'SELECT'];
+
+         // Check if the click is not on an interactive element
+         if (!interactiveElements.includes(target.tagName)) {
+             // If not, refocus the RFID input
+             rfidScanElement.focus();
+         }
+    });
 
     // Restore saved selections from sessionStorage
     const savedSection       = sessionStorage.getItem('selectedSection');

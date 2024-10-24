@@ -9,7 +9,7 @@
             <a href="https://www.rfidschoolattendance.online" target="_blank" rel="noopener noreferrer" class="hover:underline">RFID School Attendance</a>. All Rights Reserved.
         </div>
         <div>
-            Version: {{ env('APP_VERSION', '1.0.0-beta') }}
+            Version: {{ config('app.version') }}
         </div>
     </span>
 </footer>
