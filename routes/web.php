@@ -136,6 +136,12 @@ Route::group(['middleware' => ['auth', 'verified', 'role:teacher'], 'prefix' => 
     Route::post('reports-to-generate', [AttendanceReportController::class, 'reportsToGenerate'])->name('reports_to_generate');
     // Route::get('reports-to-download', [AttendanceReportController::class, 'reportsToDownload'])->name('reports_to_download');
 
+    /* Attendance History Routes */
+
+    Route::get('attendance-histories', function () {
+        return view('layouts.teacher-layouts.contents.attendance-history.index-attendance-history');
+    })->name('attendance_history');
+
     /* Student Location Routes */
     
     Route::get('student/{student}/location', [StudentLocationRequest::class, 'getStudentLocation'])->name('student.location');
