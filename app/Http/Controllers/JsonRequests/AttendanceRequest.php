@@ -6,9 +6,11 @@ use App\Http\Controllers\Controller;
 use App\Models\Attendance;
 use App\Models\ClassSchedule;
 use App\Models\Section;
+use App\Models\Student;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Http\Request;
 
 class AttendanceRequest extends Controller
 {
@@ -18,14 +20,15 @@ class AttendanceRequest extends Controller
 
     public function __construct()
     {
-        $this->today   = Carbon::now()->timezone('Asia/Manila')->toDateString();
+        $this->today   = Carbon::now();
+        // Log::info('today', [$this->today]);
+
         $this->user    = Auth::user();
         $this->teacher = $this->user->teacher;
     }
 
     protected function getAttendanceQuery()
     {
-        
         if (!$this->teacher) {
             return response()->json(['error' => 'Teacher not found'], 404);
         }
@@ -41,6 +44,8 @@ class AttendanceRequest extends Controller
     {
         $dailyAttendances = $this->getAttendanceQuery()
         ->get();
+
+        // Log::info('dailyAttendances', [$dailyAttendances]);
 
         return response()->json($dailyAttendances);
     }
@@ -73,7 +78,7 @@ class AttendanceRequest extends Controller
                     ->get(); # Execute the query, ayaw ni kalimti basta query builder gani when you create the query for $attendancesBySchedule, 
                              # it's an instance of the query builder and does not hold the actual results until you call get().
 
-                Log::info('attendancesBySchedule-Get', [$attendancesBySchedule]);
+                // Log::info('attendancesBySchedule-Get', [$attendancesBySchedule]);
 
                 $total = $attendancesBySchedule->count();
 
@@ -115,4 +120,23 @@ class AttendanceRequest extends Controller
 
         return response()->json(['error' => 'Section not found'], 404);
     }
+
+    public function reviewStudentAttendanceByClassSchedule(Request $request)
+    {
+        $studentId = $request->input('student_id');
+        $classScheduleId = $request->input('class_schedule_id');
+
+        // Log::info('studentId', [$studentId]);
+        // Log::info('classScheduleId', [$classScheduleId]);
+
+       $attendances = Attendance::with('attendanceStatus')
+       ->where('student_id', $studentId)
+       ->where('class_schedule_id', $classScheduleId)
+       ->get();
+
+    //    Log::info('attendances', [$attendances]);
+
+       return response()->json(['attendances' => $attendances]);
+    }
+
 }

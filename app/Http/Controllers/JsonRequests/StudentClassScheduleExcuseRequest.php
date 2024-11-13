@@ -7,9 +7,10 @@ use App\Models\Attendance;
 
 class StudentClassScheduleExcuseRequest extends Controller
 {
-    public function getExcuseRequestClassScheduleAttendance($classSchdeuleId)
+    public function getExcuseRequestClassScheduleAttendance($classSchdeuleId, $studentId)
     {
-        $attendances = Attendance::where('class_schedule_id', $classSchdeuleId)
+        $attendances = Attendance::where('student_id', $studentId)
+        ->where('class_schedule_id', $classSchdeuleId)
         ->with('attendanceStatus')
         ->whereHas('attendanceStatus', function($query) {
             $query->where('status', 'absent');

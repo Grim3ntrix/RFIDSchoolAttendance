@@ -27,12 +27,38 @@ class RFIDAttendanceController extends Controller
      */
     public function store(Request $request)
     {
-        $student       = Student::where('rfid_serial_number', $request->rfid_serial_number)->first();
-        $classSchedule = ClassSchedule::findOrFail($request->class_schedule);
+        $student = Student::where('rfid_serial_number', $request->rfid_serial_number)->first();
+
+        // First, validate the existence of the class schedule.
+        $sectionInput       = $request->section;
+        $classScheduleInput = $request->class_schedule;
+
+        // Manual validation for class schedule.
+        if (!$sectionInput) {
+            return response()->json([
+                'errors' => [
+                    'section' => ['Oops! section is required.']
+                ]
+            ], 422);
+        }
+
+        // Manual validation for class schedule.
+        if (!$classScheduleInput) {
+            return response()->json([
+                'errors' => [
+                    'class_schedule' => ['Oops! class schedule is required.']
+                ]
+            ], 422);
+        }
+
+        // Use findOrFail for the existing class schedule.
+        $classSchedule = ClassSchedule::find($classScheduleInput);
 
         if (!$classSchedule) {
             return response()->json([
-                'error' => 'The selected class schedule is invalid.'
+                'errors' => [
+                    'class_schedule' => ['The selected class schedule does not exist.']
+                ]
             ], 422);
         }
 
@@ -58,8 +84,6 @@ class RFIDAttendanceController extends Controller
         $currentDayId = $dayMapping[now()->setTimezone('Asia/Manila')->dayOfWeek];
 
         $validated = $request->validate([
-            'section'            => 'required',
-            'class_schedule'     => 'required|exists:class_schedules,id',
             'rfid_serial_number' => [
                 'required',
                 'exists:students,rfid_serial_number',

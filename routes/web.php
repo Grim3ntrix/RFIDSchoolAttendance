@@ -101,6 +101,10 @@ Route::group(['middleware' => ['auth', 'verified', 'role:teacher'], 'prefix' => 
     Route::get('students/daily-attendances', [AttendanceRequest::class, 'getDailyAttendanceByTeacher'])->name('student_daily_attendances.bysection');
     Route::get('students/daily-attendances/counts', [AttendanceRequest::class, 'getAttendanceCountByTeacher'])->name('student_daily_attendances.count');
 
+    Route::post('students-by-section', [StudentRequest::class, 'getStudentBySection'])->name('student_by_section.get');
+
+    Route::post('review-student-attendance-by-class-schedule', [AttendanceRequest::class, 'reviewStudentAttendanceByClassSchedule'])->name('review_student_attendance_by_class_schedule');
+
     Route::resource('rfid-attendances', RFIDAttendanceController::class)->only([
         'index', 'store',
     ]);
@@ -136,12 +140,6 @@ Route::group(['middleware' => ['auth', 'verified', 'role:teacher'], 'prefix' => 
     Route::post('reports-to-generate', [AttendanceReportController::class, 'reportsToGenerate'])->name('reports_to_generate');
     // Route::get('reports-to-download', [AttendanceReportController::class, 'reportsToDownload'])->name('reports_to_download');
 
-    /* Attendance History Routes */
-
-    Route::get('attendance-histories', function () {
-        return view('layouts.teacher-layouts.contents.attendance-history.index-attendance-history');
-    })->name('attendance_history');
-
     /* Student Location Routes */
     
     Route::get('student/{student}/location', [StudentLocationRequest::class, 'getStudentLocation'])->name('student.location');
@@ -153,8 +151,8 @@ Route::group(['middleware' => ['auth', 'verified', 'role:teacher'], 'prefix' => 
 
     Route::get('/get-excuse-request-by-student-to-review', [ReviewStudentExcuseRequest::class, 'getStudentExcuseRequestToReview'])->name('get_excuse_request_by_student_to_review.get');
     Route::get('/get-excuse-request-message/{id}', [ExcuseMessageRequest::class, 'getExcuseMessageRequest'])->name('get_teacher_excuse_message_request.get');
-    Route::get('/get-excuse-request-class-schedule-attendance/{classSchdeuleId}', [StudentClassScheduleExcuseRequest::class, 'getExcuseRequestClassScheduleAttendance'])->name('get_teacher_excuse_request_class_scheule_attendance.get');
-    Route::post('/mark-excuse-student-attendances/{attendanceId}', [ApproveStudentExcuseRequestController::class, 'attendanceMarkExcuse'])->name('stuudent_mark_excuse.update');
+    Route::get('/get-excuse-request-class-schedule-attendance/{classSchdeuleId}/{studentId}', [StudentClassScheduleExcuseRequest::class, 'getExcuseRequestClassScheduleAttendance'])->name('get_teacher_excuse_request_class_scheule_attendance.get');
+    Route::post('/mark-excuse-student-attendances/{attendanceId}', [ApproveStudentExcuseRequestController::class, 'attendanceMarkExcuse'])->name('student_mark_excuse.update');
     Route::get('/count-pending-excuse-request', [TeacherPendingExcuseRequestCount::class, 'countPendingExcuseRequests'])->name('teacher_count_pending_excuse_requests.get');
     Route::post('/decline-excuse-request/{classScheduleId}', [DeclineStudentExcuseRequestController::class, 'declineStudentExcuseRequest'])->name('decline_student_excuse_request.update');
 

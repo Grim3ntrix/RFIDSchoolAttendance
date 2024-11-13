@@ -8,7 +8,7 @@
                      <svg class="w-4 h-4 text-white mr-2 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 7.757v8.486M7.757 12h8.486M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
                      </svg>
-                     Teacher
+                     Add
                   </button>
                </div>
             </div>
@@ -107,16 +107,29 @@
             <!-- Delete Modal Container-->
             <div id="delete-teacher-modal-container"></div>
 
-            <div id="table-loader" class="flex justify-center items-center py-10">
-               <svg role="status" class="inline w-8 h-8 mr-2 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9765 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9765 100 50.5908ZM9.08125 50.5908C9.08125 73.5495 27.0413 91.5095 50 91.5095C72.9587 91.5095 90.9188 73.5495 90.9188 50.5908C90.9188 27.6321 72.9587 9.67209 50 9.67209C27.0413 9.67209 9.08125 27.6321 9.08125 50.5908Z" fill="currentColor"/>
-                  <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5536C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7233 75.2124 7.41289C69.5422 4.10248 63.2754 1.94025 56.7335 1.05189C51.7661 0.367391 46.7345 0.446447 41.8062 1.27873C39.324 1.69443 37.8557 4.19778 38.4928 6.62326C39.1299 9.04874 41.6119 10.5012 44.1076 10.1076C47.8923 9.47543 51.7426 9.52629 55.4747 10.2485C60.8569 11.2887 65.968 13.4632 70.543 16.6697C75.118 19.8763 79.0733 24.0361 82.1918 28.9444C84.7348 32.8122 86.6207 37.1317 87.7824 41.708C88.4351 44.0608 91.5422 45.6781 93.9676 45.0409Z" fill="currentFill"/>
-               </svg>
-               <span>Loading data, please wait...</span>
+            <div class="rounded-lg bg-teal-100 dark:bg-gray-700 border border-gray-300 shadow-lg p-6 md:p-8 mt-8" id="toggle-daily-attendance-content">
+               <div class="flex justify-between items-center mb-3">
+                  <div class="flex items-center mb-3">
+                     <svg class="w-7 h-7 mr-2" fill="#201e8f" viewBox="0 0 16 16" id="badge-16px" xmlns="http://www.w3.org/2000/svg" stroke="#201e8f" stroke-width="0.032"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path id="Path_192" data-name="Path 192" d="M-21.5,3H-26V.5a.5.5,0,0,0-.5-.5h-5a.5.5,0,0,0-.5.5V3h-4.5a.5.5,0,0,0-.5.5v12a.5.5,0,0,0,.5.5h15a.5.5,0,0,0,.5-.5V3.5A.5.5,0,0,0-21.5,3ZM-31,3V1h4V3a2,2,0,0,1-2,2A2,2,0,0,1-31,3Zm9,12H-36V4h4.184A3,3,0,0,0-29,6a3,3,0,0,0,2.816-2H-22Zm-7.5-7a2,2,0,0,0-2-2,2,2,0,0,0-2,2,2,2,0,0,0,2,2A2,2,0,0,0-29.5,8Zm-2,1a1,1,0,0,1-1-1,1,1,0,0,1,1-1,1,1,0,0,1,1,1A1,1,0,0,1-31.5,9Zm1,1h-2A2.5,2.5,0,0,0-35,12.5,1.5,1.5,0,0,0-33.5,14h4A1.5,1.5,0,0,0-28,12.5,2.5,2.5,0,0,0-30.5,10Zm1,3h-4a.5.5,0,0,1-.5-.5A1.5,1.5,0,0,1-32.5,11h2A1.5,1.5,0,0,1-29,12.5.5.5,0,0,1-29.5,13Zm6-6a.5.5,0,0,1,.5.5.5.5,0,0,1-.5.5h-4a.5.5,0,0,1-.5-.5.5.5,0,0,1,.5-.5Zm.5,3.5a.5.5,0,0,1-.5.5h-3a.5.5,0,0,1-.5-.5.5.5,0,0,1,.5-.5h3A.5.5,0,0,1-23,10.5Zm0,3a.5.5,0,0,1-.5.5h-3a.5.5,0,0,1-.5-.5.5.5,0,0,1,.5-.5h3A.5.5,0,0,1-23,13.5Z" transform="translate(37)"></path> </g></svg>
+                     <h3 class="text-2xl font-semibold text-gray-900 dark:text-white">Pre-Register</h3>
+                  </div>
+               </div>
+               <p class="text-gray-700 dark:text-gray-300 mt-2 md:mt-0">
+                  Pre-register teachers by their identification (ID) to enable their registration as new users.
+               </p>
+
+               <div id="table-loader" class="flex justify-center items-center py-10">
+                  <svg role="status" class="inline w-8 h-8 mr-2 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+                     <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9765 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9765 100 50.5908ZM9.08125 50.5908C9.08125 73.5495 27.0413 91.5095 50 91.5095C72.9587 91.5095 90.9188 73.5495 90.9188 50.5908C90.9188 27.6321 72.9587 9.67209 50 9.67209C27.0413 9.67209 9.08125 27.6321 9.08125 50.5908Z" fill="currentColor"/>
+                     <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5536C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7233 75.2124 7.41289C69.5422 4.10248 63.2754 1.94025 56.7335 1.05189C51.7661 0.367391 46.7345 0.446447 41.8062 1.27873C39.324 1.69443 37.8557 4.19778 38.4928 6.62326C39.1299 9.04874 41.6119 10.5012 44.1076 10.1076C47.8923 9.47543 51.7426 9.52629 55.4747 10.2485C60.8569 11.2887 65.968 13.4632 70.543 16.6697C75.118 19.8763 79.0733 24.0361 82.1918 28.9444C84.7348 32.8122 86.6207 37.1317 87.7824 41.708C88.4351 44.0608 91.5422 45.6781 93.9676 45.0409Z" fill="currentFill"/>
+                  </svg>
+                  <span>Loading data, please wait...</span>
+               </div>
+
+               <div id="teacher-datatable-container" class="mt-4">
+                  <!-- Table content goes here -->
+               </div>
             </div>
-            
-            <!-- Datatable Container-->
-            <div id="teacher-datatable-container"></div>
 
          </div>
       </div>

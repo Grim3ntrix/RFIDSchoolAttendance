@@ -14,19 +14,25 @@
             <!-- Settings Dropdown -->
             <div class="flex items-center sm:ms-6"> <!-- Added items-center for alignment -->
 
-                <!-- SVG Avatar -->
-                <button id="avatarButton" type="button" class="flex text-sm rounded-full focus:ring-2 focus:ring-gray-300 dark:focus:ring-gray-600" aria-expanded="false" data-dropdown-toggle="userDropdown" data-dropdown-placement="bottom-start">
-                    <svg class="w-10 h-10 cursor-pointer" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                        <defs>
-                            <linearGradient id="greenGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                                <stop offset="0%" style="stop-color:#34D399; stop-opacity:1" /> <!-- Tailwind 'emerald-400' -->
-                                <stop offset="100%" style="stop-color:#065F46; stop-opacity:1" /> <!-- Tailwind 'emerald-800' -->
-                            </linearGradient>
-                        </defs>
-                        <path fill="url(#greenGradient)" fill-rule="evenodd" d="M12 20a7.966 7.966 0 0 1-5.002-1.756l.002.001v-.683c0-1.794 1.492-3.25 3.333-3.25h3.334c1.84 0 3.333 1.456 3.333 3.25v.683A7.966 7.966 0 0 1 12 20ZM2 12C2 6.477 6.477 2 12 2s10 4.477 10 10c0 5.5-4.44 9.963-9.932 10h-.138C6.438 21.962 2 17.5 2 12Zm10-5c-1.84 0-3.333 1.455-3.333 3.25S10.159 13.5 12 13.5c1.84 0 3.333-1.455 3.333-3.25S13.841 7 12 7Z" clip-rule="evenodd"/>
-                    </svg>
-                </button>
-
+            <button id="avatarButton" type="button" 
+                class="flex items-center justify-center w-9 h-9 rounded-full bg-gradient-to-br from-emerald-400 to-emerald-800 p-1 
+                focus:ring-2 focus:ring-gray-300 dark:focus:ring-gray-600" 
+                aria-expanded="false" 
+                data-dropdown-toggle="userDropdown" 
+                data-dropdown-placement="bottom-start">
+                <svg class="w-5 h-5 cursor-pointer" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 30 30" xml:space="preserve" fill="#FFFFFF">
+                    <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                    <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                    <g id="SVGRepo_iconCarrier">
+                        <style type="text/css">
+                            .st4{fill:#FFFFFF;stroke:#FFFFFF;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;}
+                            .st14{fill:#FFFFFF;stroke:#FFFFFF;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;}
+                        </style>
+                        <path class="st4" d="M24,28H6c-1.1,0-2-0.9-2-2v0c0-3.9,3.1-7,7-7h8c3.9,0,7,3.1,7,7v0C26,27.1,25.1,28,24,28z"></path>
+                        <circle class="st14" cx="15" cy="9" r="6"></circle>
+                    </g>
+                </svg>
+            </button>
                 <!-- Dropdown menu -->
                 <div id="userDropdown" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
                     <div class="px-4 py-3 text-sm text-gray-900 dark:text-white">

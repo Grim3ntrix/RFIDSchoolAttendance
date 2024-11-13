@@ -27,6 +27,14 @@ export function studentLocationPage() {
                             <tr>
                                 <th>
                                     <span class="flex items-center">
+                                        Action
+                                        <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4"/>
+                                        </svg>
+                                    </span>
+                                </th>
+                                <th>
+                                    <span class="flex items-center">
                                         School ID
                                         <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4"/>
@@ -76,14 +84,6 @@ export function studentLocationPage() {
                                 <th>
                                     <span class="flex items-center">
                                         Location Status
-                                        <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4"/>
-                                        </svg>
-                                    </span>
-                                </th>
-                                <th>
-                                    <span class="flex items-center">
-                                        Action
                                         <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4"/>
                                         </svg>
@@ -124,13 +124,6 @@ export function studentLocationPage() {
                         const buttonDisabled = userStatus === 'offline' ? 'disabled cursor-not-allowed text-gray-400' : 'text-blue-500 hover:underline';
                         const row = document.createElement('tr');
                         row.innerHTML = `
-                            <td>${student.school_id}</td>
-                            <td>${student.first_name} ${student.last_name} ${student.middle_name ?? ''} ${student.name_extension ?? ''}</td>
-                            <td>${student.sex}</td>
-                            <td>${sectionName}</td>
-                            <td>${gradeOrYearLevel}</td>
-                            <td>${userStatus}</td>
-                            <td>${studentLocationStatus}</td>
                             <td>
                                 <button type="button" ${userStatus === 'offline' ? 'disabled' : ''} data-modal-target="student-location-modal" data-modal-toggle="student-location-modal" class="${buttonDisabled}" data-student-id="${student.id}">
                                     <svg class="w-7 h-6 ${userStatus === 'offline' ? 'text-gray-400' : 'text-gray-800 dark:text-white hover:text-blue-500'} transition-colors duration-150" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
@@ -138,6 +131,13 @@ export function studentLocationPage() {
                                     </svg>
                                 </button>
                             </td>
+                            <td>${student.school_id}</td>
+                            <td>${student.first_name} ${student.last_name} ${student.middle_name ?? ''} ${student.name_extension ?? ''}</td>
+                            <td>${student.sex}</td>
+                            <td>${sectionName}</td>
+                            <td>${gradeOrYearLevel}</td>
+                            <td>${userStatus}</td>
+                            <td>${studentLocationStatus}</td>
                         `;
                         tbody.appendChild(row);
                     });
@@ -156,6 +156,14 @@ export function studentLocationPage() {
                     <table id="studentLocationTable" class="bg-gray-50 dark:bg-gray-800">
                         <thead>
                             <tr>
+                                <th>
+                                    <span class="flex items-center">
+                                        Action
+                                        <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4"/>
+                                        </svg>
+                                    </span>
+                                </th>
                                 <th>
                                     <span class="flex items-center">
                                         School ID
@@ -207,14 +215,6 @@ export function studentLocationPage() {
                                 <th>
                                     <span class="flex items-center">
                                         Location Status
-                                        <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4"/>
-                                        </svg>
-                                    </span>
-                                </th>
-                                <th>
-                                    <span class="flex items-center">
-                                        Action
                                         <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4"/>
                                         </svg>
@@ -309,7 +309,7 @@ if (studentLocationModalContainer) {
                     // Add a tile layer to the map
                     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                         maxZoom: 18,
-                        attribution: '© OpenStreetMap contributors'
+                        attribution: ''
                     }).addTo(map);
 
                     // Add a geofence boundary (circle)

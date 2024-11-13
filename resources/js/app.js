@@ -57,6 +57,12 @@ document.addEventListener('DOMContentLoaded', async () => {
             rfidAttendance();
         }
 
+        /* Teacher - Review Previous Attendance Page Datatables */
+        if (document.querySelector('#review-previous-attendances-table-container')) {
+            const { reviewPreviousAttendance } = await import('./teacher/review-previous-attendance');
+            reviewPreviousAttendance();
+        }
+
         /* Teacher - Class Schedule Page Datatables */
         if (document.querySelector('#class-schedule-datatable-container')) {
             const { initializeClassScheduleDatatable } = await import('./teacher/class-schedule-page-datatable');

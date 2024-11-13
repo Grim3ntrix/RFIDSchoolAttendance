@@ -8,7 +8,7 @@
                      <svg class="w-4 h-4 text-white mr-2 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 7.757v8.486M7.757 12h8.486M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
                      </svg>
-                     Geofence Boundary
+                     Add
                   </button> 
                </div>
             </div>
@@ -69,25 +69,38 @@
                </div>
             </div>
 
-            <!-- School Geofence Boundary Container-->
-            <div id="geofence-boundary-container"></div>
-
             <!-- Edit & Update Modal Container-->
             <div id="edit-geofence-boundary-modal-container"></div>
 
             <!-- Delete Modal Container-->
             <div id="delete-geofence-boundary-modal-container"></div>
 
-            <div id="table-loader" class="flex justify-center items-center py-10">
-               <svg role="status" class="inline w-8 h-8 mr-2 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9765 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9765 100 50.5908ZM9.08125 50.5908C9.08125 73.5495 27.0413 91.5095 50 91.5095C72.9587 91.5095 90.9188 73.5495 90.9188 50.5908C90.9188 27.6321 72.9587 9.67209 50 9.67209C27.0413 9.67209 9.08125 27.6321 9.08125 50.5908Z" fill="currentColor"/>
-                  <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5536C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7233 75.2124 7.41289C69.5422 4.10248 63.2754 1.94025 56.7335 1.05189C51.7661 0.367391 46.7345 0.446447 41.8062 1.27873C39.324 1.69443 37.8557 4.19778 38.4928 6.62326C39.1299 9.04874 41.6119 10.5012 44.1076 10.1076C47.8923 9.47543 51.7426 9.52629 55.4747 10.2485C60.8569 11.2887 65.968 13.4632 70.543 16.6697C75.118 19.8763 79.0733 24.0361 82.1918 28.9444C84.7348 32.8122 86.6207 37.1317 87.7824 41.708C88.4351 44.0608 91.5422 45.6781 93.9676 45.0409Z" fill="currentFill"/>
-               </svg>
-               <span>Loading data, please wait...</span>
+            <div class="rounded-lg bg-teal-100 dark:bg-gray-700 border border-gray-300 shadow-lg p-6 md:p-8 mt-8" id="toggle-daily-attendance-content">
+               <div class="flex justify-between items-center mb-3">
+                  <div class="flex items-center mb-3">
+                     <svg class="w-7 h-7 mr-2" viewBox="0 0 1024 1024" class="icon" version="1.1" xmlns="http://www.w3.org/2000/svg" fill="#000000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M128 757.333333a384 138.666667 0 1 0 768 0 384 138.666667 0 1 0-768 0Z" fill="#90CAF9"></path><path d="M512 128c-129.6 0-234.666667 103.637333-234.666667 231.466667C277.333333 487.317333 512 789.333333 512 789.333333s234.666667-302.016 234.666667-429.866666C746.666667 231.637333 641.6 128 512 128z m0 341.333333a106.666667 106.666667 0 1 1 0-213.333333 106.666667 106.666667 0 0 1 0 213.333333z" fill="#FF3D00"></path></g></svg>
+                     <h3 class="text-2xl font-semibold text-gray-900 dark:text-white">Boundary</h3>
+                  </div>
+               </div>
+               <p class="text-gray-700 dark:text-gray-300 mt-2 md:mt-0"> Set up geofence boundaries to help track and manage the location status of students within designated areas.</p>
+
+               <div class="bg-green-100 border border-gray-500 min-h-80 rounded-lg mt-4">
+                  <!-- School Geofence Boundary Container-->
+                  <div id="geofence-boundary-container"></div>
+               </div>
+
+               <div id="geofence-boundaries-datatable-container" class="mt-8">
+
+                  <div id="table-loader" class="flex justify-center items-center py-10">
+                     <svg role="status" class="inline w-8 h-8 mr-2 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9765 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9765 100 50.5908ZM9.08125 50.5908C9.08125 73.5495 27.0413 91.5095 50 91.5095C72.9587 91.5095 90.9188 73.5495 90.9188 50.5908C90.9188 27.6321 72.9587 9.67209 50 9.67209C27.0413 9.67209 9.08125 27.6321 9.08125 50.5908Z" fill="currentColor"/>
+                        <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5536C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7233 75.2124 7.41289C69.5422 4.10248 63.2754 1.94025 56.7335 1.05189C51.7661 0.367391 46.7345 0.446447 41.8062 1.27873C39.324 1.69443 37.8557 4.19778 38.4928 6.62326C39.1299 9.04874 41.6119 10.5012 44.1076 10.1076C47.8923 9.47543 51.7426 9.52629 55.4747 10.2485C60.8569 11.2887 65.968 13.4632 70.543 16.6697C75.118 19.8763 79.0733 24.0361 82.1918 28.9444C84.7348 32.8122 86.6207 37.1317 87.7824 41.708C88.4351 44.0608 91.5422 45.6781 93.9676 45.0409Z" fill="currentFill"/>
+                     </svg>
+                     <span>Loading data, please wait...</span>
+                  </div>
+                  <!-- Table content goes here -->
+               </div>
             </div>
-            
-            <!-- Datatable Container-->
-            <div id="geofence-boundaries-datatable-container"></div>
             
          </div>
       </div>

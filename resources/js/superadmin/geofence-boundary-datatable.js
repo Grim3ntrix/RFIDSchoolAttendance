@@ -18,7 +18,7 @@ export function initializeGeofenceDatatable() {
 
             if (geofenceBoundariesMapData) {
                 const geofenceBoundaryHTML = `
-                    <div id="map" class="h-80 my-8 rounded-lg bg-gradient-to-br from-gray-100 via-gray-300 to-gray-500 dark:bg-gray-800 shadow-lg p-6"></div>
+                    <div id="map" class="h-80 rounded-lg shadow-lg"></div>
                 `;
                 geofenceBoundary.innerHTML = geofenceBoundaryHTML;
 
@@ -37,7 +37,7 @@ export function initializeGeofenceDatatable() {
                 // Add a tile layer to the map
                 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                     maxZoom: 18,
-                    attribution: '© OpenStreetMap contributors'
+                    attribution: ''
                 }).addTo(map);
 
                 // Add a geofence boundary (circle)

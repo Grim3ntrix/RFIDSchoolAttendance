@@ -16,7 +16,7 @@
                   <div class="grid grid-cols-1 md:grid-cols-2 gap-6 my-10">
 
                      <!-- Section and Class Schedules Input -->
-                     <div class="h-auto rounded-lg bg-gradient-to-l from-lime-100 to-green-200 border border-gray-300 shadow p-6">
+                     <div class="h-auto rounded-lg bg-gradient-to-l from-lime-100 to-green-200 border border-gray-300 shadow-lg p-6">
                         <div class="mt-1">
                            <label for="section" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Section</label>
                            <select id="section" name="section" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-indigo-500 dark:focus:border-indigo-500">
@@ -30,7 +30,7 @@
                      </div>
 
                      <!-- RFID Input -->
-                     <div class="h-auto rounded-lg bg-gradient-to-r from-lime-100 to-green-200 border border-gray-300 shadow p-6">
+                     <div class="h-auto rounded-lg bg-gradient-to-r from-lime-100 to-green-200 border border-gray-300 shadow-lg p-6">
                         <div class="flex justify-end">
                            <svg data-tooltip-target="tooltip-hover" data-tooltip-trigger="hover" class="w-4 h-4 text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white cursor-pointer ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
                               <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm0 16a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3Zm1-5.034V12a1 1 0 0 1-2 0v-1.418a1 1 0 0 1 1.038-.999 1.436 1.436 0 0 0 1.488-1.441 1.501 1.501 0 1 0-3-.116.986.986 0 0 1-1.037.961 1 1 0 0 1-.96-1.037A3.5 3.5 0 1 1 11 11.466Z"/>
@@ -55,17 +55,82 @@
                   </div>
                </form>
 
-               <div id="separator"></div>
-
-               <div id="table-loader" class="flex justify-center items-center py-10">
-                  <svg role="status" class="inline w-8 h-8 mr-2 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
-                     <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9765 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9765 100 50.5908ZM9.08125 50.5908C9.08125 73.5495 27.0413 91.5095 50 91.5095C72.9587 91.5095 90.9188 73.5495 90.9188 50.5908C90.9188 27.6321 72.9587 9.67209 50 9.67209C27.0413 9.67209 9.08125 27.6321 9.08125 50.5908Z" fill="currentColor"/>
-                     <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5536C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7233 75.2124 7.41289C69.5422 4.10248 63.2754 1.94025 56.7335 1.05189C51.7661 0.367391 46.7345 0.446447 41.8062 1.27873C39.324 1.69443 37.8557 4.19778 38.4928 6.62326C39.1299 9.04874 41.6119 10.5012 44.1076 10.1076C47.8923 9.47543 51.7426 9.52629 55.4747 10.2485C60.8569 11.2887 65.968 13.4632 70.543 16.6697C75.118 19.8763 79.0733 24.0361 82.1918 28.9444C84.7348 32.8122 86.6207 37.1317 87.7824 41.708C88.4351 44.0608 91.5422 45.6781 93.9676 45.0409Z" fill="currentFill"/>
-                  </svg>
-                  <span>Loading data, please wait...</span>
+               <div class="flex flex-row justify-center gap-3">
+                  <div id="separator-daily-attendance"></div>
+                  <div id="separator-attendance-history"></div>
                </div>
 
-               <div id="daily-attendance-table-container"></div>
+               <div class="rounded-lg bg-teal-100 dark:bg-gray-700 border border-gray-300 shadow-lg p-6 md:p-8 mt-8" id="toggle-daily-attendance-content">
+                  <div class="flex items-center mb-3">
+                     <svg class="w-7 h-7 text-blue-600 mr-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 4h3a1 1 0 0 1 1 1v15a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h3m0 3h6m-3 5h3m-6 0h.01M12 16h3m-6 0h.01M10 3v4h4V3h-4Z"/>
+                     </svg>
+                     <h3 class="text-2xl font-semibold text-gray-900 dark:text-white">Attendance Logs for Today</h3>
+                  </div>
+                  <p class="text-gray-700 dark:text-gray-300">Quick overview of today’s attendance records.</p>
+
+                  <div id="table-loader" class="flex justify-center items-center py-10">
+                     <svg role="status" class="inline w-8 h-8 mr-2 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9765 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9765 100 50.5908ZM9.08125 50.5908C9.08125 73.5495 27.0413 91.5095 50 91.5095C72.9587 91.5095 90.9188 73.5495 90.9188 50.5908C90.9188 27.6321 72.9587 9.67209 50 9.67209C27.0413 9.67209 9.08125 27.6321 9.08125 50.5908Z" fill="currentColor"/>
+                        <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5536C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7233 75.2124 7.41289C69.5422 4.10248 63.2754 1.94025 56.7335 1.05189C51.7661 0.367391 46.7345 0.446447 41.8062 1.27873C39.324 1.69443 37.8557 4.19778 38.4928 6.62326C39.1299 9.04874 41.6119 10.5012 44.1076 10.1076C47.8923 9.47543 51.7426 9.52629 55.4747 10.2485C60.8569 11.2887 65.968 13.4632 70.543 16.6697C75.118 19.8763 79.0733 24.0361 82.1918 28.9444C84.7348 32.8122 86.6207 37.1317 87.7824 41.708C88.4351 44.0608 91.5422 45.6781 93.9676 45.0409Z" fill="currentFill"/>
+                     </svg>
+                     <span>Loading data, please wait...</span>
+                  </div>
+
+                  <div id="daily-attendance-table-container" class="mt-8 overflow-x-auto">
+                     <!-- Table content goes here -->
+                  </div>
+               </div>
+
+               <div class="rounded-lg bg-teal-100 dark:bg-gray-700 border border-gray-300 shadow-lg p-6 md:p-8 mt-8" id="toggle-attendance-history-content">
+                  <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-3">
+                     <div class="flex items-center space-x-3"> 
+                        <div class="relative inline-block">
+                           <!-- Document Icon -->
+                           <svg class="w-7 h-7 text-purple-600" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 4h3a1 1 0 0 1 1 1v15a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h3m0 3h6m-3 5h3m-6 0h.01M12 16h3m-6 0h.01M10 3v4h4V3h-4Z"/>
+                           </svg>
+
+                           <!-- Magnifying Glass Icon -->
+                           <svg class="w-6 h-6 text-blue-600 dark:text-white absolute right-0 top-0 transform translate-x-2 translate-y-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                              <path d="M10 2a8 8 0 1 0 0 16 8 8 0 0 0 0-16Z"/>
+                              <path fill-rule="evenodd" d="M21.707 21.707a1 1 0 0 1-1.414 0l-3.5-3.5a1 1 0 0 1 1.414-1.414l3.5 3.5a1 1 0 0 1 0 1.414Z" clip-rule="evenodd"/>
+                           </svg>
+                        </div>
+
+                        <!-- Text -->
+                        <h3 class="text-2xl font-semibold text-gray-900 dark:text-white">Review Previous Attendances</h3>
+                     </div>
+                  </div>
+
+                  <!-- Description Paragraph -->
+                  <p class="text-gray-700 dark:text-gray-300 mt-2 md:mt-0">Access and review past attendance records.</p>
+
+                  <!-- Dropdown Filters Inline -->
+                  <div class="flex flex-col md:flex-row md:space-x-4 mt-4 justify-center">
+                     <!-- Section Dropdown -->
+                     <div class="w-full md:w-1/2">
+                        <label for="section_to_review_prev_att" class="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">Section</label>
+                        <select id="section_to_review_prev_att" name="section_to_review_prev_att" class="mb-3 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-indigo-500 dark:focus:border-indigo-500">
+                           <!-- Options go here -->
+                        </select>
+                     </div>
+
+                     <!-- Class Schedule Dropdown -->
+                     <div class="w-full md:w-1/2">
+                        <label for="class_schedule_to_review_prev_att" class="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">Class Schedule</label>
+                        <select id="class_schedule_to_review_prev_att" name="class_schedule_to_review_prev_att" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-indigo-500 dark:focus:border-indigo-500">
+                           <!-- Options go here -->
+                        </select>
+                     </div>
+                  </div>
+
+                  <div id="review-previous-attendances-table-container" class="mt-8 overflow-x-auto">
+                     <!-- Table content goes here -->
+                  </div>
+               </div>
+               
+               <div id="view-attendance-history-modal-container"></div>
             </div>
         </div>
     </div>

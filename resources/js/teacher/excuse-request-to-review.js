@@ -174,7 +174,7 @@ function studentClassScheduleToReviewDataTable()
                             <td>${createdAt}</td>
                             <td class="text-center">
                                 <div class="flex justify-center">
-                                    <button type="button" data-modal-target="excuse-request-message-to-approve-modal" data-modal-toggle="excuse-request-message-to-approve-modal" class="text-blue-500 hover:underline" data-excuse-request-class-schedule-id="${classSchedule.id}">
+                                    <button type="button" data-modal-target="excuse-request-message-to-approve-modal" data-modal-toggle="excuse-request-message-to-approve-modal" class="text-blue-500 hover:underline" data-excuse-request-class-schedule-id="${classSchedule.id}" data-student-id="${student.id}">
                                         <svg class="w-6 h-5 text-gray-800 dark:text-white hover:text-blue-600 transition-colors duration-150" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
                                         <path fill-rule="evenodd" d="M15.03 9.684h3.965c.322 0 .64.08.925.232.286.153.532.374.717.645a2.109 2.109 0 0 1 .242 1.883l-2.36 7.201c-.288.814-.48 1.355-1.884 1.355-2.072 0-4.276-.677-6.157-1.256-.472-.145-.924-.284-1.348-.404h-.115V9.478a25.485 25.485 0 0 0 4.238-5.514 1.8 1.8 0 0 1 .901-.83 1.74 1.74 0 0 1 1.21-.048c.396.13.736.397.96.757.225.36.32.788.269 1.211l-1.562 4.63ZM4.177 10H7v8a2 2 0 1 1-4 0v-6.823C3 10.527 3.527 10 4.176 10Z" clip-rule="evenodd"/>
                                         </svg>
@@ -307,14 +307,14 @@ function studentClassScheduleToReviewDataTable()
     const excuseMessageRequestToReviewModalContainer = document.getElementById('excuse-request-message-to-review-modal-container');
 
     if (excuseMessageRequestToReviewModalContainer) {
-        let excuseMessgaeRequestToReviewId; // To hold the ID of the excuse request
+        let excuseMessageRequestToReviewId; // To hold the ID of the excuse request
 
         document.addEventListener('click', function (e) {
             if (e.target.closest('[data-modal-toggle="excuse-request-message-to-review-modal"]')) {
                 e.preventDefault();
 
                 // Get the excuse request ID
-                excuseMessgaeRequestToReviewId = e.target.closest('button').getAttribute('data-excuse-message-request-id');
+                excuseMessageRequestToReviewId = e.target.closest('button').getAttribute('data-excuse-message-request-id');
 
                 // Create modal HTML
                 const modalHTML = `
@@ -347,7 +347,7 @@ function studentClassScheduleToReviewDataTable()
                 excuseRequestToReviewModal.show();
 
                 // Handle fetching excuse request details
-                axios.get(`/teacher/get-excuse-request-message/${excuseMessgaeRequestToReviewId}`)
+                axios.get(`/teacher/get-excuse-request-message/${excuseMessageRequestToReviewId}`)
                     .then(response => {
                         const excuseRequestToReview         = response.data; // Assuming the response structure
                         const excuseMessageDetailsContainer = document.getElementById('excuse-message-details');
@@ -377,14 +377,17 @@ function studentClassScheduleToReviewDataTable()
     const excuseRequestClassScheduleAttendanceModalContainer = document.getElementById('excuse-request-class-schedule-attendance-modal-container');
 
     if (excuseRequestClassScheduleAttendanceModalContainer) {
-        let excuseRequestClassScheduleId; // To hold the ID of the excuse request
+        let excuseRequestClassScheduleId; // To hold the ID of the class schedule of excuse request
+        let studentId; // To hold the ID of the student id of excuse request
 
         document.addEventListener('click', function (e) {
             if (e.target.closest('[data-modal-toggle="excuse-request-message-to-approve-modal"]')) {
                 e.preventDefault();
 
                 // Get the excuse request class schedule ID
-                excuseRequestClassScheduleId = e.target.closest('button').getAttribute('data-excuse-request-class-schedule-id');
+                const button = e.target.closest('button');
+                excuseRequestClassScheduleId = button.getAttribute('data-excuse-request-class-schedule-id');
+                studentId = button.getAttribute('data-student-id');
 
                 const excuseRequestClassScheduleAttendanceModalHTML = `
                 <div id="excuse-request-message-to-approve-modal" tabindex="-1" class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
@@ -431,7 +434,7 @@ function studentClassScheduleToReviewDataTable()
 
                     /* Axios GET request to populate the datatable */
 
-                    axios.get(`/teacher/get-excuse-request-class-schedule-attendance/${excuseRequestClassScheduleId}`)
+                    axios.get(`/teacher/get-excuse-request-class-schedule-attendance/${excuseRequestClassScheduleId}/${studentId}`)
                     .then(response => {
                         const classScheduleAttendanceData = response.data;
 
@@ -514,15 +517,18 @@ function studentClassScheduleToReviewDataTable()
                                 tbody.innerHTML += row; // Add row data to tbody
                             });
 
-                            // Add click event listeners to all "Excuse" buttons
-                            const excuseButtons = document.querySelectorAll('.excuse-btn');
-                            excuseButtons.forEach(button => {
-                                button.addEventListener('click', function() {
-                                    const attendanceId = this.getAttribute('data-student-class-schedule-attendance-id');  // Get the data-id of the clicked button
+                            // Add click event listener to the parent element (tbody)
+                            tbody.addEventListener('click', function(event) {
+                                // Check if the clicked element is the "Excuse" button
+                                if (event.target.closest('.excuse-btn')) {
+                                    const excuseButton = event.target.closest('.excuse-btn');
+                                    const attendanceId = excuseButton.getAttribute('data-student-class-schedule-attendance-id');
+                                    
                                     if (attendanceId) {
-                                     markExcuseStudentAttendance(attendanceId);  // Call the function and pass the attendanceId
+                                        console.log("Attendance ID:", attendanceId);
+                                        markExcuseStudentAttendance(attendanceId);  // Call the function and pass the attendanceId
                                     }
-                                });
+                                }
                             });
                             
                             // Initialize DataTable with proper options
@@ -605,9 +611,8 @@ function studentClassScheduleToReviewDataTable()
     }
 }
 
-function markExcuseStudentAttendance($attendanceId) 
+function markExcuseStudentAttendance(attendanceId) 
 {
-    const attendanceId = $attendanceId;
 
     axios.post(`/teacher/mark-excuse-student-attendances/${attendanceId}`, {
         headers: {
@@ -651,13 +656,16 @@ function declineStudentExcuseRequest() {
 
     if (declineExcuseRequestModalContainer) {
         let classScheduleAttendanceToDeclineId; // To hold the ID of the section to delete
+        let studentId; // To hold the ID of the student id of excuse request
 
         document.addEventListener('click', function (e) {
             if (e.target.closest('[data-modal-toggle="excuse-request-message-to-decline-modal"]')) {
                 e.preventDefault();
                 
-                classScheduleAttendanceToDeclineId = e.target.closest('button').getAttribute('data-excuse-request-class-schedule-id');
-
+                const button = e.target.closest('button');
+                classScheduleAttendanceToDeclineId = button.getAttribute('data-excuse-request-class-schedule-id');
+                studentId = button.getAttribute('data-student-id');
+                
                 // Create modal HTML
                 const modalHTML = `
                     <div id="excuse-request-message-to-decline-modal" tabindex="-1" class="overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 flex justify-center items-center w-full h-full">

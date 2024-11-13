@@ -67,56 +67,51 @@ export function initializeSectionPage() {
         if (sections.length > 0) {
             sections.forEach(section => {
                 const sectionContent = `
-                    <div class="flex justify-between items-center rounded-lg shadow p-4 cursor-pointer bg-gradient-to-r from-lime-200 to-green-400 hover:text-white text-gray-800 duration-50 ease-in-out hover:bg-gradient-to-r hover:from-emerald-500 hover:to-lime-500">
+                    <div class="flex flex-col md:flex-row justify-between items-center border border-gray-300 rounded-lg shadow p-4 mb-3 mt-4 cursor-pointer bg-gradient-to-r from-lime-200 to-green-400 hover:text-white text-gray-800 duration-50 ease-in-out hover:bg-gradient-to-r hover:from-emerald-500 hover:to-lime-500">
                         
-                        <!-- Section Content -->
-                        <div class="section-info flex items-center space-x-3">
-                            <p class="subpixel-antialiased font-lg font-semibold">
+                        <!-- Section Info -->
+                        <div class="section-info flex flex-col md:flex-row items-center space-y-3 md:space-x-3 md:space-y-0 mb-3 md:mb-0">
+                            <p class="text-lg font-semibold">
                                 ${section.section_name}
                             </p>
-                            
-                            <span class="bg-purple-100 text-purple-800 text-sm font-medium me-2 px-2.5 py-0.5 rounded dark:bg-purple-900 dark:text-purple-300">
+                            <span class="bg-purple-100 text-purple-800 text-sm font-medium px-2.5 py-0.5 rounded dark:bg-purple-900 dark:text-purple-300">
                                 ${section.grade_or_year_level}
                             </span>
                         </div>
 
                         <!-- Button Group -->
-                        <div class="section-actions flex space-x-2">
+                        <div class="section-actions flex flex-wrap justify-center gap-2 md:space-x-2">
 
                             <!-- Manage Student Button -->
-                            <button type="button" class="w-15 font-medium rounded-md text-sm p-0.5 shadow bg-gray-50 dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition ease-in-out duration-150" data-section-id="${section.id}">
-                            <a href="/teacher/sections/${section.slug}/students">
-                                    <svg class="w-6 h-5 text-gray-800 dark:text-white hover:text-purple-500 transition-colors duration-150" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                            <a href="/teacher/sections/${section.slug}/students" class="w-15 p-0.5 bg-gray-50 dark:bg-gray-800 rounded-md shadow hover:bg-gray-100 focus:ring-2 focus:ring-indigo-500">
+                                <svg class="w-5 h-5 text-gray-800 dark:text-white hover:text-purple-500 transition-colors duration-150 md:w-6 md:h-6" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">  
                                     <path fill-rule="evenodd" d="M17 10v1.126c.367.095.714.24 1.032.428l.796-.797 1.415 1.415-.797.796c.188.318.333.665.428 1.032H21v2h-1.126c-.095.367-.24.714-.428 1.032l.797.796-1.415 1.415-.796-.797a3.979 3.979 0 0 1-1.032.428V20h-2v-1.126a3.977 3.977 0 0 1-1.032-.428l-.796.797-1.415-1.415.797-.796A3.975 3.975 0 0 1 12.126 16H11v-2h1.126c.095-.367.24-.714.428-1.032l-.797-.796 1.415-1.415.796.797A3.977 3.977 0 0 1 15 11.126V10h2Zm.406 3.578.016.016c.354.358.574.85.578 1.392v.028a2 2 0 0 1-3.409 1.406l-.01-.012a2 2 0 0 1 2.826-2.83ZM5 8a4 4 0 1 1 7.938.703 7.029 7.029 0 0 0-3.235 3.235A4 4 0 0 1 5 8Zm4.29 5H7a4 4 0 0 0-4 4v1a2 2 0 0 0 2 2h6.101A6.979 6.979 0 0 1 9 15c0-.695.101-1.366.29-2Z" clip-rule="evenodd"/>
-                                    </svg>
-                                </a>
-                            </button>
+                                </svg>
+                            </a>
 
                             <!-- Manage Class Schedule Button -->
-                            <button type="button" class="w-15 font-medium rounded-md text-sm p-0.5 shadow bg-gray-50 dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition ease-in-out duration-150" data-section-id="${section.id}">
-                                <a href="/teacher/sections/${section.slug}/class-schedules">
-                                    <svg class="w-6 h-5 text-gray-800 dark:text-white hover:text-purple-500 transition-colors duration-150" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                            <a href="/teacher/sections/${section.slug}/class-schedules" class="w-15 p-0.5 bg-gray-50 dark:bg-gray-800 rounded-md shadow hover:bg-gray-100 focus:ring-2 focus:ring-indigo-500">
+                                <svg class="w-5 h-5 text-gray-800 dark:text-white hover:text-purple-500 transition-colors duration-150 md:w-6 md:h-6" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
                                     <path fill="currentColor" d="M4 9.05H3v2h1v-2Zm16 2h1v-2h-1v2ZM10 14a1 1 0 1 0 0 2v-2Zm4 2a1 1 0 1 0 0-2v2Zm-3 1a1 1 0 1 0 2 0h-2Zm2-4a1 1 0 1 0-2 0h2Zm-2-5.95a1 1 0 1 0 2 0h-2Zm2-3a1 1 0 1 0-2 0h2Zm-7 3a1 1 0 0 0 2 0H6Zm2-3a1 1 0 1 0-2 0h2Zm8 3a1 1 0 1 0 2 0h-2Zm2-3a1 1 0 1 0-2 0h2Zm-13 3h14v-2H5v2Zm14 0v12h2v-12h-2Zm0 12H5v2h14v-2Zm-14 0v-12H3v12h2Zm0 0H3a2 2 0 0 0 2 2v-2Zm14 0v2a2 2 0 0 0 2-2h-2Zm0-12h2a2 2 0 0 0-2-2v2Zm-14-2a2 2 0 0 0-2 2h2v-2Zm-1 6h16v-2H4v2ZM10 16h4v-2h-4v2Zm3 1v-4h-2v4h2Zm0-9.95v-3h-2v3h2Zm-5 0v-3H6v3h2Zm10 0v-3h-2v3h2Z"/>
-                                    </svg>
-                                </a>
-                            </button>
-                            
+                                </svg>
+                            </a>
+
                             <!-- Edit Button -->
-                            <button type="button" data-modal-target="edit-section-modal" data-modal-toggle="edit-section-modal" class="w-15 font-medium rounded-md text-sm p-0.5 shadow bg-gray-50 dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition ease-in-out duration-150" data-section-id="${section.id}">
-                                <svg class="w-6 h-5 text-gray-800 dark:text-white hover:text-purple-500 transition-colors duration-150" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
-                                <path fill-rule="evenodd" d="M11.32 6.176H5c-1.105 0-2 .949-2 2.118v10.588C3 20.052 3.895 21 5 21h11c1.105 0 2-.948 2-2.118v-7.75l-3.914 4.144A2.46 2.46 0 0 1 12.81 16l-2.681.568c-1.75.37-3.292-1.263-2.942-3.115l.536-2.839c.097-.512.335-.983.684-1.352l2.914-3.086Z" clip-rule="evenodd"/>
-                                <path fill-rule="evenodd" d="M19.846 4.318a2.148 2.148 0 0 0-.437-.692 2.014 2.014 0 0 0-.654-.463 1.92 1.92 0 0 0-1.544 0 2.014 2.014 0 0 0-.654.463l-.546.578 2.852 3.02.546-.579a2.14 2.14 0 0 0 .437-.692 2.244 2.244 0 0 0 0-1.635ZM17.45 8.721 14.597 5.7 9.82 10.76a.54.54 0 0 0-.137.27l-.536 2.84c-.07.37.239.696.588.622l2.682-.567a.492.492 0 0 0 .255-.145l4.778-5.06Z" clip-rule="evenodd"/>
+                            <button data-modal-target="edit-section-modal" data-modal-toggle="edit-section-modal" class="w-15 p-0.5 bg-gray-50 dark:bg-gray-800 rounded-md shadow hover:bg-gray-100 focus:ring-2 focus:ring-indigo-500">
+                                <svg class="w-5 h-5 text-gray-800 dark:text-white hover:text-purple-500 transition-colors duration-150 md:w-6 md:h-6" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                                    <path fill-rule="evenodd" d="M11.32 6.176H5c-1.105 0-2 .949-2 2.118v10.588C3 20.052 3.895 21 5 21h11c1.105 0 2-.948 2-2.118v-7.75l-3.914 4.144A2.46 2.46 0 0 1 12.81 16l-2.681.568c-1.75.37-3.292-1.263-2.942-3.115l.536-2.839c.097-.512.335-.983.684-1.352l2.914-3.086Z" clip-rule="evenodd"/>
+                                        <path fill-rule="evenodd" d="M19.846 4.318a2.148 2.148 0 0 0-.437-.692 2.014 2.014 0 0 0-.654-.463 1.92 1.92 0 0 0-1.544 0 2.014 2.014 0 0 0-.654.463l-.546.578 2.852 3.02.546-.579a2.14 2.14 0 0 0 .437-.692 2.244 2.244 0 0 0 0-1.635ZM17.45 8.721 14.597 5.7 9.82 10.76a.54.54 0 0 0-.137.27l-.536 2.84c-.07.37.239.696.588.622l2.682-.567a.492.492 0 0 0 .255-.145l4.778-5.06Z" clip-rule="evenodd"/>
+                                    </svg>
                                 </svg>
                             </button>
 
                             <!-- Delete Button -->
-                            <button type="button" data-modal-target="delete-section-modal" data-modal-toggle="delete-section-modal" class="w-15 font-medium rounded-md text-sm p-0.5 shadow bg-gray-50 dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition ease-in-out duration-150" data-section-id="${section.id}">
-                                <svg class="w-6 h-5 text-gray-800 dark:text-white hover:text-red-500 transition-colors duration-150" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
-                                <path fill-rule="evenodd" d="M8.586 2.586A2 2 0 0 1 10 2h4a2 2 0 0 1 2 2v2h3a1 1 0 1 1 0 2v12a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V8a1 1 0 0 1 0-2h3V4a2 2 0 0 1 .586-1.414ZM10 6h4V4h-4v2Zm1 4a1 1 0 1 0-2 0v8a1 1 0 1 0 2 0v-8Zm4 0a1 1 0 1 0-2 0v8a1 1 0 1 0 2 0v-8Z" clip-rule="evenodd"/>
+                            <button data-modal-target="delete-section-modal" data-modal-toggle="delete-section-modal" class="w-15 p-0.5 bg-gray-50 dark:bg-gray-800 rounded-md shadow hover:bg-gray-100 focus:ring-2 focus:ring-indigo-500">
+                                <svg class="w-5 h-5 text-gray-800 dark:text-white hover:text-red-500 transition-colors duration-150 md:w-6 md:h-6" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                                    <path fill-rule="evenodd" d="M8.586 2.586A2 2 0 0 1 10 2h4a2 2 0 0 1 2 2v2h3a1 1 0 1 1 0 2v12a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V8a1 1 0 0 1 0-2h3V4a2 2 0 0 1 .586-1.414ZM10 6h4V4h-4v2Zm1 4a1 1 0 1 0-2 0v8a1 1 0 1 0 2 0v-8Zm4 0a1 1 0 1 0-2 0v8a1 1 0 1 0 2 0v-8Z" clip-rule="evenodd"/>
                                 </svg>
                             </button>
                         </div>
-
                     </div>
                 `;
 
