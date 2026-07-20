@@ -1,6 +1,6 @@
 # RFID School Attendance - Release Notes
 
-**Version:** v1.0.0-beta
+**Version:** v1.0.0 (Stable Beta)
 
 ---
 
@@ -36,16 +36,16 @@
 
 ### **Attendance - RFID**
 1. Conditions:
-   - Missing inputs: Section, Class Schedule, RFID Serial Number
-   - Unregistered RFID Serial Number
-   - Class not yet started
-   - Class already ended
-   - Attendance only valid on scheduled class days.
+    - Missing inputs: Section, Class Schedule, RFID Serial Number
+    - Unregistered RFID Serial Number
+    - Class not yet started
+    - Class already ended
+    - Attendance only valid on scheduled class days.
 2. Attendance statuses:
-   - **Present**: Students are marked present if they scan the RFID within 15 minutes of the class start time.
-   - **Late**: Students are marked late if they scan the RFID after the 15-minute grace period.
-   - **Absent**: Automatically marked absent if no RFID scan is recorded within the scheduled class time.
-   - **Excused**: Excused attendance upon teacher approval of valid requests.
+    - **Present**: Students are marked present if they scan the RFID within 15 minutes of the class start time.
+    - **Late**: Students are marked late if they scan the RFID after the 15-minute grace period.
+    - **Absent**: Automatically marked absent if no RFID scan is recorded within the scheduled class time.
+    - **Excused**: Excused attendance upon teacher approval of valid requests.
 3. Attendance counter shows how many students have taken attendance.
 4. All attendance records for the current day are displayed in a table.
 
@@ -54,32 +54,32 @@
 
 #### **Section Management**
 1. Conditions:
-   - Required inputs: Section Name, Grade/Year Level.
-   - Section names must be unique per teacher and grade/year.
+    - Required inputs: Section Name, Grade/Year Level.
+    - Section names must be unique per teacher and grade/year.
 2. Deleting a section will also delete related user accounts, class schedules, attendance records, and excuse requests.
 
 #### **Student Management**
 1. Register student RFID and create user accounts for excuse requests.
 2. Conditions:
-   - Required inputs: Name, Email, Birthdate, RFID Serial Number.
-   - Email and birthdate (MMDDYYYY) are default login credentials.
+    - Required inputs: Name, Email, Birthdate, RFID Serial Number.
+    - Email and birthdate (MMDDYYYY) are default login credentials.
 3. Deleting a student also deletes their user account.
 
 #### **Class Schedule Management**
 1. Conditions:
-   - Time range: 07:00 AM to 05:00 PM.
-   - Required inputs: Subject, Subject Code, Start Time, End Time.
-   - Time conflicts and overlaps are only allowed within the same teacher and section.
-   - Start time must be earlier than end time.
+    - Time range: 07:00 AM to 05:00 PM.
+    - Required inputs: Subject, Subject Code, Start Time, End Time.
+    - Time conflicts and overlaps are only allowed within the same teacher and section.
+    - Start time must be earlier than end time.
 
 ### **Reports - Quarterly Attendance**
 Generates quarterly attendance reports for each student in a section.
 1. Steps:
-   - Select Section
-   - Select Student
-   - Select Quarter
-   - Choose Quarter Start and End Dates
-   - Generate PDF
+    - Select Section
+    - Select Student
+    - Select Quarter
+    - Choose Quarter Start and End Dates
+    - Generate PDF
 
 ### **Location**
 - Active while the student is online, limited to assigned sections.
@@ -111,3 +111,13 @@ Generates quarterly attendance reports for each student in a section.
    - Selectable Class Schedule
    - Upload proof of excuse (e.g., document link)
    - Message to explain the excuse request
+
+---
+
+## **Version History**
+
+| Version | Date | Notes |
+|---------|------|-------|
+| v1.0.0 (Stable Beta) | 2026-07-20 | Concluded stable beta phase; all core features verified. |
+| v1.0.0-beta2 | 2024-10-24 | Dynamic focus on RFID input, version tracking improvements. |
+| v1.0.0-beta | 2024-10-20 | Initial beta release with core attendance, geofence, and role-based features. |

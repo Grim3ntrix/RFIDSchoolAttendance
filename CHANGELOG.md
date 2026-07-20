@@ -1,5 +1,17 @@
 # Changelog
 
+## [Stable Beta] - 2026-07-20
+### Added
+- Concluded stable beta phase; all core features verified and documented.
+- Updated documentation across CHANGELOG, RELEASE_NOTES, and README to reflect stable beta completion.
+
+### Changed
+- Bumped application version to `1.0.0` across `.env.example` and `config/app.php`.
+- Synchronized release notes with changelog entries (beta, beta2, and stable beta).
+
+### Fixed
+- Resolved inconsistencies between CHANGELOG.md and RELEASE_NOTES.md.
+
 ## [v1.0.0-beta2] - 2024-10-24
 ### Added
 - Added version number to the `.env` file for better version tracking.
