@@ -1,75 +1,161 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# RFIDSchoolAttendance
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+RFIDSchoolAttendance is a comprehensive attendance system designed for schools. It uses RFID technology combined with geofencing and location-based tracking to monitor student attendance. The system allows teachers to capture attendance records automatically based on students' proximity to designated geofence boundaries set by the school administrator. Students' locations are tracked with their consent, and attendance is logged in real-time using a semi-geofencing approach. This project aims to streamline the attendance process, improve accuracy, and enhance overall school management.
 
-## About Laravel
+## Features
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- **Role-Based Access Control** — Three roles: Super Admin, Teacher, and Student
+- **RFID Attendance** — Scan RFID cards to mark attendance with automatic present/late classification
+- **Geofence Boundaries** — Define school boundaries for location-based attendance tracking
+- **Student Location Tracking** — Real-time location status (inside, outside, entered) via browser Geolocation API
+- **Excuse Management** — Students submit excuse requests; teachers approve or decline
+- **Reports** — Generate downloadable quarterly attendance PDF reports
+- **Class Schedule Management** — Define subjects, time slots, and days of the week with conflict detection
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Prerequisites
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- PHP >= 8.2
+- Composer
+- Laragon (recommended for local Windows development)
+- MySQL (included with Laragon)
+- Node.js & npm (for Vite frontend assets)
 
-## Learning Laravel
+## Installation
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+1. **Clone or extract the project** into your Laragon `www` directory:
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+    ```bash
+    C:\laragon\www\RFIDSchoolAttendance-1.0.0-beta3
+    ```
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+2. **Install PHP dependencies:**
 
-## Laravel Sponsors
+    ```bash
+    composer install
+    ```
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+3. **Install Node dependencies and build assets:**
 
-### Premium Partners
+    ```bash
+    npm install
+    npm run build
+    ```
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+4. **Create the `.env` file:**
 
-## Contributing
+    Copy `.env.example` to `.env`:
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+    ```bash
+    copy .env.example .env
+    ```
 
-## Code of Conduct
+5. **Generate the application key:**
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+    ```bash
+    php artisan key:generate
+    ```
 
-## Security Vulnerabilities
+6. **Configure the `.env` file for MySQL:**
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+    Update the database connection settings in `.env`:
 
-## License
+    ```env
+    DB_CONNECTION=mysql
+    DB_HOST=127.0.0.1
+    DB_PORT=3306
+    DB_DATABASE=rfidschoolattendance
+    DB_USERNAME=root
+    DB_PASSWORD=
+    ```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+    Adjust `DB_DATABASE`, `DB_USERNAME`, and `DB_PASSWORD` to match your Laragon MySQL configuration.
+
+7. **Run migrations and seeders:**
+
+    ```bash
+    php artisan migrate --seed
+    ```
+
+8. **Configure your domain in Laragon:**
+
+    Add `rfidschoolattendance.test` (or your preferred domain) to your Laragon hosts and point it to the project directory.
+
+9. **Start Laragon:**
+
+    Open Laragon and start Apache/MySQL (or Nginx).
+
+10. **Access the application:**
+
+    Navigate to `https://rfidschoolattendance.test` in your browser.
 
 ---
 
-## RFIDSchoolAttendance
+## First User
 
-RFIDSchoolAttendance is a comprehensive attendance system designed for schools. It uses RFID technology combined with geofencing and location-based tracking to monitor student attendance. The system allows teachers to capture attendance records automatically based on students' proximity to designated geofence boundaries set by the school administrator. Students' locations are tracked with their consent, and attendance is logged in real-time using a semi-geofencing approach. This project aims to streamline the attendance process, improve accuracy, and enhance overall school management.
+After running the seeders, the following default Super Admin account is created:
+
+| Field    | Value                  |
+|----------|------------------------|
+| Email    | superadmin@gmail.com   |
+| Password | Spassword              |
+
+Use this account to log in and begin configuring the system.
+
+---
+
+## Enabling HTTPS SSL in Laragon
+
+> **Why is this needed?**
+>
+> The browser Geolocation API — used for student location tracking and geofence boundary mapping — only works in **secure contexts** (HTTPS or `localhost`). If you access the application via plain HTTP (e.g., `http://rfidschoolattendance.test`), location features will fail.
+>
+> To fix this, enable SSL for your local domain in Laragon.
+
+### Step 1: Open Laragon Settings
+
+1. Open Laragon.
+2. Click the **Menu** button (top-left).
+3. Select **Settings** (or press `Ctrl + Alt + S`).
+
+### Step 2: Enable SSL
+
+1. In the Settings window, go to the **SSL** tab.
+2. Check the box labeled **Enable SSL**.
+3. Click **OK** to save.
+
+### Step 3: Restart Laragon
+
+1. Stop all services (click **Stop All**).
+2. Start all services again (click **Start All**).
+
+### Step 4: Verify HTTPS Access
+
+1. Open your browser and navigate to:
+
+    ```
+    https://rfidschoolattendance.test
+    ```
+
+2. You should see a padlock icon in the address bar. Laragon uses a self-signed certificate, so your browser may show a warning on first visit. Click **Advanced** and proceed to the site (this is normal for local development).
+
+### Troubleshooting
+
+- **Certificate error persists:** Clear your browser cache or restart the browser. On Windows, you may also import the Laragon CA certificate into your system/browser trust store.
+- **Mixed content warnings:** Ensure all asset URLs in your `.env` use `https://`:
+    ```
+    APP_URL=https://rfidschoolattendance.test
+    ```
+- **Geolocation still fails:** Make sure you are accessing the site via `https://` and not `http://`. Also confirm that the geofence boundary is enabled in the Super Admin panel.
+
+---
+
+## Documentation
+
+For detailed role-based workflows and implementation details, see:
+
+- [Super Admin Workflow](./docs/superadmin-workflow.md)
+- [Teacher Workflow](./docs/teacher-workflow.md)
+- [Student Workflow](./docs/student-workflow.md)
 
 ## Release Notes
 

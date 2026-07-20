@@ -30,35 +30,37 @@ class WatchPositionController extends Controller
 
         $enabledBoundary = $this->geofenceBoundaryMapRequest->getEnabledGeofenceBoundary();
 
-        if ($enabledBoundary) {
-            $studentDistance = $this->calculateDistance(
-                $validated['latitude'],
-                $validated['longitude'],
-                $enabledBoundary->latitude,
-                $enabledBoundary->longitude
-            );
-
-            $radius = $enabledBoundary->radius;
-            $status = null;
-
-            if ($studentDistance < $radius) {
-                $status = StudentLocationStatus::where('status', 'inside')->first();
-            } elseif ($studentDistance == $radius) {
-                $status = StudentLocationStatus::where('status', 'entered')->first();
-            } else {
-                $status = StudentLocationStatus::where('status', 'outside')->first();
-            }
-
-            // Save the student location and status
-            if ($status) {
-                StudentLocation::create(array_merge($validated, [
-                    'student_id'  => $student->id,
-                    'status_id'   => $status->id,
-                ]));
-            }
-        } else {
+        if (!$enabledBoundary || is_null($enabledBoundary->latitude) || is_null($enabledBoundary->longitude) || is_null($enabledBoundary->radius) || $enabledBoundary->radius <= 0) {
             return response()->json(['error' => 'No enabled geofence boundary found'], 404);
         }
+
+        $studentDistance = $this->calculateDistance(
+            $validated['latitude'],
+            $validated['longitude'],
+            $enabledBoundary->latitude,
+            $enabledBoundary->longitude
+        );
+
+        $radius = $enabledBoundary->radius;
+        $status = null;
+
+        if ($studentDistance < $radius) {
+            $status = StudentLocationStatus::where('status', 'inside')->first();
+        } elseif ($studentDistance == $radius) {
+            $status = StudentLocationStatus::where('status', 'entered')->first();
+        } else {
+            $status = StudentLocationStatus::where('status', 'outside')->first();
+        }
+
+        // Save the student location and status
+        if ($status) {
+            StudentLocation::create(array_merge($validated, [
+                'student_id'  => $student->id,
+                'status_id'   => $status->id,
+            ]));
+        }
+
+        return response()->json(['success' => true]);
     }
 
     private function calculateDistance($studentLatitude, $studentLongitude, $boundaryLatitude, $boundaryLongitude) {

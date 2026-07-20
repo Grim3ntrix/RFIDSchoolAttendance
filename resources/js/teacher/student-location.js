@@ -293,12 +293,12 @@ if (studentLocationModalContainer) {
             .then(response => {
                 const geofenceBoundariesMapData = response.data;
                 
-                if (geofenceBoundariesMapData) {
-                    const latitude  = parseFloat(geofenceBoundariesMapData.latitude);
-                    const longitude = parseFloat(geofenceBoundariesMapData.longitude);
-                    const radius    = parseFloat(geofenceBoundariesMapData.radius);
+                if (geofenceBoundariesMapData && geofenceBoundariesMapData.configured === true && geofenceBoundariesMapData.state === 'configured') {
+                    const data = geofenceBoundariesMapData.data;
+                    const latitude  = parseFloat(data.latitude);
+                    const longitude = parseFloat(data.longitude);
+                    const radius    = parseFloat(data.radius);
 
-                    // Initialize the Leaflet map centered at the given latitude and longitude
                     const map = L.map('map', {
                         fullscreenControl: true,
                         fullscreenControlOptions: {
@@ -306,13 +306,11 @@ if (studentLocationModalContainer) {
                         }
                     }).setView([latitude, longitude], 16);
 
-                    // Add a tile layer to the map
                     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                         maxZoom: 18,
                         attribution: ''
                     }).addTo(map);
 
-                    // Add a geofence boundary (circle)
                     const boundary = L.circle([latitude, longitude], {
                         color: 'red',
                         fillColor: 'blue',
@@ -330,17 +328,15 @@ if (studentLocationModalContainer) {
                         const customIcon = L.icon({
                             iconUrl: '/images/marker-icon.png',
                             shadowUrl: '/images/marker-shadow.png',
-                            iconSize: [25, 41],     // Default size
-                            iconAnchor: [12, 41],   // Point of the icon which will correspond to marker's location
-                            popupAnchor: [1, -34],  // Point from which the popup should open relative to the iconAnchor
-                            shadowSize: [41, 41]    // Size of the shadow
+                            iconSize: [25, 41],
+                            iconAnchor: [12, 41],
+                            popupAnchor: [1, -34],
+                            shadowSize: [41, 41]
                         });
                         
-                        // Use the custom icon for the marker
                         const studentMarker = L.marker([studentLat, studentLng], { icon: customIcon })
                             .addTo(map);
 
-                        // Check if the student is within the boundary
                         const distanceFromBoundary = map.distance([latitude, longitude], [studentLat, studentLng]);
 
                         if (distanceFromBoundary <= radius) {
@@ -354,10 +350,25 @@ if (studentLocationModalContainer) {
                     .catch(error => {
                         console.error('Error fetching student location:', error);
                     });
+                } else {
+                    const mapContainer = document.getElementById('map');
+                    if (mapContainer) {
+                        let message = 'Unable to load geofence configuration. Please try again later.';
+                        if (geofenceBoundariesMapData && geofenceBoundariesMapData.state === 'incomplete') {
+                            message = 'Geofence configuration is incomplete. Latitude, longitude or radius is missing.';
+                        } else if (geofenceBoundariesMapData && geofenceBoundariesMapData.state === 'not_configured') {
+                            message = 'No geofence has been configured.';
+                        }
+                        mapContainer.innerHTML = `<div class="flex flex-col items-center justify-center py-16 text-center"><svg class="w-12 h-12 text-gray-400 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"/></svg><p class="text-gray-700 dark:text-gray-300">${message}</p></div>`;
+                    }
                 }
             })
             .catch(error => {
                 console.error('Error fetching geofence boundary map data:', error);
+                const mapContainer = document.getElementById('map');
+                if (mapContainer) {
+                    mapContainer.innerHTML = `<div class="flex flex-col items-center justify-center py-16 text-center"><svg class="w-12 h-12 text-red-500 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><p class="text-gray-700 dark:text-gray-300">Unable to load geofence configuration. Please try again later.</p></div>`;
+                }
             });
 
             // Handle modal close with close button

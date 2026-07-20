@@ -84,10 +84,37 @@
                </div>
                <p class="text-gray-700 dark:text-gray-300 mt-2 md:mt-0"> Set up geofence boundaries to help track and manage the location status of students within designated areas.</p>
 
-               <div class="bg-green-100 border border-gray-500 min-h-80 rounded-lg mt-4">
-                  <!-- School Geofence Boundary Container-->
-                  <div id="geofence-boundary-container"></div>
-               </div>
+                <div class="bg-green-100 border border-gray-500 min-h-80 rounded-lg mt-4">
+                   <!-- School Geofence Boundary Container-->
+                   <div id="geofence-boundary-container"></div>
+
+                   <!-- Empty State: Not Configured -->
+                   <div id="geofence-not-configured" class="hidden flex flex-col items-center justify-center py-16 px-4 text-center">
+                      <svg class="w-16 h-16 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                      <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">School Geofence</h3>
+                      <p class="text-gray-700 dark:text-gray-300 mb-6 max-w-md">No geofence has been configured. Configure your school's location to enable attendance validation.</p>
+                      <button type="button" data-modal-target="geofence-boundary-modal" data-modal-toggle="geofence-boundary-modal" class="inline-flex items-center px-4 py-2 bg-gray-800 dark:bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-white dark:text-gray-800 uppercase tracking-widest hover:bg-gray-700 dark:hover:bg-white focus:bg-gray-700 dark:focus:bg-white active:bg-gray-900 dark:active:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition ease-in-out duration-150">
+                         Configure Geofence
+                      </button>
+                   </div>
+
+                   <!-- Empty State: Incomplete -->
+                   <div id="geofence-incomplete" class="hidden flex flex-col items-center justify-center py-16 px-4 text-center">
+                      <svg class="w-16 h-16 text-yellow-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"/></svg>
+                      <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">Geofence configuration is incomplete.</h3>
+                      <p class="text-gray-700 dark:text-gray-300 mb-6 max-w-md">Latitude, longitude or radius is missing. Please complete the configuration to enable the map.</p>
+                      <button type="button" data-modal-target="geofence-boundary-modal" data-modal-toggle="geofence-boundary-modal" class="inline-flex items-center px-4 py-2 bg-gray-800 dark:bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-white dark:text-gray-800 uppercase tracking-widest hover:bg-gray-700 dark:hover:bg-white focus:bg-gray-700 dark:focus:bg-white active:bg-gray-900 dark:active:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition ease-in-out duration-150">
+                         Edit Configuration
+                      </button>
+                   </div>
+
+                   <!-- Empty State: Server Error -->
+                   <div id="geofence-error" class="hidden flex flex-col items-center justify-center py-16 px-4 text-center">
+                      <svg class="w-16 h-16 text-red-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                      <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">Unable to load geofence configuration.</h3>
+                      <p class="text-gray-700 dark:text-gray-300 mb-6 max-w-md">Please try again later.</p>
+                   </div>
+                </div>
 
                <div id="geofence-boundaries-datatable-container" class="mt-8">
 

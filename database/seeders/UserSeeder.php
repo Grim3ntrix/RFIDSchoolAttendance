@@ -21,7 +21,7 @@ class UserSeeder extends Seeder
         $superadmin = User::factory()->create([
             'name'      => 'Super Admin',
             'email'     => 'superadmin@gmail.com',
-            'password'  => Hash::make('rfidschoolattendance@superadmin.0nline'),
+            'password'  => Hash::make('Spassword'),
             'status_id' => 2,
         ]);
 
