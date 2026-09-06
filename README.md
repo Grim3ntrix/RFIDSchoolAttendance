@@ -39,7 +39,7 @@ RFIDSchoolAttendance is a comprehensive attendance system designed for schools. 
 
 ## Prerequisites
 
-- PHP >= 8.2
+- PHP >= 8.4
 - Composer
 - Laragon (recommended for local Windows development)
 - MySQL (included with Laragon)
@@ -101,15 +101,27 @@ RFIDSchoolAttendance is a comprehensive attendance system designed for schools. 
     php artisan migrate --seed
     ```
 
-8. **Configure your domain in Laragon:**
+8. **Create the public storage symlink:**
+
+    ```bash
+    php artisan storage:link
+    ```
+
+    > **Why is this needed?**
+    >
+    > Generated quarterly attendance PDF reports are saved to `storage/app/public/`, but only files inside the `public/` directory are web-accessible. This command creates the `public/storage` symlink that bridges the two.
+    >
+    > The symlink is **not tracked by git**, so it must be created once per machine (and per deployment — on shared hosts that don't support symlinks, copy or bind the directory instead). If PDF downloads ever return a 404 even though the report was generated, a missing symlink is the first thing to check.
+
+9. **Configure your domain in Laragon:**
 
     Add `rfidschoolattendance.test` (or your preferred domain) to your Laragon hosts and point it to the project directory.
 
-9. **Start Laragon:**
+10. **Start Laragon:**
 
     Open Laragon and start Apache/MySQL (or Nginx).
 
-10. **Access the application:**
+11. **Access the application:**
 
     Navigate to `https://rfidschoolattendance.test` in your browser.
 
