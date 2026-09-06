@@ -51,6 +51,22 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Session Serialization
+    |--------------------------------------------------------------------------
+    |
+    | This option determines how session data is serialized before it is
+    | stored. JSON serialization is recommended as a hardening measure
+    | against PHP object deserialization attacks. Note that changing
+    | this value will invalidate all existing sessions.
+    |
+    | Supported: "json", "php"
+    |
+    */
+
+    'serialization' => env('SESSION_SERIALIZATION', 'json'),
+
+    /*
+    |--------------------------------------------------------------------------
     | Session File Location
     |--------------------------------------------------------------------------
     |

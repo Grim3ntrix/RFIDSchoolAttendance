@@ -18,5 +18,6 @@ yarn-error.log
 /.fleet
 /.idea
 /.vscode
-doc
+tasks
 .kilo
+storage/app

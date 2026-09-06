@@ -94,6 +94,21 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Serializable Cache Classes
+    |--------------------------------------------------------------------------
+    |
+    | This option hardens cache unserialization behavior to help prevent
+    | PHP deserialization gadget chain attacks if the application's
+    | encryption key is leaked. When set to false, only scalar values
+    | and arrays may be unserialized from the cache. If the application
+    | intentionally caches PHP objects, list their class names here.
+    |
+    */
+
+    'serializable_classes' => env('CACHE_SERIALIZABLE_CLASSES', false),
+
+    /*
+    |--------------------------------------------------------------------------
     | Cache Key Prefix
     |--------------------------------------------------------------------------
     |
