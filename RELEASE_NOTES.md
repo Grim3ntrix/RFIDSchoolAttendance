@@ -1,6 +1,6 @@
 # RFID School Attendance - Release Notes
 
-**Version:** v1.0.0 (Stable Beta)
+**Version:** v1.1.0
 
 ---
 
@@ -118,6 +118,7 @@ Generates quarterly attendance reports for each student in a section.
 
 | Version | Date | Notes |
 |---------|------|-------|
+| v1.1.0 | 2026-09-07 | Upgraded to Laravel 13 (PHP 8.4); session/cache security hardening; fixed invalid auth redirects and test database isolation. |
 | v1.0.0 (Stable Beta) | 2026-07-20 | Concluded stable beta phase; all core features verified. |
 | v1.0.0-beta2 | 2024-10-24 | Dynamic focus on RFID input, version tracking improvements. |
 | v1.0.0-beta | 2024-10-20 | Initial beta release with core attendance, geofence, and role-based features. |

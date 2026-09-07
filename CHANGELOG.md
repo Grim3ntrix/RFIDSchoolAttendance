@@ -1,5 +1,23 @@
 # Changelog
 
+## [v1.1.0] - 2026-09-07
+### Changed
+- Upgraded the framework from Laravel 11.22 to 13.30.1 following the official 12.x and 13.x upgrade guides.
+- Raised the runtime requirement to PHP 8.4 (Symfony 8.1 requires >= 8.4.1).
+- Applied Laravel 13 security hardening: JSON session serialization (invalidates active sessions once on deploy) and cache `serializable_classes` hardening.
+- Bumped `spatie/laravel-permission` to ^6.21, `barryvdh/laravel-dompdf` to ^3.1, `laravel/tinker` to ^3.0, and PHPUnit to ^12.0.
+- Bumped the application version to `1.1.0` across `.env.example` and `.env`.
+
+### Fixed
+- Fixed email verification and password confirmation redirects that referenced an unregistered `overview` route (500 errors in production).
+- Pointed the test suite at a dedicated `rfidschoolattendance_testing` database instead of the development database.
+- Grouped the eight lookup seeders into `ReferenceDataSeeder` and seeded them during database refresh so user creation no longer violates the `users.status_id` foreign key.
+- Resolved all npm security advisories.
+
+### Added
+- Documented the `php artisan storage:link` setup step and the PHP 8.4 requirement in the README.
+- Added the Flowbite UI/UX design system guide (`docs/design/FLOWBITE_UI_UX_GUIDELINES.md`).
+
 ## [Stable Beta] - 2026-07-20
 ### Added
 - Concluded stable beta phase; all core features verified and documented.
