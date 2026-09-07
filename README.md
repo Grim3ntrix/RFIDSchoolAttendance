@@ -193,6 +193,9 @@ For detailed role-based workflows and implementation details, see:
 - [Super Admin Workflow](./docs/superadmin-workflow.md)
 - [Teacher Workflow](./docs/teacher-workflow.md)
 - [Student Workflow](./docs/student-workflow.md)
+- [UI/UX Design System](./docs/design/FLOWBITE_UI_UX_GUIDELINES.md)
+
+The design system guide is the authoritative reference for the application's visual language — brand colors, typography, spacing, Flowbite component usage, and UX patterns. It applies to all UI work, including AI-assisted development (see [CLAUDE.md](./CLAUDE.md)).
 
 ## Release Notes
 

@@ -63,6 +63,21 @@ Composer is invoked as `php /c/laragon/bin/composer/composer.phar`.
 - Pint has never been run on the legacy codebase; only fix style on files
   actually being touched.
 
+## UI/UX design system
+
+- `docs/design/FLOWBITE_UI_UX_GUIDELINES.md` is authoritative for visual
+  language, Flowbite component usage, color, spacing, accessibility, and UX
+  patterns — read it before substantial UI work.
+- Green is the primary brand direction on a neutral/slate foundation. Semantic
+  colors keep their meaning: amber = late, red = absent/danger, blue = info.
+  Never saturate the interface in green.
+- Prefer Flowbite components and established project patterns over custom
+  one-offs; no arbitrary hex values, spacing, or typography.
+- UI work preserves existing functionality — routes, permissions, validation,
+  and business logic stay untouched during visual passes.
+- The flowbite MCP server (`.mcp.json`) provides `generate-theme`; use it when
+  establishing or revising the theme, not for individual pages.
+
 ## Git conventions
 
 - Conventional Commits (`type(scope): short description` + bulleted body).
