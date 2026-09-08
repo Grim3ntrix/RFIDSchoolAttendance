@@ -23,6 +23,7 @@
         "flowbite": "^2.5.1",
         "leaflet": "^1.9.4",
         "leaflet.fullscreen": "^3.0.2",
+        "lucide": "^1.43.0",
         "simple-datatables": "^9.1.0",
         "sweetalert2": "^11.14.0"
     }

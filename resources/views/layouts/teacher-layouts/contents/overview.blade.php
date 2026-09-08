@@ -1,7 +1,4 @@
 <x-app-layout>
-    <div class="min-h-screen flex flex-col sm:ml-64">
-        <div class="flex-grow p-4">
-            <div class="p-4">
                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-7">
                   <div class="flex items-center justify-between border-t-4 border-violet-500 h-36 rounded-lg bg-gray-50 dark:bg-gray-800 shadow-lg p-4 md:p-6">
                      <div class="flex items-center">
@@ -86,7 +83,4 @@
                      <div id="ongoing-class-schedules"></div>
                   </div>
                </div>
-            </div>
-        </div>
-    </div>
 </x-app-layout>

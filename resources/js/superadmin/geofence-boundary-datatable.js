@@ -5,6 +5,7 @@ import 'leaflet.fullscreen/Control.FullScreen.js';
 import 'leaflet.fullscreen/Control.FullScreen.css';
 import Swal from 'sweetalert2';
 import { addBasemap } from '../map-basemap';
+import { refreshIcons } from '../icons';
 
 export function initializeGeofenceDatatable() {
     // console.log("School Geofence Boundary page function triggered.");
@@ -82,11 +83,12 @@ export function initializeGeofenceDatatable() {
         }
     })
 
-    document.querySelector('[data-modal-hide="geofence-boundary-modal"]').addEventListener('click', function () {
-
-        if (geofenceBoundary) {
-            geofenceBoundary.style.display = 'block'; // Show the map again
-        }
+    document.querySelectorAll('[data-modal-hide="geofence-boundary-modal"]').forEach(function (closeTrigger) {
+        closeTrigger.addEventListener('click', function () {
+            if (geofenceBoundary) {
+                geofenceBoundary.style.display = 'block'; // Show the map again
+            }
+        });
     });
 
     const form = document.getElementById('add-geofence-boundary-form');
@@ -129,11 +131,11 @@ export function initializeGeofenceDatatable() {
                     for (let key in errors) {
                         let inputElement = document.getElementById(key);
                         let errorMessage = errors[key][0];
-    
+
                         let errorElement = document.createElement('p');
-                        errorElement.classList.add('text-red-500', 'text-xs', 'mt-1', 'error-message');
+                        errorElement.classList.add('mt-1', 'text-xs', 'text-red-600', 'error-message', 'dark:text-red-400');
                         errorElement.innerText = errorMessage;
-    
+
                         inputElement.after(errorElement);
                     }
                 }
@@ -150,15 +152,14 @@ export function initializeGeofenceDatatable() {
 
     if (fillLocationBtnContainer) {
 
-        const fillLocationBtnHTML = 
-        `<button type="button" id="fill-location-btn" class="flex items-center text-white bg-emerald-700 hover:bg-emerald-800 focus:ring-4 focus:outline-none focus:ring-emerald-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-emerald-600 dark:hover:bg-emerald-700 dark:focus:ring-emerald-800">
-            <svg class="w-4 h-4 mr-1 text-white dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
-            <path fill-rule="evenodd" d="M11.906 1.994a8.002 8.002 0 0 1 8.09 8.421 7.996 7.996 0 0 1-1.297 3.957.996.996 0 0 1-.133.204l-.108.129c-.178.243-.37.477-.573.699l-5.112 6.224a1 1 0 0 1-1.545 0L5.982 15.26l-.002-.002a18.146 18.146 0 0 1-.309-.38l-.133-.163a.999.999 0 0 1-.13-.202 7.995 7.995 0 0 1 6.498-12.518ZM15 9.997a3 3 0 1 1-5.999 0 3 3 0 0 1 5.999 0Z" clip-rule="evenodd"/>
-            </svg>
+        const fillLocationBtnHTML =
+        `<button type="button" id="fill-location-btn" class="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-medium text-gray-900 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-700">
+            <i data-lucide="locate-fixed" class="w-4 h-4"></i>
             Auto Fill
         </button>`;
 
         fillLocationBtnContainer.innerHTML = fillLocationBtnHTML;
+        refreshIcons();
 
         const fillLocationBtn = document.getElementById('fill-location-btn');
         
@@ -210,79 +211,32 @@ export function initializeGeofenceDatatable() {
 
             if (geofenceBoundaries.length > 0) {
                 const tableHTML = `
-                    <table id="geofenceBoundaryTable" class="bg-gray-50 dark:bg-gray-800">
-                        <thead>
-                            <tr>
-                                <th>
-                                    <span class="flex items-center">
-                                        School Name
-                                        <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4"/>
-                                        </svg>
-                                    </span>
-                                </th>
-                                <th>
-                                    <span class="flex items-center">
-                                        Address
-                                        <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4"/>
-                                        </svg>
-                                    </span>
-                                </th>
-                                <th>
-                                    <span class="flex items-center">
-                                        Latitude
-                                        <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4"/>
-                                        </svg>
-                                    </span>
-                                </th>
-                                <th>
-                                    <span class="flex items-center">
-                                        Longitude
-                                        <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4"/>
-                                        </svg>
-                                    </span>
-                                </th>
-                                <th>
-                                    <span class="flex items-center">
-                                        Radius (meters)
-                                        <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4"/>
-                                        </svg>
-                                    </span>
-                                </th>
-                                <th>
-                                    <span class="flex items-center">
-                                        Status
-                                        <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4"/>
-                                        </svg>
-                                    </span>
-                                </th>
-                                <th>
-                                    <span class="flex items-center">
-                                        Action
-                                        <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4"/>
-                                        </svg>
-                                    </span>
-                                </th>
-                            </tr>
-                        </thead>
-                    <tbody></tbody>
-                </table>`;
+                    <div class="relative overflow-x-auto">
+                        <table id="geofenceBoundaryTable" class="w-full text-left text-sm text-gray-500 dark:text-gray-400">
+                            <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                                <tr>
+                                    <th scope="col" class="px-4 py-3">School Name</th>
+                                    <th scope="col" class="px-4 py-3">Address</th>
+                                    <th scope="col" class="px-4 py-3">Latitude</th>
+                                    <th scope="col" class="px-4 py-3">Longitude</th>
+                                    <th scope="col" class="px-4 py-3">Radius (meters)</th>
+                                    <th scope="col" class="px-4 py-3">Status</th>
+                                    <th scope="col" class="px-4 py-3 text-right">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>`;
 
                 document.getElementById('geofence-boundaries-datatable-container').innerHTML = tableHTML;
                 const tbody = document.querySelector('#geofenceBoundaryTable tbody');
                 tbody.innerHTML = '';
 
                 const geofenceBoundaryStatusColorMap = {
-                    'enabled': 'bg-green-100 text-green-800 dark:bg-gray-700 dark:text-green-400 border border-green-400',
-                    'disabled': 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-400 border border-gray-500',
+                    'enabled': 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300',
+                    'disabled': 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300',
                 };
-                
+
                 geofenceBoundaries.forEach(geofenceBoundary => {
                     const row = document.createElement('tr');
 
@@ -290,35 +244,41 @@ export function initializeGeofenceDatatable() {
                     const selectedStatus = geofenceBoundary.geofence_boundary_status.status;
 
                     // Get the corresponding badge class based on the status
-                    const badgeClass = geofenceBoundaryStatusColorMap[selectedStatus] || 'bg-gray-100 text-gray-800'; // Default to gray if status not found
+                    const badgeClass = geofenceBoundaryStatusColorMap[selectedStatus] || 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'; // Default to gray if status not found
 
                     // Assign class and add text inside the badge
                     statusBadge.className = `text-xs font-medium px-2.5 py-0.5 rounded-full ${badgeClass}`;
-                    statusBadge.textContent = selectedStatus; // Set the status text inside the badge
+                    statusBadge.textContent = selectedStatus.charAt(0).toUpperCase() + selectedStatus.slice(1); // Set the status text inside the badge
 
+                    row.className = 'border-b border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50';
                     row.innerHTML = `
-                        <td>${geofenceBoundary.school_name}</td>
-                        <td>${geofenceBoundary.address}</td>
-                        <td>${geofenceBoundary.latitude}</td>
-                        <td>${geofenceBoundary.longitude}</td>
-                        <td>${geofenceBoundary.radius } m</td>
-                        <td>${statusBadge.outerHTML}</td>
-                        <td>
-                            <button type="button" data-modal-target="edit-geofence-boundary-modal" data-modal-toggle="edit-geofence-boundary-modal" class="text-blue-500 hover:underline" data-geofence-boundary-id="${geofenceBoundary.id}">
-                                <svg class="w-6 h-5 text-gray-800 dark:text-white hover:text-purple-500 transition-colors duration-150" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
-                                    <path fill-rule="evenodd" d="M11.32 6.176H5c-1.105 0-2 .949-2 2.118v10.588C3 20.052 3.895 21 5 21h11c1.105 0 2-.948 2-2.118v-7.75l-3.914 4.144A2.46 2.46 0 0 1 12.81 16l-2.681.568c-1.75.37-3.292-1.263-2.942-3.115l.536-2.839c.097-.512.335-.983.684-1.352l2.914-3.086Z" clip-rule="evenodd"/>
-                                    <path fill-rule="evenodd" d="M19.846 4.318a2.148 2.148 0 0 0-.437-.692 2.014 2.014 0 0 0-.654-.463 1.92 1.92 0 0 0-1.544 0 2.014 2.014 0 0 0-.654.463l-.546.578 2.852 3.02.546-.579a2.14 2.14 0 0 0 .437-.692 2.244 2.244 0 0 0 0-1.635ZM17.45 8.721 14.597 5.7 9.82 10.76a.54.54 0 0 0-.137.27l-.536 2.84c-.07.37.239.696.588.622l2.682-.567a.492.492 0 0 0 .255-.145l4.778-5.06Z" clip-rule="evenodd"/>
-                                </svg>
-                            </button> 
-                            <button type="button" data-modal-target="delete-geofence-boundary-modal" data-modal-toggle="delete-geofence-boundary-modal" class="text-red-500 hover:underline" data-geofence-boundary-id="${geofenceBoundary.id}">
-                                <svg class="w-6 h-5 text-gray-800 dark:text-white hover:text-red-500 transition-colors duration-150" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
-                                    <path fill-rule="evenodd" d="M8.586 2.586A2 2 0 0 1 10 2h4a2 2 0 0 1 2 2v2h3a1 1 0 1 1 0 2v12a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V8a1 1 0 0 1 0-2h3V4a2 2 0 0 1 .586-1.414ZM10 6h4V4h-4v2Zm1 4a1 1 0 1 0-2 0v8a1 1 0 1 0 2 0v-8Zm4 0a1 1 0 1 0-2 0v8a1 1 0 1 0 2 0v-8Z" clip-rule="evenodd"/>
-                                </svg>
-                            </button>
+                        <td class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">${geofenceBoundary.school_name}</td>
+                        <td class="px-4 py-3 max-w-xs truncate" title="${geofenceBoundary.address}">${geofenceBoundary.address}</td>
+                        <td class="px-4 py-3 whitespace-nowrap">${geofenceBoundary.latitude}</td>
+                        <td class="px-4 py-3 whitespace-nowrap">${geofenceBoundary.longitude}</td>
+                        <td class="px-4 py-3 whitespace-nowrap">${geofenceBoundary.radius} m</td>
+                        <td class="px-4 py-3">${statusBadge.outerHTML}</td>
+                        <td class="px-4 py-3">
+                            <div class="flex items-center justify-end gap-1">
+                                <button type="button" data-modal-target="edit-geofence-boundary-modal" data-modal-toggle="edit-geofence-boundary-modal" data-geofence-boundary-id="${geofenceBoundary.id}" title="Edit boundary"
+                                    class="rounded-lg p-2 text-gray-500 hover:bg-gray-100 hover:text-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-primary-400">
+                                    <i data-lucide="pencil" class="w-4 h-4"></i>
+                                    <span class="sr-only">Edit</span>
+                                </button>
+                                <button type="button" data-modal-target="delete-geofence-boundary-modal" data-modal-toggle="delete-geofence-boundary-modal" data-geofence-boundary-id="${geofenceBoundary.id}" title="Delete boundary"
+                                    class="rounded-lg p-2 text-gray-500 hover:bg-gray-100 hover:text-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-red-400">
+                                    <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                    <span class="sr-only">Delete</span>
+                                </button>
+                            </div>
                         </td>
                     `;
                     tbody.appendChild(row);
                 });
+
+                /* Convert <i data-lucide> placeholders before the DataTable
+                   takes a copy of the row markup for its re-renders. */
+                refreshIcons();
 
                 new DataTable('#geofenceBoundaryTable', {
                     searchable: true,
@@ -330,81 +290,17 @@ export function initializeGeofenceDatatable() {
                 document.getElementById('table-loader').style.display = 'none';
 
             } else {
-                const tableHTML = `
-                    <table id="geofenceBoundaryTable" class="bg-gray-50 dark:bg-gray-800">
-                        <thead>
-                            <tr>
-                                <th>
-                                    <span class="flex items-center">
-                                        School Name
-                                        <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4"/>
-                                        </svg>
-                                    </span>
-                                </th>
-                                <th>
-                                    <span class="flex items-center">
-                                        Address
-                                        <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4"/>
-                                        </svg>
-                                    </span>
-                                </th>
-                                <th>
-                                    <span class="flex items-center">
-                                        Latitude
-                                        <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4"/>
-                                        </svg>
-                                    </span>
-                                </th>
-                                <th>
-                                    <span class="flex items-center">
-                                        Longitude
-                                        <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4"/>
-                                        </svg>
-                                    </span>
-                                </th>
-                                <th>
-                                    <span class="flex items-center">
-                                        Radius (meters)
-                                        <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4"/>
-                                        </svg>
-                                    </span>
-                                </th>
-                                <th>
-                                    <span class="flex items-center">
-                                        Status
-                                        <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4"/>
-                                        </svg>
-                                    </span>
-                                </th>
-                                <th>
-                                    <span class="flex items-center">
-                                        Action
-                                        <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4"/>
-                                        </svg>
-                                    </span>
-                                </th>
-                            </tr>
-                        </thead>
-                    <tbody></tbody>
-                </table>`;
+                const emptyStateHTML = `
+                    <div class="flex flex-col items-center justify-center px-4 py-16 text-center">
+                        <div class="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-gray-100 dark:bg-gray-700">
+                            <i data-lucide="map-pin" class="w-7 h-7 text-gray-500 dark:text-gray-400"></i>
+                        </div>
+                        <h3 class="mb-2 text-lg font-semibold text-gray-900 dark:text-white">No geofence boundaries yet.</h3>
+                        <p class="max-w-md text-sm text-gray-500 dark:text-gray-400">Add a boundary to start tracking and managing student locations within designated areas.</p>
+                    </div>`;
 
-                document.getElementById('geofence-boundaries-datatable-container').innerHTML = tableHTML;
-                const tbody = document.querySelector('#geofenceBoundaryTable tbody');
-                tbody.innerHTML = '';
-
-                new DataTable('#geofenceBoundaryTable', {
-                    searchable: true,
-                    fixedHeight: true,
-                    sortable: true,
-                    perPage: 5,
-                });
+                document.getElementById('geofence-boundaries-datatable-container').innerHTML = emptyStateHTML;
+                refreshIcons();
 
                 document.getElementById('table-loader').style.display = 'none'; // Hide Loading spinner
             }
@@ -421,54 +317,56 @@ export function initializeGeofenceDatatable() {
     const editGeofenceBoundaryModalContainer = document.getElementById('edit-geofence-boundary-modal-container');
 
     const editGeofenceBoundaryModal = `
-       <div id="edit-geofence-boundary-modal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
-            <div class="relative p-4 w-full max-w-2xl max-h-full">
-                <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
-                    <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
+        <div id="edit-geofence-boundary-modal" tabindex="-1" aria-hidden="true" class="fixed left-0 right-0 top-0 z-50 hidden h-[calc(100%-1rem)] max-h-full w-full overflow-y-auto overflow-x-hidden p-4 md:inset-0">
+            <div class="relative max-h-full w-full max-w-2xl">
+                <div class="relative rounded-xl bg-white shadow dark:bg-gray-800">
+                    <div class="flex items-center justify-between rounded-t border-b border-gray-200 p-4 md:p-5 dark:border-gray-600">
                     <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
                         Edit Geofence Boundary
                     </h3>
-                    <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-full text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="edit-geofence-boundary-modal">
-                        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
-                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
-                        </svg>
+                    <button type="button" class="ms-auto inline-flex h-8 w-8 items-center justify-center rounded-lg bg-transparent text-sm text-gray-400 hover:bg-gray-200 hover:text-gray-900 dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="edit-geofence-boundary-modal">
+                            <i data-lucide="x" class="w-3.5 h-3.5"></i>
+                            <span class="sr-only">Close modal</span>
                     </button>
                     </div>
-                    <div class="p-4 md:p-5 space-y-4">   
-                    <form id="edit-geofence-boundary-form">
-                        <div class="grid gap-6 mb-6 md:grid-cols-2">
+                    <div class="p-4 md:p-5">
+                    <form id="edit-geofence-boundary-form" class="space-y-6">
+                        <div class="grid gap-6 md:grid-cols-2">
                             <div>
-                                <label for="school_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">School Name</label>
-                                <input type="text" id="edit_school_name" name="school_name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" autocomplete="off" placeholder="Enter School Name" />
+                                <label for="edit_school_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">School Name</label>
+                                <input type="text" id="edit_school_name" name="school_name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" autocomplete="off" placeholder="Enter School Name" />
                             </div>
                             <div>
-                                <label for="address" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Address</label>
-                                <input type="text" id="edit_address" name="address" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" autocomplete="off" placeholder="Enter Address" />
-                            </div>
-                        </div>
-                        <div class="grid gap-6 mb-6 md:grid-cols-3">
-                            <div>
-                                <label for="latitude" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Latitude</label>
-                                <input type="number" id="edit_latitude" name="latitude" step="any" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" autocomplete="off" />
-                            </div>
-                            <div>
-                                <label for="longitude" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Longitude</label>
-                                <input type="number" id="edit_longitude" name="longitude" step="any" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" autocomplete="off" />
-                            </div>
-                            <div>
-                                <label for="radius" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Radius (meters)</label>
-                                <input type="number" id="edit_radius" name="radius" step="any" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" autocomplete="off" />
+                                <label for="edit_address" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Address</label>
+                                <input type="text" id="edit_address" name="address" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" autocomplete="off" placeholder="Enter Address" />
                             </div>
                         </div>
-                        <div class="grid gap-6 mb-6 md:grid-cols-1">
+                        <div class="grid gap-6 md:grid-cols-3">
+                            <div>
+                                <label for="edit_latitude" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Latitude</label>
+                                <input type="number" id="edit_latitude" name="latitude" step="any" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" autocomplete="off" />
+                            </div>
+                            <div>
+                                <label for="edit_longitude" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Longitude</label>
+                                <input type="number" id="edit_longitude" name="longitude" step="any" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" autocomplete="off" />
+                            </div>
+                            <div>
+                                <label for="edit_radius" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Radius (meters)</label>
+                                <input type="number" id="edit_radius" name="radius" step="any" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" autocomplete="off" />
+                            </div>
+                        </div>
+                        <div class="grid gap-6 md:grid-cols-1">
                             <div>
                                 <label for="status_id" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Status</label>
-                                <select id="status_id" name="status_id" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                                <option selected disabled>Open melect menu</option>
+                                <select id="status_id" name="status_id" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                                <option selected disabled>Select a status</option>
                                 </select>
                             </div>
                         </div>
-                        <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Submit</button>
+                        <div class="flex items-center gap-3 pt-2">
+                            <button type="submit" class="text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">Save Changes</button>
+                            <button type="button" data-modal-hide="edit-geofence-boundary-modal" class="px-5 py-2.5 text-sm font-medium text-gray-900 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 dark:hover:bg-gray-700">Cancel</button>
+                        </div>
                     </form>
                     </div>
                 </div>
@@ -478,6 +376,7 @@ export function initializeGeofenceDatatable() {
 
     // Inject the modal HTML into the container
     editGeofenceBoundaryModalContainer.innerHTML = editGeofenceBoundaryModal;
+    refreshIcons();
 
     const editGeofenceBoundaryModalEl = document.getElementById('edit-geofence-boundary-modal');
 
@@ -602,7 +501,7 @@ export function initializeGeofenceDatatable() {
                         let errorMessage = errors[key][0];
 
                         let errorElement = document.createElement('p');
-                        errorElement.classList.add('text-red-500', 'text-xs', 'mt-1', 'error-message');
+                        errorElement.classList.add('mt-1', 'text-xs', 'text-red-600', 'error-message', 'dark:text-red-400');
                         errorElement.innerText = errorMessage;
 
                         inputElement.after(errorElement);
@@ -627,24 +526,22 @@ export function initializeGeofenceDatatable() {
 
                 // Create modal HTML
                 const modalHTML = `
-                    <div id="delete-geofence-boundary-modal" tabindex="-1" class="overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 flex justify-center items-center w-full h-full">
-                        <div class="relative p-6 w-full max-w-md max-h-full">
-                            <div class="relative bg-white rounded-lg shadow-lg dark:bg-gray-700">
-                                <button type="button" class="absolute top-3 right-3 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-full text-sm w-8 h-8 flex justify-center items-center" data-modal-hide="delete-geofence-boundary-modal">
-                                    <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
-                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
-                                    </svg>
+                    <div id="delete-geofence-boundary-modal" tabindex="-1" class="fixed left-0 right-0 top-0 z-50 flex h-full w-full items-center justify-center overflow-y-auto overflow-x-hidden p-4">
+                        <div class="relative max-h-full w-full max-w-md p-4 md:p-5">
+                            <div class="relative rounded-xl bg-white shadow-lg dark:bg-gray-800">
+                                <button type="button" class="absolute top-3 right-3 inline-flex h-8 w-8 items-center justify-center rounded-lg bg-transparent text-sm text-gray-400 hover:bg-gray-200 hover:text-gray-900 dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="delete-geofence-boundary-modal">
+                                    <i data-lucide="x" class="w-3.5 h-3.5"></i>
                                     <span class="sr-only">Close modal</span>
                                 </button>
-                                <div class="p-6 text-center">
-                                    <svg class="mx-auto mb-4 text-gray-500 w-12 h-12 dark:text-gray-200" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
-                                    </svg>
-                                    <h3 class="mb-2 text-xl font-semibold text-gray-700 dark:text-gray-300">Delete Student?</h3>
-                                    <p class="mb-5 text-sm text-gray-500 dark:text-gray-400">All data including student and attendance records will be permanently removed. This action cannot be undone.</p>
-                                    <div class="flex justify-center space-x-3">
+                                <div class="p-6 text-center md:p-8">
+                                    <div class="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-red-50 dark:bg-red-500/10">
+                                        <i data-lucide="circle-alert" class="w-7 h-7 text-red-500 dark:text-red-400"></i>
+                                    </div>
+                                    <h3 class="mb-2 text-lg font-semibold text-gray-900 dark:text-white">Delete this boundary?</h3>
+                                    <p class="mb-6 text-sm text-gray-500 dark:text-gray-400">This geofence boundary record will be permanently removed. This action cannot be undone.</p>
+                                    <div class="flex justify-center gap-3">
                                         <form action="">
-                                            <button type="submit" id="delete-geofence-boundary-confirm-btn" data-modal-hide="delete-geofence-boundary-modal" class="text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-700 font-medium rounded-lg text-sm px-5 py-2.5">
+                                            <button type="submit" id="delete-geofence-boundary-confirm-btn" data-modal-hide="delete-geofence-boundary-modal" class="text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm px-5 py-2.5">
                                                 Yes, Delete
                                             </button>
                                         </form>
@@ -659,6 +556,7 @@ export function initializeGeofenceDatatable() {
 
                 // Inject the modal into the container
                 deleteGeofenceBoundaryModalContainer.innerHTML = modalHTML;
+                refreshIcons();
 
                 // Show the modal
                 const deleteGeofenceBoundaryModalEl = document.getElementById('delete-geofence-boundary-modal');

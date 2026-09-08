@@ -1,15 +1,13 @@
-<footer class="static bottom-0 left-0 z-20 p-4 mt-6 border-gray-200 dark:border-gray-700 sm:ml-64 border-t border-gray-200 shadow md:flex md:items-center md:justify-between md:p-6 dark:bg-gray-800 dark:border-gray-600">
-    <span class="flex justify-between w-full text-sm text-gray-500 sm:text-center dark:text-gray-400">
-        <div>
+<footer class="border-t border-gray-200 px-4 py-4 sm:px-6 lg:px-8 dark:border-gray-700">
+    <span class="flex flex-col gap-1 text-sm text-gray-500 sm:flex-row sm:items-center sm:justify-between dark:text-gray-400">
+        <span>
             @if ('2024' === \Carbon\Carbon::now()->format('Y'))
                 © 2024
             @else
-                © 2024-{{ \Carbon\Carbon::now()->format('Y') }} 
+                © 2024-{{ \Carbon\Carbon::now()->format('Y') }}
             @endif
             <a href="https://www.rfidschoolattendance.online" target="_blank" rel="noopener noreferrer" class="hover:underline">RFID School Attendance</a>. All Rights Reserved.
-        </div>
-        <div>
-            Version: {{ config('app.version') }}
-        </div>
+        </span>
+        <span>Version {{ config('app.version') }}</span>
     </span>
 </footer>

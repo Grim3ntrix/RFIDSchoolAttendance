@@ -1,8 +1,5 @@
 <x-app-layout>
-    <div class="min-h-screen flex flex-col sm:ml-64">
-        <div class="flex-grow p-4">
             <!-- Time Counting Div -->
-            <div class="p-4">
                <div class="flex items-center justify-center h-32 p-4 rounded-lg bg-gradient-to-r from-green-500 via-emerald-500 to-teal-500 shadow-lg">
                   <div class="text-center w-full sm:w-auto">
                      <p id="current-time" class="font-bold text-5xl sm:text-6xl md:text-6xl text-white truncate">00:00:00 --</p>
@@ -131,7 +128,4 @@
                </div>
                
                <div id="view-attendance-history-modal-container"></div>
-            </div>
-        </div>
-    </div>
 </x-app-layout>

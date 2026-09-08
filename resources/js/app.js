@@ -2,11 +2,13 @@ import './bootstrap';
 import 'flowbite';
 import Alpine from 'alpinejs';
 import { initializeThemeToggle } from './theme-toggle';
+import { refreshIcons } from './icons';
 
 window.Alpine = Alpine;
 Alpine.start();
 
 initializeThemeToggle();
+refreshIcons();
 
 document.addEventListener('DOMContentLoaded', async () => {
 

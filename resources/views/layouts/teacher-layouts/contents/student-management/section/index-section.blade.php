@@ -1,7 +1,4 @@
 <x-app-layout>
-   <div class="min-h-screen flex flex-col sm:ml-64">
-      <div class="flex-grow p-4">
-         <div class="p-4">
             <div class="mb-4">
                <div class="flex items-center justify-between mb-1">
                   <div id="add-section-container" class="mr-2" data-modal-target="add-section-modal" data-modal-toggle="add-section-modal">
@@ -84,7 +81,4 @@
                      <!-- Table content goes here -->
                   </div>
                </div>
-         </div>
-      </div>
-   </div> 
 </x-app-layout>

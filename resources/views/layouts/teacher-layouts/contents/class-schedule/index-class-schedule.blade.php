@@ -1,7 +1,4 @@
 <x-app-layout>
-   <div class="min-h-screen flex flex-col sm:ml-64">
-      <div class="flex-grow p-4">
-         <div class="p-4">
 
             <div class="flex justify-start mb-6">
                <div id="add-class-schedule-container" class="mr-2" data-modal-target="add-class-schedule-modal" data-modal-toggle="add-class-schedule-modal">
@@ -122,7 +119,4 @@
             <script>
                const sectionSlug = "{{ $section->slug }}";
             </script>
-         </div>
-      </div>
-   </div>
 </x-app-layout>

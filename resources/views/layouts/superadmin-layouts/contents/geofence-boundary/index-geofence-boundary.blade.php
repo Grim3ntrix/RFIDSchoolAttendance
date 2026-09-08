@@ -1,135 +1,122 @@
 <x-app-layout>
-   <div class="min-h-screen flex flex-col sm:ml-64">
-      <div class="flex-grow p-4">
-         <div class="p-4">
-            <div class="flex justify-start mb-4">
-               <div id="add-geofence-boundary-btn" class="mr-2" data-modal-target="geofence-boundary-modal" data-modal-toggle="geofence-boundary-modal">
-                  <button class="inline-flex items-center px-4 py-2 bg-gray-800 dark:bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-white dark:text-gray-800 uppercase tracking-widest hover:bg-gray-700 dark:hover:bg-white focus:bg-gray-700 dark:focus:bg-white active:bg-gray-900 dark:active:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition ease-in-out duration-150">
-                     <svg class="w-4 h-4 text-white mr-2 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 7.757v8.486M7.757 12h8.486M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
-                     </svg>
-                     Add
-                  </button> 
-               </div>
-            </div>
+    <x-page-header title="Geofence Boundary" description="Set up geofence boundaries to help track and manage the location status of students within designated areas.">
+        <x-slot:actions>
+            <button type="button" id="add-geofence-boundary-btn" data-modal-target="geofence-boundary-modal" data-modal-toggle="geofence-boundary-modal"
+                class="inline-flex items-center gap-2 rounded-lg bg-primary-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-primary-800 focus:outline-none focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
+                <x-icon name="plus" class="h-4 w-4" />
+                Add Boundary
+            </button>
+        </x-slot:actions>
+    </x-page-header>
 
-            <!-- Add Geofence Boundary Modal -->
-            <div id="geofence-boundary-modal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
-               <div class="relative p-4 w-full max-w-2xl max-h-full">
-                  <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
-                     <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
-                        <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
-                           Add Geofence Boundary
-                        </h3>
-                        <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-full text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="geofence-boundary-modal">
-                           <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
-                                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
-                           </svg>
-                        </button>
-                     </div>
-                     <div class="p-4 md:p-5 space-y-4">   
-                        <form method="POST" id="add-geofence-boundary-form">
-                           @csrf
-                           <div class="grid gap-6 mb-6 md:grid-cols-2">
-                              <div>
-                                 <label for="school_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">School Name</label>
-                                 <input type="text" id="school_name" name="school_name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" autocomplete="off" placeholder="Enter School Name" />
-                              </div>
-                              <div>
-                                 <label for="address" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Address</label>
-                                 <input type="text" id="address" name="address" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" autocomplete="off" placeholder="Enter Address" />
-                              </div>
-                           </div>
-                           <div class="grid gap-6 mb-6 md:grid-cols-3">
-                              <div>
-                                 <label for="latitude" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Latitude</label>
-                                 <input type="number" id="latitude" name="latitude" step="any" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" autocomplete="off" />
-                              </div>
-                              <div>
-                                 <label for="longitude" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Longitude</label>
-                                 <input type="number" id="longitude" name="longitude" step="any" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" autocomplete="off" />
-                              </div>
-                              <div>
-                                 <label for="radius" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Radius (meters)</label>
-                                 <input type="number" id="radius" name="radius" step="any" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" autocomplete="off" />
-                              </div>
-                           </div>
-                           
-                           <div class="flex justify-between items-center space-x-2">
-                              <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                                 Submit
-                              </button>
-                              
-                              <div id="fill-location-btn-container"></div>
-                              
-                           </div>
-                        </form>
-                     </div>
-                  </div>
-               </div>
-            </div>
-
-            <!-- Edit & Update Modal Container-->
-            <div id="edit-geofence-boundary-modal-container"></div>
-
-            <!-- Delete Modal Container-->
-            <div id="delete-geofence-boundary-modal-container"></div>
-
-            <div class="rounded-lg bg-teal-100 dark:bg-gray-700 border border-gray-300 shadow-lg p-6 md:p-8 mt-8" id="toggle-daily-attendance-content">
-               <div class="flex justify-between items-center mb-3">
-                  <div class="flex items-center mb-3">
-                     <svg class="w-7 h-7 mr-2" viewBox="0 0 1024 1024" class="icon" version="1.1" xmlns="http://www.w3.org/2000/svg" fill="#000000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M128 757.333333a384 138.666667 0 1 0 768 0 384 138.666667 0 1 0-768 0Z" fill="#90CAF9"></path><path d="M512 128c-129.6 0-234.666667 103.637333-234.666667 231.466667C277.333333 487.317333 512 789.333333 512 789.333333s234.666667-302.016 234.666667-429.866666C746.666667 231.637333 641.6 128 512 128z m0 341.333333a106.666667 106.666667 0 1 1 0-213.333333 106.666667 106.666667 0 0 1 0 213.333333z" fill="#FF3D00"></path></g></svg>
-                     <h3 class="text-2xl font-semibold text-gray-900 dark:text-white">Boundary</h3>
-                  </div>
-               </div>
-               <p class="text-gray-700 dark:text-gray-300 mt-2 md:mt-0"> Set up geofence boundaries to help track and manage the location status of students within designated areas.</p>
-
-                <div class="bg-green-100 border border-gray-500 min-h-80 rounded-lg mt-4">
-                   <!-- School Geofence Boundary Container-->
-                   <div id="geofence-boundary-container"></div>
-
-                   <!-- Empty State: Not Configured -->
-                   <div id="geofence-not-configured" class="hidden flex-col items-center justify-center py-16 px-4 text-center">
-                      <svg class="w-16 h-16 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-                      <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">School Geofence</h3>
-                      <p class="text-gray-700 dark:text-gray-300 mb-6 max-w-md">No geofence has been configured. Configure your school's location to enable attendance validation.</p>
-                      <button type="button" data-modal-target="geofence-boundary-modal" data-modal-toggle="geofence-boundary-modal" class="inline-flex items-center px-4 py-2 bg-gray-800 dark:bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-white dark:text-gray-800 uppercase tracking-widest hover:bg-gray-700 dark:hover:bg-white focus:bg-gray-700 dark:focus:bg-white active:bg-gray-900 dark:active:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition ease-in-out duration-150">
-                         Configure Geofence
-                      </button>
-                   </div>
-
-                   <!-- Empty State: Incomplete -->
-                   <div id="geofence-incomplete" class="hidden flex-col items-center justify-center py-16 px-4 text-center">
-                      <svg class="w-16 h-16 text-yellow-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"/></svg>
-                      <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">Geofence configuration is incomplete.</h3>
-                      <p class="text-gray-700 dark:text-gray-300 mb-6 max-w-md">Latitude, longitude or radius is missing. Please complete the configuration to enable the map.</p>
-                      <button type="button" data-modal-target="geofence-boundary-modal" data-modal-toggle="geofence-boundary-modal" class="inline-flex items-center px-4 py-2 bg-gray-800 dark:bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-white dark:text-gray-800 uppercase tracking-widest hover:bg-gray-700 dark:hover:bg-white focus:bg-gray-700 dark:focus:bg-white active:bg-gray-900 dark:active:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition ease-in-out duration-150">
-                         Edit Configuration
-                      </button>
-                   </div>
-
-                   <!-- Empty State: Server Error -->
-                   <div id="geofence-error" class="hidden flex-col items-center justify-center py-16 px-4 text-center">
-                      <svg class="w-16 h-16 text-red-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                      <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">Unable to load geofence configuration.</h3>
-                      <p class="text-gray-700 dark:text-gray-300 mb-6 max-w-md">Please try again later.</p>
-                   </div>
+    <!-- Add Geofence Boundary Modal -->
+    <div id="geofence-boundary-modal" tabindex="-1" aria-hidden="true" class="fixed left-0 right-0 top-0 z-50 hidden h-[calc(100%-1rem)] max-h-full w-full overflow-y-auto overflow-x-hidden p-4 md:inset-0">
+        <div class="relative max-h-full w-full max-w-2xl">
+            <div class="relative rounded-xl bg-white shadow dark:bg-gray-800">
+                <div class="flex items-center justify-between rounded-t border-b border-gray-200 p-4 md:p-5 dark:border-gray-600">
+                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white">Add Geofence Boundary</h3>
+                    <button type="button" class="ms-auto inline-flex h-8 w-8 items-center justify-center rounded-lg bg-transparent text-sm text-gray-400 hover:bg-gray-200 hover:text-gray-900 dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="geofence-boundary-modal">
+                        <x-icon name="x" class="h-3.5 w-3.5" />
+                        <span class="sr-only">Close modal</span>
+                    </button>
                 </div>
+                <div class="p-4 md:p-5">
+                    <form method="POST" id="add-geofence-boundary-form" class="space-y-6">
+                        @csrf
+                        <div class="grid gap-6 md:grid-cols-2">
+                            <div>
+                                <label for="school_name" class="mb-2 block text-sm font-medium text-gray-900 dark:text-white">School Name</label>
+                                <input type="text" id="school_name" name="school_name" class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-primary-500 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-primary-500 dark:focus:ring-primary-500" autocomplete="off" placeholder="Enter School Name" />
+                            </div>
+                            <div>
+                                <label for="address" class="mb-2 block text-sm font-medium text-gray-900 dark:text-white">Address</label>
+                                <input type="text" id="address" name="address" class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-primary-500 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-primary-500 dark:focus:ring-primary-500" autocomplete="off" placeholder="Enter Address" />
+                            </div>
+                        </div>
+                        <div class="grid gap-6 md:grid-cols-3">
+                            <div>
+                                <label for="latitude" class="mb-2 block text-sm font-medium text-gray-900 dark:text-white">Latitude</label>
+                                <input type="number" id="latitude" name="latitude" step="any" class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-primary-500 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:focus:border-primary-500 dark:focus:ring-primary-500" autocomplete="off" />
+                            </div>
+                            <div>
+                                <label for="longitude" class="mb-2 block text-sm font-medium text-gray-900 dark:text-white">Longitude</label>
+                                <input type="number" id="longitude" name="longitude" step="any" class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-primary-500 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:focus:border-primary-500 dark:focus:ring-primary-500" autocomplete="off" />
+                            </div>
+                            <div>
+                                <label for="radius" class="mb-2 block text-sm font-medium text-gray-900 dark:text-white">Radius (meters)</label>
+                                <input type="number" id="radius" name="radius" step="any" class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-primary-500 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:focus:border-primary-500 dark:focus:ring-primary-500" autocomplete="off" />
+                            </div>
+                        </div>
 
-               <div id="table-loader" class="flex justify-center items-center py-10">
-                     <svg role="status" class="inline w-8 h-8 mr-2 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9765 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9765 100 50.5908ZM9.08125 50.5908C9.08125 73.5495 27.0413 91.5095 50 91.5095C72.9587 91.5095 90.9188 73.5495 90.9188 50.5908C90.9188 27.6321 72.9587 9.67209 50 9.67209C27.0413 9.67209 9.08125 27.6321 9.08125 50.5908Z" fill="currentColor"/>
-                        <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5536C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7233 75.2124 7.41289C69.5422 4.10248 63.2754 1.94025 56.7335 1.05189C51.7661 0.367391 46.7345 0.446447 41.8062 1.27873C39.324 1.69443 37.8557 4.19778 38.4928 6.62326C39.1299 9.04874 41.6119 10.5012 44.1076 10.1076C47.8923 9.47543 51.7426 9.52629 55.4747 10.2485C60.8569 11.2887 65.968 13.4632 70.543 16.6697C75.118 19.8763 79.0733 24.0361 82.1918 28.9444C84.7348 32.8122 86.6207 37.1317 87.7824 41.708C88.4351 44.0608 91.5422 45.6781 93.9676 45.0409Z" fill="currentFill"/>
-                     </svg>
-                     <span>Loading data, please wait...</span>
-                  </div>
-
-               <div id="geofence-boundaries-datatable-container" class="mt-4">
-                  <!-- Table content goes here -->
-               </div>
+                        <div class="flex items-center justify-between gap-3 pt-2">
+                            <div id="fill-location-btn-container"></div>
+                            <div class="flex items-center gap-3">
+                                <button type="submit" class="rounded-lg bg-primary-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-primary-800 focus:outline-none focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">Submit</button>
+                                <button type="button" data-modal-hide="geofence-boundary-modal" class="rounded-lg border border-gray-300 bg-white px-5 py-2.5 text-sm font-medium text-gray-900 hover:bg-gray-100 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 dark:hover:bg-gray-700">Cancel</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
             </div>
-            
-         </div>
-      </div>
-   </div>
+        </div>
+    </div>
+
+    <!-- Edit & Update Modal Container-->
+    <div id="edit-geofence-boundary-modal-container"></div>
+
+    <!-- Delete Modal Container-->
+    <div id="delete-geofence-boundary-modal-container"></div>
+
+    <div class="rounded-xl border border-gray-200 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-800">
+        <div class="min-h-80 rounded-lg bg-gray-50 p-4 dark:bg-gray-900/40">
+            <!-- School Geofence Boundary Container-->
+            <div id="geofence-boundary-container"></div>
+
+            <!-- Empty State: Not Configured -->
+            <div id="geofence-not-configured" class="hidden flex-col items-center justify-center px-4 py-16 text-center">
+                <div class="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-gray-100 dark:bg-gray-700">
+                    <x-icon name="map-pin" class="h-7 w-7 text-gray-500 dark:text-gray-400" />
+                </div>
+                <h3 class="mb-2 text-lg font-semibold text-gray-900 dark:text-white">School Geofence</h3>
+                <p class="mb-6 max-w-md text-sm text-gray-500 dark:text-gray-400">No geofence has been configured. Configure your school's location to enable attendance validation.</p>
+                <button type="button" data-modal-target="geofence-boundary-modal" data-modal-toggle="geofence-boundary-modal"
+                    class="rounded-lg bg-primary-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-primary-800 focus:outline-none focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
+                    Configure Geofence
+                </button>
+            </div>
+
+            <!-- Empty State: Incomplete -->
+            <div id="geofence-incomplete" class="hidden flex-col items-center justify-center px-4 py-16 text-center">
+                <div class="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-amber-50 dark:bg-amber-500/10">
+                    <x-icon name="alert-triangle" class="h-7 w-7 text-amber-500 dark:text-amber-400" />
+                </div>
+                <h3 class="mb-2 text-lg font-semibold text-gray-900 dark:text-white">Geofence configuration is incomplete.</h3>
+                <p class="mb-6 max-w-md text-sm text-gray-500 dark:text-gray-400">Latitude, longitude or radius is missing. Please complete the configuration to enable the map.</p>
+                <button type="button" data-modal-target="geofence-boundary-modal" data-modal-toggle="geofence-boundary-modal"
+                    class="rounded-lg bg-primary-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-primary-800 focus:outline-none focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
+                    Edit Configuration
+                </button>
+            </div>
+
+            <!-- Empty State: Server Error -->
+            <div id="geofence-error" class="hidden flex-col items-center justify-center px-4 py-16 text-center">
+                <div class="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-red-50 dark:bg-red-500/10">
+                    <x-icon name="x-circle" class="h-7 w-7 text-red-500 dark:text-red-400" />
+                </div>
+                <h3 class="mb-2 text-lg font-semibold text-gray-900 dark:text-white">Unable to load geofence configuration.</h3>
+                <p class="mb-6 max-w-md text-sm text-gray-500 dark:text-gray-400">Please try again later.</p>
+            </div>
+        </div>
+
+        <div class="flex justify-center items-center py-10" id="table-loader">
+            <div role="status" class="flex items-center gap-3 text-sm text-gray-500 dark:text-gray-400">
+                <x-icon name="loader-circle" class="h-6 w-6 animate-spin text-primary-600 dark:text-primary-500" />
+                Loading data, please wait...
+            </div>
+        </div>
+
+        <div id="geofence-boundaries-datatable-container" class="p-4 sm:p-6">
+            <!-- Table content goes here -->
+        </div>
+    </div>
 </x-app-layout>

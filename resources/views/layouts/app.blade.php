@@ -39,15 +39,22 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
     <body class="font-sans antialiased">
-        <div class="min-h-screen flex flex-col bg-gray-100 dark:bg-gray-900">
-            @include('layouts.navbar')
+        <div class="flex min-h-screen flex-col bg-gray-50 dark:bg-gray-900">
             @include('layouts.sidebar')
 
-            <main>
-                {{ $slot }}
-            </main>
+            <!-- Content column: the sm:ml-64 offset for the fixed sidebar lives
+                 here (and only here) so individual pages never repeat it. -->
+            <div class="flex min-w-0 flex-1 flex-col sm:ml-64">
+                @include('layouts.navbar')
 
-            @include('layouts.footer') 
+                <main class="flex-1 p-4 sm:p-6 lg:p-8">
+                    <div class="mx-auto w-full max-w-7xl">
+                        {{ $slot }}
+                    </div>
+                </main>
+
+                @include('layouts.footer')
+            </div>
         </div>
     </body>
     

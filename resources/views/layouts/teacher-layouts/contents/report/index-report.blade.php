@@ -1,7 +1,4 @@
 <x-app-layout>
-    <div class="min-h-screen flex flex-col sm:ml-64">
-        <div class="flex-grow p-4">
-            <div class="p-4">
             
                <div id="reports-container" class="relative rounded-lg bg-teal-100 dark:bg-gray-700 border border-gray-300 shadow-lg p-6 md:p-8">
                   <div class="flex flex-col gap-2 sm:flex-row items-start sm:items-center justify-between border-b border-green-300 pb-4 mb-4">
@@ -49,7 +46,4 @@
                   </form>
                </div>
 
-            </div>
-        </div>
-    </div>
 </x-app-layout>

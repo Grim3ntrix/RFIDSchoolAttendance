@@ -1,12 +1,18 @@
 <section>
-    <header>
-        <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
-            {{ __('Update Password') }}
-        </h2>
+    <header class="flex items-start gap-4">
+        <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary-50 text-primary-700 dark:bg-primary-600/10 dark:text-primary-400">
+            <x-icon name="key-round" class="h-5 w-5" />
+        </span>
 
-        <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
-            {{ __('Ensure your account is using a long, random password to stay secure.') }}
-        </p>
+        <div>
+            <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
+                {{ __('Update Password') }}
+            </h2>
+
+            <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
+                {{ __('Ensure your account is using a long, random password to stay secure.') }}
+            </p>
+        </div>
     </header>
 
     <form method="post" action="{{ route('password.update') }}" class="mt-6 space-y-6">

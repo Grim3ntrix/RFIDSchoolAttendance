@@ -31,6 +31,24 @@ export default {
             fontFamily: {
                 sans: ['Figtree', ...defaultTheme.fontFamily.sans],
             },
+            /* Primary brand palette — generated via the Flowbite MCP theme
+               tool (brand #16a34a). Green is an accent, not the foundation:
+               most surfaces stay neutral gray/white. */
+            colors: {
+                primary: {
+                    50: '#f6f9f7',
+                    100: '#e9f1ec',
+                    200: '#cee9d8',
+                    300: '#98f1b9',
+                    400: '#66ea97',
+                    500: '#35e475',
+                    600: '#1bca5c',
+                    700: '#16a64b',
+                    800: '#117e39',
+                    900: '#0c5a29',
+                    950: '#0d351c',
+                },
+            },
         },
     },
 

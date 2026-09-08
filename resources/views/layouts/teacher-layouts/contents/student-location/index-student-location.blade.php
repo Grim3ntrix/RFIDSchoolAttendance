@@ -1,7 +1,4 @@
 <x-app-layout>
-   <div class="min-h-screen flex flex-col sm:ml-64 bg-gray-100">
-      <div class="flex-grow p-4">
-         <div class="p-4"> 
 
             <!-- Student Location Modal Container-->
             <div id="student-location-modal-container"></div>
@@ -30,7 +27,4 @@
                </div>
             </div>
             
-         </div>
-      </div>
-   </div>
 </x-app-layout>

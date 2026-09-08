@@ -1,6 +1,4 @@
 <x-app-layout>
-   <div class="min-h-screen flex flex-col sm:ml-64">
-      <div class="flex-grow p-6">
          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-center mb-8 relative">
             <!-- Section Name -->
             <div class="col-span-1 flex justify-between items-center">
@@ -112,6 +110,4 @@
          </div>
          <!-- Student Watch Position -->
          <div id="student-watch-position"></div>
-      </div>
-   </div> 
 </x-app-layout>
