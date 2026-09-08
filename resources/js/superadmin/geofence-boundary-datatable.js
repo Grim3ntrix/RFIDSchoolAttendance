@@ -16,9 +16,9 @@ export function initializeGeofenceDatatable() {
 
     function hideAllStates() {
         if (geofenceBoundary) geofenceBoundary.style.display = 'none';
-        if (notConfiguredState) notConfiguredState.classList.add('hidden');
-        if (incompleteState) incompleteState.classList.add('hidden');
-        if (errorState) errorState.classList.add('hidden');
+        if (notConfiguredState) notConfiguredState.classList.replace('flex', 'hidden');
+        if (incompleteState) incompleteState.classList.replace('flex', 'hidden');
+        if (errorState) errorState.classList.replace('flex', 'hidden');
     }
 
     if (geofenceBoundary) {
@@ -60,16 +60,16 @@ export function initializeGeofenceDatatable() {
                 }).addTo(map);
             } else if (geofenceBoundariesMapData && geofenceBoundariesMapData.state === 'incomplete') {
                 hideAllStates();
-                incompleteState.classList.remove('hidden');
+                incompleteState.classList.replace('hidden', 'flex');
             } else {
                 hideAllStates();
-                notConfiguredState.classList.remove('hidden');
+                notConfiguredState.classList.replace('hidden', 'flex');
             }
         })
         .catch(error => {
             console.error('Error fetching geofence boundary map data:', error);
             hideAllStates();
-            errorState.classList.remove('hidden');
+            errorState.classList.replace('hidden', 'flex');
             const tableLoader = document.getElementById('table-loader');
             if (tableLoader) tableLoader.style.display = 'none';
         });

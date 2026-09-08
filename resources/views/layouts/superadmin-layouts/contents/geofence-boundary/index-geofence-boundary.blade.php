@@ -89,7 +89,7 @@
                    <div id="geofence-boundary-container"></div>
 
                    <!-- Empty State: Not Configured -->
-                   <div id="geofence-not-configured" class="hidden flex flex-col items-center justify-center py-16 px-4 text-center">
+                   <div id="geofence-not-configured" class="hidden flex-col items-center justify-center py-16 px-4 text-center">
                       <svg class="w-16 h-16 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                       <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">School Geofence</h3>
                       <p class="text-gray-700 dark:text-gray-300 mb-6 max-w-md">No geofence has been configured. Configure your school's location to enable attendance validation.</p>
@@ -99,7 +99,7 @@
                    </div>
 
                    <!-- Empty State: Incomplete -->
-                   <div id="geofence-incomplete" class="hidden flex flex-col items-center justify-center py-16 px-4 text-center">
+                   <div id="geofence-incomplete" class="hidden flex-col items-center justify-center py-16 px-4 text-center">
                       <svg class="w-16 h-16 text-yellow-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"/></svg>
                       <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">Geofence configuration is incomplete.</h3>
                       <p class="text-gray-700 dark:text-gray-300 mb-6 max-w-md">Latitude, longitude or radius is missing. Please complete the configuration to enable the map.</p>
@@ -109,22 +109,22 @@
                    </div>
 
                    <!-- Empty State: Server Error -->
-                   <div id="geofence-error" class="hidden flex flex-col items-center justify-center py-16 px-4 text-center">
+                   <div id="geofence-error" class="hidden flex-col items-center justify-center py-16 px-4 text-center">
                       <svg class="w-16 h-16 text-red-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                       <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">Unable to load geofence configuration.</h3>
                       <p class="text-gray-700 dark:text-gray-300 mb-6 max-w-md">Please try again later.</p>
                    </div>
                 </div>
 
-               <div id="geofence-boundaries-datatable-container" class="mt-8">
-
-                  <div id="table-loader" class="flex justify-center items-center py-10">
+               <div id="table-loader" class="flex justify-center items-center py-10">
                      <svg role="status" class="inline w-8 h-8 mr-2 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9765 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9765 100 50.5908ZM9.08125 50.5908C9.08125 73.5495 27.0413 91.5095 50 91.5095C72.9587 91.5095 90.9188 73.5495 90.9188 50.5908C90.9188 27.6321 72.9587 9.67209 50 9.67209C27.0413 9.67209 9.08125 27.6321 9.08125 50.5908Z" fill="currentColor"/>
                         <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5536C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7233 75.2124 7.41289C69.5422 4.10248 63.2754 1.94025 56.7335 1.05189C51.7661 0.367391 46.7345 0.446447 41.8062 1.27873C39.324 1.69443 37.8557 4.19778 38.4928 6.62326C39.1299 9.04874 41.6119 10.5012 44.1076 10.1076C47.8923 9.47543 51.7426 9.52629 55.4747 10.2485C60.8569 11.2887 65.968 13.4632 70.543 16.6697C75.118 19.8763 79.0733 24.0361 82.1918 28.9444C84.7348 32.8122 86.6207 37.1317 87.7824 41.708C88.4351 44.0608 91.5422 45.6781 93.9676 45.0409Z" fill="currentFill"/>
                      </svg>
                      <span>Loading data, please wait...</span>
                   </div>
+
+               <div id="geofence-boundaries-datatable-container" class="mt-4">
                   <!-- Table content goes here -->
                </div>
             </div>

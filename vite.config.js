@@ -11,4 +11,11 @@ export default defineConfig({
             refresh: true,
         }),
     ],
+    build: {
+        // ApexCharts is ~525 kB minified and cannot be tree-shaken (single
+        // pre-bundled dist). It is dynamically imported only on pie-chart
+        // pages, so the default 500 kB limit would warn on an already
+        // optimal split.
+        chunkSizeWarningLimit: 600,
+    },
 });
