@@ -1,8 +1,9 @@
 import { DataTable } from "simple-datatables";
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import 'leaflet.fullscreen/Control.FullScreen.js'; 
-import 'leaflet.fullscreen/Control.FullScreen.css'; 
+import 'leaflet.fullscreen/Control.FullScreen.js';
+import 'leaflet.fullscreen/Control.FullScreen.css';
+import { addBasemap } from '../map-basemap';
 
 export function studentLocationPage() {
     // console.log("Student location page function triggered.");
@@ -252,6 +253,7 @@ const studentLocationModalContainer = document.getElementById('student-location-
 
 if (studentLocationModalContainer) {
     let studentId; // To hold the ID of the student whose location we want to display
+    let mapInstance = null; // To hold the modal's map so it can be destroyed on close
 
     document.addEventListener('click', function (e) {
         if (e.target.closest('[data-modal-toggle="student-location-modal"]')) {
@@ -306,10 +308,8 @@ if (studentLocationModalContainer) {
                         }
                     }).setView([latitude, longitude], 16);
 
-                    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                        maxZoom: 18,
-                        attribution: ''
-                    }).addTo(map);
+                    addBasemap(map);
+                    mapInstance = map;
 
                     const boundary = L.circle([latitude, longitude], {
                         color: 'red',
@@ -374,6 +374,12 @@ if (studentLocationModalContainer) {
             // Handle modal close with close button
             document.querySelector('[data-modal-hide="student-location-modal"]').addEventListener('click', function () {
                 studentLocationModal.hide();
+
+                if (mapInstance) {
+                    mapInstance.remove(); // Destroy the map and detach its listeners
+                    mapInstance = null;
+                }
+
                 studentLocationModalContainer.innerHTML = ''; // Clear modal content
             });
         }

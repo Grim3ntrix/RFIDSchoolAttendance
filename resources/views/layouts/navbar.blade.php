@@ -14,24 +14,27 @@
             <!-- Settings Dropdown -->
             <div class="flex items-center sm:ms-6"> <!-- Added items-center for alignment -->
 
-            <button id="avatarButton" type="button" 
-                class="flex items-center justify-center w-9 h-9 rounded-full bg-gradient-to-br from-emerald-400 to-emerald-800 p-1 
-                focus:ring-2 focus:ring-gray-300 dark:focus:ring-gray-600" 
-                aria-expanded="false" 
-                data-dropdown-toggle="userDropdown" 
-                data-dropdown-placement="bottom-start">
-                <svg class="w-5 h-5 cursor-pointer" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 30 30" xml:space="preserve" fill="#FFFFFF">
-                    <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                    <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                    <g id="SVGRepo_iconCarrier">
-                        <style type="text/css">
-                            .st4{fill:#FFFFFF;stroke:#FFFFFF;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;}
-                            .st14{fill:#FFFFFF;stroke:#FFFFFF;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;}
-                        </style>
-                        <path class="st4" d="M24,28H6c-1.1,0-2-0.9-2-2v0c0-3.9,3.1-7,7-7h8c3.9,0,7,3.1,7,7v0C26,27.1,25.1,28,24,28z"></path>
-                        <circle class="st14" cx="15" cy="9" r="6"></circle>
-                    </g>
-                </svg>
+                <!-- Dark mode toggle -->
+                <button id="theme-toggle-btn" type="button" class="inline-flex items-center p-2 me-3 text-sm text-gray-500 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600">
+                    <span class="sr-only">Toggle dark mode</span>
+                    <!-- Moon: shown in light mode -->
+                    <svg class="hidden w-6 h-6 dark:block" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
+                    </svg>
+                    <!-- Sun: shown in dark mode -->
+                    <svg class="w-6 h-6 dark:hidden" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clip-rule="evenodd"></path>
+                    </svg>
+                </button>
+
+            <button id="avatarButton" type="button"
+                class="flex items-center justify-center w-9 h-9 rounded-full {{ Auth::user()->avatar_color }}
+                focus:ring-2 focus:ring-gray-300 dark:focus:ring-gray-600"
+                aria-expanded="false"
+                data-dropdown-toggle="userDropdown"
+                data-dropdown-placement="bottom-start"
+                title="{{ Auth::user()->name }}">
+                <span class="text-sm font-semibold text-white select-none leading-none" aria-hidden="true">{{ Auth::user()->initials }}</span>
             </button>
                 <!-- Dropdown menu -->
                 <div id="userDropdown" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600">

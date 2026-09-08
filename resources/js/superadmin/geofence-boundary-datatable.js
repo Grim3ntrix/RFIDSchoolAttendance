@@ -1,9 +1,10 @@
 import { DataTable } from "simple-datatables";
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import 'leaflet.fullscreen/Control.FullScreen.js'; 
-import 'leaflet.fullscreen/Control.FullScreen.css'; 
+import 'leaflet.fullscreen/Control.FullScreen.js';
+import 'leaflet.fullscreen/Control.FullScreen.css';
 import Swal from 'sweetalert2';
+import { addBasemap } from '../map-basemap';
 
 export function initializeGeofenceDatatable() {
     // console.log("School Geofence Boundary page function triggered.");
@@ -47,10 +48,7 @@ export function initializeGeofenceDatatable() {
                     }
                 }).setView([latitude, longitude], 16);
 
-                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                    maxZoom: 18,
-                    attribution: ''
-                }).addTo(map);
+                addBasemap(map);
 
                 const boundary = L.circle([latitude, longitude], {
                     color: 'red',

@@ -1,0 +1,13 @@
+/* Dark mode for OpenStreetMap tiles: invert + hue-rotate flips the map to a
+   dark theme while keeping hues recognizable (green stays green, blue stays
+   blue). Labels invert with it — dark text becomes light — and stay readable.
+   Applies to tiles only; markers, circles, and the attribution are untouched. */
+.dark-basemap .leaflet-tile {
+    filter: invert(1) hue-rotate(180deg) brightness(0.9) contrast(0.9);
+}
+
+/* Theme-matched backdrop so tiles load against a dark surface instead of
+   Leaflet's light-gray default (#ddd = Tailwind gray-800 background). */
+.leaflet-container.dark-basemap {
+    background: #1f2937;
+}

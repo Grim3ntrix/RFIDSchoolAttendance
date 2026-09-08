@@ -1,9 +1,12 @@
 import './bootstrap';
 import 'flowbite';
 import Alpine from 'alpinejs';
+import { initializeThemeToggle } from './theme-toggle';
 
 window.Alpine = Alpine;
 Alpine.start();
+
+initializeThemeToggle();
 
 document.addEventListener('DOMContentLoaded', async () => {
 
