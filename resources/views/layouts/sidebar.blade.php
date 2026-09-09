@@ -72,13 +72,13 @@
     <div class="flex h-full flex-col overflow-y-auto px-3 pb-4">
 
         <!-- Brand -->
-        <div class="flex items-center justify-between px-2 py-5">
-            <a href="{{ url('/') }}" class="flex items-center gap-3">
-                <img src="{{ asset('images/mnhs.png') }}" class="h-8 w-8" alt="MNHS Logo" />
-                <span class="self-center text-lg font-semibold whitespace-nowrap text-gray-900 dark:text-white">MNHS Attendance</span>
+        <div class="flex items-center justify-between gap-1 px-2 py-5">
+            <a href="{{ url('/') }}" class="flex min-w-0 flex-1 items-center gap-3">
+                <img src="{{ asset('images/mnhs.png') }}" class="h-8 w-8 shrink-0" alt="MNHS Logo" />
+                <span class="truncate text-base font-semibold text-gray-900 dark:text-white">MNHS Attendance</span>
             </a>
             <button type="button" data-drawer-toggle="logo-sidebar" aria-controls="logo-sidebar"
-                class="inline-flex items-center rounded-lg p-2 text-sm text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600 sm:hidden">
+                class="inline-flex shrink-0 items-center rounded-lg p-1.5 text-sm text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600 sm:hidden">
                 <span class="sr-only">Close sidebar</span>
                 <x-icon name="x" class="h-5 w-5" />
             </button>

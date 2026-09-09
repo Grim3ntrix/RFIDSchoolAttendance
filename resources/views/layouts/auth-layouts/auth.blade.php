@@ -41,17 +41,10 @@
     <body class="font-sans text-gray-900 antialiased bg-gray-50 dark:bg-gray-900">
         <div class="relative min-h-screen flex flex-col sm:justify-center items-center px-6 py-12">
 
-            <!-- Dark mode toggle (same hook as the navbar: #theme-toggle-btn) -->
-            <div class="absolute top-4 right-4 sm:top-6 sm:right-6">
-                <button id="theme-toggle-btn" type="button"
-                    class="inline-flex items-center rounded-lg bg-white p-2 text-gray-500 shadow-sm ring-1 ring-gray-200 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-300 dark:bg-gray-800 dark:text-gray-400 dark:ring-gray-700 dark:hover:bg-gray-700 dark:focus:ring-gray-600">
-                    <span class="sr-only">Toggle dark mode</span>
-                    <!-- Moon: shown in light mode -->
-                    <x-icon name="moon" class="hidden h-5 w-5 dark:block" />
-                    <!-- Sun: shown in dark mode -->
-                    <x-icon name="sun" class="h-5 w-5 dark:hidden" />
-                </button>
-            </div>
+            <!-- No theme toggle here: theme-init applies the user's stored
+                 choice (or the OS preference for guests) before first paint,
+                 and localStorage persists across logout. The toggle lives in
+                 the authenticated navbar only. -->
 
             <!-- Brand -->
             <a href="/" class="flex flex-col items-center gap-3 mb-8 sm:mb-10">
