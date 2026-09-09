@@ -1,3 +1,19 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Chrome/Edge paint a fixed light-blue background on autofilled inputs,
+   which ignores dark mode. Re-tint them to the form's dark surface and
+   keep the box-shadow trick (needed to override the UA color) in sync
+   with the light-mode input background. */
+input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0 1000px #f9fafb inset; /* gray-50 */
+    -webkit-text-fill-color: #111827;              /* gray-900 */
+    caret-color: #111827;                          /* match typed text */
+}
+
+.dark input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0 1000px #374151 inset; /* gray-700 */
+    -webkit-text-fill-color: #fff;                  /* white */
+    caret-color: #fff;                              /* white — visible on the dark surface even before typing */
+}

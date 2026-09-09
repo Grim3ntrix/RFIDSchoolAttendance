@@ -108,8 +108,10 @@
                                     @endif
 
                                     @if (isset($item['badge']))
+                                        <!-- `hidden` is toggled by the excuse-count JS; no other display
+                                             utility here so there's no display conflict. -->
                                         <span id="{{ $item['badge'] }}"
-                                            class="hidden ms-3 inline-flex items-center justify-center rounded-full border border-white bg-red-500 px-2 py-1 text-xs font-bold leading-none text-white">0</span>
+                                            class="ms-3 rounded-full border border-white bg-red-500 px-2 py-1 text-xs font-bold leading-none text-white">0</span>
                                     @endif
                                 </a>
                             </li>

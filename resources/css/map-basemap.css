@@ -1,3 +1,18 @@
+/* Leaflet's internal layers use z-indexes far above the app chrome (panes
+   200-700, control corners 1000) while the navbar sits at z-30 and the
+   sidebar at z-40. Without a stacking context on the map container those
+   values compete at page level, and the map paints over the navbar and the
+   profile dropdown while scrolling. Containing each map in its own context
+   (z-index: 0) keeps every Leaflet layer below the app chrome.
+
+   Fullscreen is unaffected: the native Fullscreen API renders in the
+   browser's top layer, and the plugin's pseudo-fullscreen fallback sets
+   z-index 99999 !important, which overrides this rule. */
+.leaflet-container {
+    position: relative;
+    z-index: 0;
+}
+
 /* Dark mode for OpenStreetMap tiles: invert + hue-rotate flips the map to a
    dark theme while keeping hues recognizable (green stays green, blue stays
    blue). Labels invert with it — dark text becomes light — and stay readable.
@@ -10,4 +25,125 @@
    Leaflet's light-gray default (#ddd = Tailwind gray-800 background). */
 .leaflet-container.dark-basemap {
     background: #1f2937;
+}
+
+/* Dark mode for Leaflet's built-in controls: zoom and fullscreen buttons ship
+   light-only (#fff surface, near-black glyphs), and the attribution is a
+   white translucent strip. Restyle to the same Flowbite grays the custom
+   boundary toolbar uses so every control on the map reads as one system. */
+.dark .leaflet-bar a {
+    background-color: #1f2937;      /* gray-800 */
+    color: #9ca3af;                 /* gray-400 */
+    border-bottom-color: #4b5563;   /* gray-600 */
+}
+
+.dark .leaflet-bar a:hover {
+    background-color: #374151;      /* gray-700 */
+    color: #e5e7eb;                 /* gray-200 */
+}
+
+/* The fullscreen control's icon is an SVG sprite used as a background image,
+   so its fill="currentColor" cannot pick up the button's text color and the
+   glyphs render black. A filter would invert the whole button (background
+   included — that inverts gray-800 into a light beige), so recolor via a mask
+   instead: the sprite's shape stencils a gray fill on a pseudo-element while
+   the button surface stays dark. Position rules mirror the plugin's sprite
+   offsets for the enter/exit and touch states. */
+.dark .fullscreen-icon {
+    background-image: none;
+    position: relative;
+}
+
+.dark .fullscreen-icon::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-color: #9ca3af; /* gray-400, same as the zoom +/− glyphs */
+    -webkit-mask: url('../../node_modules/leaflet.fullscreen/icon-fullscreen.svg') 0 0 / 26px 52px no-repeat;
+    mask: url('../../node_modules/leaflet.fullscreen/icon-fullscreen.svg') 0 0 / 26px 52px no-repeat;
+}
+
+.dark .fullscreen-icon.leaflet-fullscreen-on::after {
+    -webkit-mask-position: 0 -26px;
+    mask-position: 0 -26px;
+}
+
+.dark .leaflet-touch .fullscreen-icon::after {
+    -webkit-mask-position: 2px 2px;
+    mask-position: 2px 2px;
+}
+
+.dark .leaflet-touch .fullscreen-icon.leaflet-fullscreen-on::after {
+    -webkit-mask-position: 2px -24px;
+    mask-position: 2px -24px;
+}
+
+.dark .leaflet-control-attribution {
+    background: rgb(31 41 55 / 0.8); /* gray-800 at the default 80% opacity */
+    color: #9ca3af;                   /* gray-400 */
+}
+
+.dark .leaflet-control-attribution a {
+    color: #9ca3af;
+}
+
+/* --- Geofence boundary map controls --- */
+
+/* The boundary maps put several controls in the top-left corner (zoom,
+   fullscreen, and the boundary toolbar). Leaflet stacks .leaflet-control
+   children vertically there by default; a flex row keeps them side by side
+   instead of a tall strip down the map edge.
+
+   Scoped to .boundary-map-container so every other map in the app (teacher
+   student location, etc.) keeps Leaflet's default control stacking. The
+   custom controls in boundary-map.js carry the leaflet-control class so they
+   take part in this layout; spacing comes from the gap, not per-control
+   margins. */
+.boundary-map-container .leaflet-top.leaflet-left {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 10px 0 0 10px;
+}
+
+.boundary-map-container .leaflet-top.leaflet-left .leaflet-control {
+    margin: 0;
+}
+
+.boundary-map-toolbar {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Recenter button's "boundary is off-screen" state — primary green accent,
+   same interaction language as the page's active buttons (primary-700). */
+.boundary-map-toolbar .boundary-toolbar-active {
+    color: #16a64b;
+}
+
+/* Draggable center marker: green dot with a white ring, visually distinct
+   from the standard OSM pin. */
+.boundary-center-handle {
+    width: 18px;
+    height: 18px;
+    border-radius: 9999px;
+    background: #16a64b;
+    border: 3px solid #fff;
+    box-shadow: 0 1px 3px rgb(0 0 0 / 0.4);
+    cursor: grab;
+}
+
+.boundary-center-handle:active {
+    cursor: grabbing;
+}
+
+/* Radius resize handle on the circle's east edge. */
+.boundary-radius-handle {
+    width: 14px;
+    height: 14px;
+    border-radius: 9999px;
+    background: #fff;
+    border: 3px solid #16a64b;
+    box-shadow: 0 1px 3px rgb(0 0 0 / 0.3);
+    cursor: ew-resize;
 }

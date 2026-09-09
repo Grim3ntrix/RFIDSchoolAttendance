@@ -48,6 +48,12 @@
                             </div>
                         </div>
 
+                        <div>
+                            <label class="mb-2 block text-sm font-medium text-gray-900 dark:text-white">Boundary Map</label>
+                            <div id="add-boundary-map" class="h-56 rounded-lg border border-gray-200 dark:border-gray-600"></div>
+                            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Drag the center pin to move the boundary, drag the edge handle to resize the radius, or search for a place on the map.</p>
+                        </div>
+
                         <div class="flex items-center justify-between gap-3 pt-2">
                             <div id="fill-location-btn-container"></div>
                             <div class="flex items-center gap-3">
@@ -70,7 +76,12 @@
     <div class="rounded-xl border border-gray-200 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-800">
         <div class="min-h-80 rounded-lg bg-gray-50 p-4 dark:bg-gray-900/40">
             <!-- School Geofence Boundary Container-->
-            <div id="geofence-boundary-container"></div>
+            <div id="geofence-boundary-container">
+                <div role="status" class="flex h-80 items-center justify-center gap-3 rounded-lg bg-gray-50 text-sm text-gray-500 dark:bg-gray-800 dark:text-gray-400">
+                    <x-icon name="loader-circle" class="h-6 w-6 animate-spin text-primary-600 dark:text-primary-500" />
+                    Loading map, please wait...
+                </div>
+            </div>
 
             <!-- Empty State: Not Configured -->
             <div id="geofence-not-configured" class="hidden flex-col items-center justify-center px-4 py-16 text-center">

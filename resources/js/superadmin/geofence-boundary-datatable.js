@@ -1,16 +1,15 @@
 import { DataTable } from "simple-datatables";
-import L from 'leaflet';
-import 'leaflet/dist/leaflet.css';
-import 'leaflet.fullscreen/Control.FullScreen.js';
-import 'leaflet.fullscreen/Control.FullScreen.css';
 import Swal from 'sweetalert2';
-import { addBasemap } from '../map-basemap';
+import { createBoundaryMap } from './boundary-map';
 import { refreshIcons } from '../icons';
+
+const GEOCODE_URL = '/superadmin/geofence-boundaries/geocode';
 
 export function initializeGeofenceDatatable() {
     // console.log("School Geofence Boundary page function triggered.");
 
-    /* Geofence Boundary Map */
+    /* --- Page display map (read-only boundary preview + toolbar) --- */
+
     const geofenceBoundary = document.getElementById('geofence-boundary-container');
     const notConfiguredState = document.getElementById('geofence-not-configured');
     const incompleteState = document.getElementById('geofence-incomplete');
@@ -33,30 +32,24 @@ export function initializeGeofenceDatatable() {
                 geofenceBoundary.style.display = 'block';
 
                 const data = geofenceBoundariesMapData.data;
-                const geofenceBoundaryHTML = `
-                    <div id="map" class="h-80 rounded-lg shadow-lg"></div>
-                `;
-                geofenceBoundary.innerHTML = geofenceBoundaryHTML;
-
                 const latitude = parseFloat(data.latitude);
                 const longitude = parseFloat(data.longitude);
                 const radius = parseFloat(data.radius);
 
-                const map = L.map('map', {
-                    fullscreenControl: true,
-                    fullscreenControlOptions: {
-                        position: 'topleft'
-                    }
-                }).setView([latitude, longitude], 16);
+                geofenceBoundary.innerHTML = `
+                    <div id="geofence-map" class="h-80 rounded-lg shadow-lg"></div>
+                `;
 
-                addBasemap(map);
+                const displayMap = createBoundaryMap({
+                    elementId: 'geofence-map',
+                    center: [latitude, longitude],
+                    zoom: 16,
+                });
 
-                const boundary = L.circle([latitude, longitude], {
-                    color: 'red',
-                    fillColor: 'blue',
-                    fillOpacity: 0.1,
-                    radius: radius,
-                }).addTo(map);
+                if (displayMap) {
+                    displayMap.drawBoundary(latitude, longitude, radius);
+                    displayMap.fitBoundary(true);
+                }
             } else if (geofenceBoundariesMapData && geofenceBoundariesMapData.state === 'incomplete') {
                 hideAllStates();
                 incompleteState.classList.replace('hidden', 'flex');
@@ -74,13 +67,70 @@ export function initializeGeofenceDatatable() {
         });
     }
 
+    /* --- Add modal: editable boundary map + Auto Fill --- */
+
     const addGeofenceBoundaryBtn = document.getElementById('add-geofence-boundary-btn');
+    const addForm = document.getElementById('add-geofence-boundary-form');
+    const schoolNameField = document.getElementById('school_name');
+    const addressField = document.getElementById('address');
+    const latitudeField = document.getElementById('latitude');
+    const longitudeField = document.getElementById('longitude');
+    const radiusField = document.getElementById('radius');
+
+    let addBoundaryMap = null;
+
+    /* The map container lives inside a hidden modal. Flowbite removes the
+       `hidden` class in its own click handler (before ours finishes), so
+       building the map on the next frame gives the container its final
+       layout; no fixed-timeout guessing. */
+    function ensureAddMap() {
+        if (addBoundaryMap) {
+            addBoundaryMap.map.invalidateSize();
+            return;
+        }
+
+        addBoundaryMap = createBoundaryMap({
+            elementId: 'add-boundary-map',
+            editable: true,
+            onBoundaryChange: syncFieldsFromMap,
+        });
+    }
+
+    function syncFieldsFromMap({ latitude, longitude, radius }) {
+        latitudeField.value = latitude.toFixed(6);
+        longitudeField.value = longitude.toFixed(6);
+        radiusField.value = Math.round(radius);
+    }
+
+    function syncMapFromFields() {
+        if (! addBoundaryMap) {
+            return;
+        }
+
+        const latitude = parseFloat(latitudeField.value);
+        const longitude = parseFloat(longitudeField.value);
+        const radius = parseFloat(radiusField.value);
+
+        if (Number.isFinite(latitude) && Number.isFinite(longitude)) {
+            addBoundaryMap.drawBoundary(latitude, longitude, Number.isFinite(radius) ? radius : 100);
+            addBoundaryMap.fitBoundary(true);
+        }
+    }
+
+    [latitudeField, longitudeField, radiusField].forEach(field => {
+        field.addEventListener('change', syncMapFromFields);
+    });
 
     addGeofenceBoundaryBtn.addEventListener('click', function (e) {
         const geofenceBoundary = document.getElementById('geofence-boundary-container');
         if (geofenceBoundary) {
             geofenceBoundary.style.display = 'none';
         }
+
+        requestAnimationFrame(() => {
+            ensureAddMap();
+            syncMapFromFields();
+        });
     })
 
     document.querySelectorAll('[data-modal-hide="geofence-boundary-modal"]').forEach(function (closeTrigger) {
@@ -91,15 +141,13 @@ export function initializeGeofenceDatatable() {
         });
     });
 
-    const form = document.getElementById('add-geofence-boundary-form');
+    if (addForm) {
+        addForm.addEventListener('submit', function (e) {
+            e.preventDefault(); // Prevent the default form submission
 
-    if (form){
-        form.addEventListener('submit', function (e) {
-        e.preventDefault(); // Prevent the default form submission
-    
-        let formData = new FormData(form);
-    
-        axios.post('/superadmin/geofence-boundaries', formData)
+            let formData = new FormData(addForm);
+
+            axios.post('/superadmin/geofence-boundaries', formData)
             .then(response => {
                 const Toast = Swal.mixin({
                     toast: true,
@@ -112,22 +160,25 @@ export function initializeGeofenceDatatable() {
                         toast.onmouseleave = Swal.resumeTimer;
                     }
                 });
-            
+
                 Toast.fire({
                     icon: "success",
                     title: "School geofence boundary record added successfully!"
                 });
-            
-                form.reset();
+
+                addForm.reset();
+                if (addBoundaryMap) {
+                    addBoundaryMap.clearBoundary();
+                }
                 window.location.href = '/superadmin/geofence-boundaries';
             })
             .catch(error => {
                 if (error.response && error.response.status === 422) {
-    
+
                     const errors = error.response.data.errors;
-    
+
                     document.querySelectorAll('.error-message').forEach(el => el.remove()); // Hide Validation
-    
+
                     for (let key in errors) {
                         let inputElement = document.getElementById(key);
                         let errorMessage = errors[key][0];
@@ -143,17 +194,14 @@ export function initializeGeofenceDatatable() {
         });
     }
 
-    /* Geofence - Auto Fill Button */
+    /* Geofence - Auto Fill Button (GPS coordinates + reverse geocoding) */
 
     const fillLocationBtnContainer = document.getElementById('fill-location-btn-container');
-    const latitudeField            = document.getElementById('latitude');
-    const longitudeField           = document.getElementById('longitude');
-    const radiusField              = document.getElementById('radius');
 
     if (fillLocationBtnContainer) {
 
         const fillLocationBtnHTML =
-        `<button type="button" id="fill-location-btn" class="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-medium text-gray-900 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-700">
+        `<button type="button" id="fill-location-btn" class="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-medium text-gray-900 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-200 disabled:cursor-not-allowed disabled:opacity-60 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-700">
             <i data-lucide="locate-fixed" class="w-4 h-4"></i>
             Auto Fill
         </button>`;
@@ -162,39 +210,72 @@ export function initializeGeofenceDatatable() {
         refreshIcons();
 
         const fillLocationBtn = document.getElementById('fill-location-btn');
-        
+
         fillLocationBtn.addEventListener('click', function () {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(function (position) {
-
-                    latitudeField.value = position.coords.latitude;
-                    longitudeField.value = position.coords.longitude;
-                    
-                    radiusField.value = 100;
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Location filled successfully!',
-                        showConfirmButton: false,
-                        timer: 1000
-                    });
-
-                }, function (error) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Unable to retrieve location',
-                        text: error.message
-                    });
-                });
-            } else {
+            if (! navigator.geolocation) {
                 Swal.fire({
                     icon: 'error',
                     title: 'Geolocation is not supported by your browser.'
                 });
+                return;
             }
+
+            fillLocationBtn.disabled = true;
+
+            navigator.geolocation.getCurrentPosition(function (position) {
+                const latitude = position.coords.latitude;
+                const longitude = position.coords.longitude;
+
+                latitudeField.value = latitude;
+                longitudeField.value = longitude;
+                radiusField.value = 100;
+
+                syncMapFromFields();
+
+                /* Fill school name and address via the reverse geocoding
+                   proxy so the whole form is filled, not just coordinates. */
+                axios.get(GEOCODE_URL, { params: { lat: latitude, lon: longitude } })
+                .then(reverseResponse => {
+                    const place = reverseResponse.data;
+
+                    if (place.school_name) {
+                        schoolNameField.value = place.school_name;
+                    }
+                    if (place.address) {
+                        addressField.value = place.address;
+                    }
+
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Location filled successfully!',
+                        showConfirmButton: false,
+                        timer: 1200
+                    });
+                })
+                .catch(() => {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Location filled successfully!',
+                        text: 'School name and address could not be identified — please enter them manually.',
+                        showConfirmButton: false,
+                        timer: 2500
+                    });
+                })
+                .finally(() => {
+                    fillLocationBtn.disabled = false;
+                });
+            }, function (error) {
+                fillLocationBtn.disabled = false;
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Unable to retrieve location',
+                    text: error.message
+                });
+            });
         });
     }
 
-    /* Get Geofence Boundary Table*/
+    /* --- Geofence Boundary Table --- */
 
     const tableLoader = document.getElementById('table-loader');
 
@@ -305,14 +386,14 @@ export function initializeGeofenceDatatable() {
                 document.getElementById('table-loader').style.display = 'none'; // Hide Loading spinner
             }
         })
-            
+
         .catch(error => {
             console.error('Error fetching geofence boundary data:', error);
             document.getElementById('table-loader').style.display = 'none'; // Hide Loading spinner
         });
     }
 
-    /* Edit GET Request - Modal Instance */
+    /* --- Edit modal (editable boundary map) --- */
 
     const editGeofenceBoundaryModalContainer = document.getElementById('edit-geofence-boundary-modal-container');
 
@@ -355,6 +436,11 @@ export function initializeGeofenceDatatable() {
                                 <input type="number" id="edit_radius" name="radius" step="any" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" autocomplete="off" />
                             </div>
                         </div>
+                        <div>
+                            <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Boundary Map</label>
+                            <div id="edit-boundary-map" class="h-56 rounded-lg border border-gray-200 dark:border-gray-600"></div>
+                            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Drag the center pin to move the boundary, drag the edge handle to resize the radius, or search for a place on the map.</p>
+                        </div>
                         <div class="grid gap-6 md:grid-cols-1">
                             <div>
                                 <label for="status_id" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Status</label>
@@ -381,6 +467,28 @@ export function initializeGeofenceDatatable() {
     const editGeofenceBoundaryModalEl = document.getElementById('edit-geofence-boundary-modal');
 
     let geofenceBoundaryId;
+    let editBoundaryMap = null;
+
+    const editLatitudeField = document.getElementById('edit_latitude');
+    const editLongitudeField = document.getElementById('edit_longitude');
+    const editRadiusField = document.getElementById('edit_radius');
+
+    function ensureEditMap() {
+        if (editBoundaryMap) {
+            editBoundaryMap.map.invalidateSize();
+            return;
+        }
+
+        editBoundaryMap = createBoundaryMap({
+            elementId: 'edit-boundary-map',
+            editable: true,
+            onBoundaryChange: ({ latitude, longitude, radius }) => {
+                editLatitudeField.value = latitude.toFixed(6);
+                editLongitudeField.value = longitude.toFixed(6);
+                editRadiusField.value = Math.round(radius);
+            },
+        });
+    }
 
     if (editGeofenceBoundaryModalEl) {
         const editGeofenceBoundaryModal = new Modal(editGeofenceBoundaryModalEl);
@@ -393,6 +501,9 @@ export function initializeGeofenceDatatable() {
                 geofenceBoundaryId = e.target.closest('button').getAttribute('data-geofence-boundary-id');
 
                 editGeofenceBoundaryModal.show();
+
+                // Build the map once the container has its open-modal layout.
+                requestAnimationFrame(ensureEditMap);
 
                 // Hide the map when the modal is opened
                 const geofenceBoundary = document.getElementById('geofence-boundary-container');
@@ -413,9 +524,19 @@ export function initializeGeofenceDatatable() {
                         // Populate the form with the geofence boundary data
                         document.getElementById('edit_school_name').value = geofenceBoundaryData.school_name;
                         document.getElementById('edit_address').value = geofenceBoundaryData.address;
-                        document.getElementById('edit_latitude').value = parseFloat(geofenceBoundaryData.latitude);
-                        document.getElementById('edit_longitude').value = parseFloat(geofenceBoundaryData.longitude);
-                        document.getElementById('edit_radius').value = parseFloat(geofenceBoundaryData.radius);
+                        editLatitudeField.value = parseFloat(geofenceBoundaryData.latitude);
+                        editLongitudeField.value = parseFloat(geofenceBoundaryData.longitude);
+                        editRadiusField.value = parseFloat(geofenceBoundaryData.radius);
+
+                        // Draw the boundary once the modal map exists.
+                        ensureEditMap();
+
+                        editBoundaryMap.drawBoundary(
+                            parseFloat(geofenceBoundaryData.latitude),
+                            parseFloat(geofenceBoundaryData.longitude),
+                            parseFloat(geofenceBoundaryData.radius)
+                        );
+                        editBoundaryMap.fitBoundary(true);
 
                         // Populate the status dropdown
                         const statusSelect = document.getElementById('status_id');
@@ -426,7 +547,7 @@ export function initializeGeofenceDatatable() {
                             const statusOption = document.createElement('option');
                             statusOption.value = status.id;
                             statusOption.textContent = status.status;
-                            
+
                             // Check if this status is the currently selected one
                             if (status.id === geofenceBoundaryData.geofence_boundary_status.id) {
                                 statusOption.selected = true;
@@ -456,12 +577,13 @@ export function initializeGeofenceDatatable() {
     }
 
     /* Edit PUT Request - FORM */
+
     const editForm = document.getElementById('edit-geofence-boundary-form');
 
     if (editForm) {
         editForm.addEventListener('submit', function (e) {
             e.preventDefault();
-            
+
             let formData = new FormData(editForm);
 
             axios.post(`/superadmin/geofence-boundaries/${geofenceBoundaryId}`, formData, {
@@ -488,6 +610,9 @@ export function initializeGeofenceDatatable() {
                 });
 
                 editForm.reset();
+                if (editBoundaryMap) {
+                    editBoundaryMap.clearBoundary();
+                }
                 window.location.href = `/superadmin/geofence-boundaries`;
             })
             .catch(error => {
@@ -521,7 +646,7 @@ export function initializeGeofenceDatatable() {
         document.addEventListener('click', function (e) {
             if (e.target.closest('[data-modal-toggle="delete-geofence-boundary-modal"]')) {
                 e.preventDefault();
-                
+
                 geofenceBoundaryId = e.target.closest('button').getAttribute('data-geofence-boundary-id');
 
                 // Create modal HTML
@@ -594,7 +719,7 @@ export function initializeGeofenceDatatable() {
                             });
 
                             window.location.href = `/superadmin/geofence-boundaries`;
-                            
+
                         })
                         .catch(error => {
                             console.error('There was an error deleting the section:', error);
