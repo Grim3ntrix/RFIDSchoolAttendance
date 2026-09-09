@@ -38,17 +38,36 @@
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-    <body class="font-sans text-gray-900 antialiased">
-        <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gray-100 dark:bg-gray-900">
-            <div>
-                <a href="/">
-                    <img src="{{ asset('images/mnhs.png') }}" alt="MNHS Logo" class="w-40 h-40">
-                </a>
+    <body class="font-sans text-gray-900 antialiased bg-gray-50 dark:bg-gray-900">
+        <div class="relative min-h-screen flex flex-col sm:justify-center items-center px-6 py-12">
+
+            <!-- Dark mode toggle (same hook as the navbar: #theme-toggle-btn) -->
+            <div class="absolute top-4 right-4 sm:top-6 sm:right-6">
+                <button id="theme-toggle-btn" type="button"
+                    class="inline-flex items-center rounded-lg bg-white p-2 text-gray-500 shadow-sm ring-1 ring-gray-200 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-300 dark:bg-gray-800 dark:text-gray-400 dark:ring-gray-700 dark:hover:bg-gray-700 dark:focus:ring-gray-600">
+                    <span class="sr-only">Toggle dark mode</span>
+                    <!-- Moon: shown in light mode -->
+                    <x-icon name="moon" class="hidden h-5 w-5 dark:block" />
+                    <!-- Sun: shown in dark mode -->
+                    <x-icon name="sun" class="h-5 w-5 dark:hidden" />
+                </button>
             </div>
 
-            <div class="w-full sm:max-w-lg mt-6 px-6 py-4 bg-gradient-to-b from-white to-gray-50 dark:bg-gray-800 border border-gray-300 shadow-lg overflow-hidden sm:rounded-lg">
+            <!-- Brand -->
+            <a href="/" class="flex flex-col items-center gap-3 mb-8 sm:mb-10">
+                <img src="{{ asset('images/mnhs.png') }}" alt="MNHS Logo" class="h-16 w-16 sm:h-20 sm:w-20">
+                <span class="flex flex-col items-center">
+                    <span class="text-xl font-semibold text-gray-900 dark:text-white">MNHS Attendance</span>
+                    <span class="text-sm text-gray-500 dark:text-gray-400">RFID school attendance &amp; tracking</span>
+                </span>
+            </a>
+
+            <!-- Card -->
+            <div class="w-full sm:max-w-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm p-6 sm:p-8">
                 {{ $slot }}
             </div>
+
+            <p class="mt-8 text-xs text-gray-400 dark:text-gray-500">&copy; {{ date('Y') }} MNHS Attendance</p>
         </div>
     </body>
 </html>
