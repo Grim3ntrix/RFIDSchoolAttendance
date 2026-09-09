@@ -1,6 +1,8 @@
 import { createIcons, Menu, X, Sun, Moon, Settings, LogOut, LayoutDashboard, UserPlus,
     MapPin, Users, FileText, ScanLine, MessageSquare, School, Plus, Pencil, Trash2,
     AlertTriangle, XCircle, KeyRound, UserCog, CircleAlert, LocateFixed, LoaderCircle,
+    BookOpen, Info, CalendarDays, Clock, Eye, Table2, History, Download,
+    ThumbsUp, ThumbsDown, Check,
 } from 'lucide';
 
 /* Central Lucide icon registry. Every icon used anywhere in the app (Blade
@@ -11,6 +13,8 @@ const iconRegistry = {
     Menu, X, Sun, Moon, Settings, LogOut, LayoutDashboard, UserPlus,
     MapPin, Users, FileText, ScanLine, MessageSquare, School, Plus, Pencil, Trash2,
     AlertTriangle, XCircle, KeyRound, UserCog, CircleAlert, LocateFixed, LoaderCircle,
+    BookOpen, Info, CalendarDays, Clock, Eye, Table2, History, Download,
+    ThumbsUp, ThumbsDown, Check,
 };
 
 /* Replace all <i data-lucide="…"> placeholder elements with inline SVGs.

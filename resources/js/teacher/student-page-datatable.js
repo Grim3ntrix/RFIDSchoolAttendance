@@ -1,5 +1,35 @@
 import { DataTable } from "simple-datatables";
 import Swal from 'sweetalert2';
+import { refreshIcons } from "../icons";
+
+/* Shared table markup for both branches (with / without records). */
+const studentTable = `
+    <div class="relative overflow-x-auto">
+        <table id="studentTable" class="w-full text-left text-sm text-gray-500 dark:text-gray-400">
+            <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                <tr>
+                    <th scope="col" class="px-4 py-3">School ID</th>
+                    <th scope="col" class="px-4 py-3">RFID Serial Number</th>
+                    <th scope="col" class="px-4 py-3">Batch</th>
+                    <th scope="col" class="px-4 py-3">Full Name</th>
+                    <th scope="col" class="px-4 py-3">Sex</th>
+                    <th scope="col" class="px-4 py-3">Phone Number</th>
+                    <th scope="col" class="px-4 py-3">Address</th>
+                    <th scope="col" class="px-4 py-3">Action</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>`;
+
+const studentEmptyState = `
+    <div class="flex flex-col items-center justify-center py-12 text-center">
+        <span class="flex h-12 w-12 items-center justify-center rounded-full bg-gray-100 text-gray-500 dark:bg-gray-700 dark:text-gray-400">
+            <i data-lucide="users" class="h-6 w-6"></i>
+        </span>
+        <h4 class="mt-4 text-base font-semibold text-gray-900 dark:text-white">No students yet</h4>
+        <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Add your first student to this section to start tracking attendance.</p>
+    </div>`;
 
 export function initializeStudentDatatable() {
     // console.log("Student page function triggered.");
@@ -47,7 +77,7 @@ export function initializeStudentDatatable() {
                         let errorMessage = errors[key][0];
 
                         let errorElement = document.createElement('p');
-                        errorElement.classList.add('text-red-500', 'text-xs', 'mt-1', 'error-message');
+                        errorElement.classList.add('mt-1', 'text-xs', 'text-red-600', 'dark:text-red-400', 'error-message');
                         errorElement.innerText = errorMessage;
 
                         inputElement.after(errorElement);
@@ -73,109 +103,40 @@ export function initializeStudentDatatable() {
             /* Datatable */
 
             if (students.length > 0) {
-                const tableHTML = `
-                    <table id="studentTable" class="bg-gray-50 dark:bg-gray-800">
-                        <thead>
-                            <tr>
-                                <th>
-                                    <span class="flex items-center">
-                                        School ID
-                                        <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4"/>
-                                        </svg>
-                                    </span>
-                                </th>
-                                <th>
-                                    <span class="flex items-center">
-                                        RFID Serial Number
-                                        <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4"/>
-                                        </svg>
-                                    </span>
-                                </th>
-                                <th>
-                                    <span class="flex items-center">
-                                        Batch
-                                        <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4"/>
-                                        </svg>
-                                    </span>
-                                </th>
-                                <th>
-                                    <span class="flex items-center">
-                                        Full Name
-                                        <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4"/>
-                                        </svg>
-                                    </span>
-                                </th>
-                                <th>
-                                    <span class="flex items-center">
-                                        Sex
-                                        <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4"/>
-                                        </svg>
-                                    </span>
-                                </th>
-                                <th>
-                                    <span class="flex items-center">
-                                        Phone Number
-                                        <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4"/>
-                                        </svg>
-                                    </span>
-                                </th>
-                                <th>
-                                    <span class="flex items-center">
-                                        Address
-                                        <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4"/>
-                                        </svg>
-                                    </span>
-                                </th>
-                                <th>
-                                    <span class="flex items-center">
-                                        Action
-                                        <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4"/>
-                                        </svg>
-                                    </span>
-                                </th>
-                            </tr>
-                        </thead>
-                    <tbody></tbody>
-                </table>`;
-
-                document.getElementById('student-datatable-container').innerHTML = tableHTML;
+                document.getElementById('student-datatable-container').innerHTML = studentTable;
                 const tbody = document.querySelector('#studentTable tbody');
                 tbody.innerHTML = '';
-                
+
                 students.forEach(student => {
                     const row = document.createElement('tr');
+                    row.className = 'border-b hover:bg-gray-50 dark:border-gray-700 dark:hover:bg-gray-700/50';
                     row.innerHTML = `
-                        <td>${student.school_id ?? 'N/A'}</td>
-                        <td>${student.rfid_serial_number}</td>
-                        <td>${student.batch}</td>
-                        <td>${student.first_name} ${student.middle_name ?? ''} ${student.last_name} ${student.name_extension ?? ''}</td>
-                        <td>${student.sex}</td>
-                        <td>${student.phone_number ?? 'N/A'}</td>
-                        <td>${student.address ?? 'N/A' }</td>
-                        <td>
-                            <button type="button" data-modal-target="edit-student-modal" data-modal-toggle="edit-student-modal" class="text-blue-500 hover:underline" data-student-id="${student.id}">
-                                <svg class="w-6 h-5 text-gray-800 dark:text-white hover:text-purple-500 transition-colors duration-150" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
-                                    <path fill-rule="evenodd" d="M11.32 6.176H5c-1.105 0-2 .949-2 2.118v10.588C3 20.052 3.895 21 5 21h11c1.105 0 2-.948 2-2.118v-7.75l-3.914 4.144A2.46 2.46 0 0 1 12.81 16l-2.681.568c-1.75.37-3.292-1.263-2.942-3.115l.536-2.839c.097-.512.335-.983.684-1.352l2.914-3.086Z" clip-rule="evenodd"/>
-                                    <path fill-rule="evenodd" d="M19.846 4.318a2.148 2.148 0 0 0-.437-.692 2.014 2.014 0 0 0-.654-.463 1.92 1.92 0 0 0-1.544 0 2.014 2.014 0 0 0-.654.463l-.546.578 2.852 3.02.546-.579a2.14 2.14 0 0 0 .437-.692 2.244 2.244 0 0 0 0-1.635ZM17.45 8.721 14.597 5.7 9.82 10.76a.54.54 0 0 0-.137.27l-.536 2.84c-.07.37.239.696.588.622l2.682-.567a.492.492 0 0 0 .255-.145l4.778-5.06Z" clip-rule="evenodd"/>
-                                </svg>
-                            </button> 
-                            <button type="button" data-modal-target="delete-student-modal" data-modal-toggle="delete-student-modal" class="text-red-500 hover:underline" data-student-id="${student.id}">
-                                <svg class="w-6 h-5 text-gray-800 dark:text-white hover:text-red-500 transition-colors duration-150" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
-                                    <path fill-rule="evenodd" d="M8.586 2.586A2 2 0 0 1 10 2h4a2 2 0 0 1 2 2v2h3a1 1 0 1 1 0 2v12a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V8a1 1 0 0 1 0-2h3V4a2 2 0 0 1 .586-1.414ZM10 6h4V4h-4v2Zm1 4a1 1 0 1 0-2 0v8a1 1 0 1 0 2 0v-8Zm4 0a1 1 0 1 0-2 0v8a1 1 0 1 0 2 0v-8Z" clip-rule="evenodd"/>
-                                </svg>
-                            </button>
+                        <td class="px-4 py-3">${student.school_id ?? 'N/A'}</td>
+                        <td class="px-4 py-3">${student.rfid_serial_number}</td>
+                        <td class="px-4 py-3">${student.batch}</td>
+                        <td class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">${student.first_name} ${student.middle_name ?? ''} ${student.last_name} ${student.name_extension ?? ''}</td>
+                        <td class="px-4 py-3">${student.sex}</td>
+                        <td class="px-4 py-3">${student.phone_number ?? 'N/A'}</td>
+                        <td class="px-4 py-3">${student.address ?? 'N/A'}</td>
+                        <td class="px-4 py-3">
+                            <div class="flex items-center gap-1">
+                                <button type="button" data-modal-target="edit-student-modal" data-modal-toggle="edit-student-modal" data-student-id="${student.id}" title="Edit student"
+                                    class="rounded-lg p-2 text-gray-500 hover:bg-gray-100 hover:text-primary-700 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-primary-400">
+                                    <span class="sr-only">Edit ${student.first_name} ${student.last_name}</span>
+                                    <i data-lucide="pencil" class="h-5 w-5"></i>
+                                </button>
+                                <button type="button" data-modal-target="delete-student-modal" data-modal-toggle="delete-student-modal" data-student-id="${student.id}" title="Delete student"
+                                    class="rounded-lg p-2 text-gray-500 hover:bg-gray-100 hover:text-red-600 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-red-400">
+                                    <span class="sr-only">Delete ${student.first_name} ${student.last_name}</span>
+                                    <i data-lucide="trash-2" class="h-5 w-5"></i>
+                                </button>
+                            </div>
                         </td>
                     `;
                     tbody.appendChild(row);
                 });
+
+                refreshIcons();
 
                 new DataTable('#studentTable', {
                     searchable: true,
@@ -187,94 +148,13 @@ export function initializeStudentDatatable() {
                 document.getElementById('table-loader').style.display = 'none';
 
             } else {
-                const tableHTML = `
-                    <table id="studentTable" class="bg-gray-50 dark:bg-gray-800">
-                        <thead>
-                            <tr>
-                                <th>
-                                    <span class="flex items-center">
-                                        School ID
-                                        <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4"/>
-                                        </svg>
-                                    </span>
-                                </th>
-                                <th>
-                                    <span class="flex items-center">
-                                        RFID Serial Number
-                                        <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4"/>
-                                        </svg>
-                                    </span>
-                                </th>
-                                <th>
-                                    <span class="flex items-center">
-                                        Batch
-                                        <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4"/>
-                                        </svg>
-                                    </span>
-                                </th>
-                                <th>
-                                    <span class="flex items-center">
-                                        Full Name
-                                        <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4"/>
-                                        </svg>
-                                    </span>
-                                </th>
-                                <th>
-                                    <span class="flex items-center">
-                                        Sex
-                                        <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4"/>
-                                        </svg>
-                                    </span>
-                                </th>
-                                <th>
-                                    <span class="flex items-center">
-                                        Phone Number
-                                        <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4"/>
-                                        </svg>
-                                    </span>
-                                </th>
-                                <th>
-                                    <span class="flex items-center">
-                                        Address
-                                        <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4"/>
-                                        </svg>
-                                    </span>
-                                </th>
-                                <th>
-                                    <span class="flex items-center">
-                                        Action
-                                        <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4"/>
-                                        </svg>
-                                    </span>
-                                </th>
-                            </tr>
-                        </thead>
-                    <tbody></tbody>
-                </table>`;
-
-                document.getElementById('student-datatable-container').innerHTML = tableHTML;
-                const tbody = document.querySelector('#studentTable tbody');
-                tbody.innerHTML = '';
-
-                new DataTable('#studentTable', {
-                    searchable: true,
-                    fixedHeight: true,
-                    sortable: true,
-                    perPage: 10,
-                });
+                document.getElementById('student-datatable-container').innerHTML = studentEmptyState;
+                refreshIcons();
 
                 document.getElementById('table-loader').style.display = 'none'; // Hide Loading spinner
             }
         })
-            
+
         .catch(error => {
             console.error('Error fetching student data:', error);
             document.getElementById('table-loader').style.display = 'none'; // Hide Loading spinner
@@ -286,85 +166,81 @@ export function initializeStudentDatatable() {
     const editStudentModalContainer = document.getElementById('edit-student-modal-container');
 
     const editStudentModal = `
-        <div id="edit-student-modal" tabindex="-1" class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
-            <div class="relative w-full max-w-4xl max-h-full">
-                <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
-                    <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
-                        <h3 class="text-xl font-medium text-gray-900 dark:text-white">
-                            Edit Student
-                        </h3>
-                        <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-full text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="edit-student-modal">
-                            <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
-                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
-                            </svg>
+        <div id="edit-student-modal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+            <div class="relative p-4 w-full max-w-4xl max-h-full">
+                <div class="relative bg-white rounded-xl shadow dark:bg-gray-800">
+                    <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-700">
+                        <h3 class="text-xl font-semibold text-gray-900 dark:text-white">Edit Student</h3>
+                        <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="edit-student-modal">
                             <span class="sr-only">Close modal</span>
+                            <i data-lucide="x" class="h-3.5 w-3.5"></i>
                         </button>
                     </div>
-                    <div class="p-4 md:p-5 space-y-4">
-                    <form id="edit-student-form">
-                        <div class="grid gap-6 mb-6 md:grid-cols-4">
-                            <div>
-                                <label for="school_id" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">School Id</label>
-                                <input type="text" id="edit_school_id" name="school_id" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" autocomplete="off" placeholder="Enter School ID" />
+                    <div class="p-4 md:p-5">
+                        <form id="edit-student-form" class="space-y-6">
+                            <div class="grid gap-6 mb-6 md:grid-cols-4">
+                                <div>
+                                    <label for="edit_school_id" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">School ID</label>
+                                    <input type="text" id="edit_school_id" name="school_id" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" autocomplete="off" placeholder="Enter School ID" />
+                                </div>
+                                <div>
+                                    <label for="edit_rfid_serial_number" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">RFID Serial Number</label>
+                                    <input type="text" id="edit_rfid_serial_number" name="rfid_serial_number" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" autocomplete="off" placeholder="0000000000" />
+                                </div>
+                                <div>
+                                    <label for="edit_batch" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Batch</label>
+                                    <input type="text" id="edit_batch" name="batch" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" autocomplete="off" placeholder="Enter Batch" />
+                                </div>
+                                <div>
+                                    <label for="edit_phone_number" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Phone Number</label>
+                                    <input type="number" id="edit_phone_number" name="phone_number" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" autocomplete="off" placeholder="Enter Phone Number" />
+                                </div>
                             </div>
-                            <div>
-                                <label for="rfid_serial_number" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">RFID Serial Number</label>
-                                <input type="text" id="edit_rfid_serial_number" name="rfid_serial_number" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" autocomplete="off" placeholder="0000000000" />
+                            <div class="grid gap-6 mb-6 md:grid-cols-4">
+                                <div>
+                                    <label for="edit_first_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">First Name</label>
+                                    <input type="text" id="edit_first_name" name="first_name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" autocomplete="off" placeholder="Enter First Name" />
+                                </div>
+                                <div>
+                                    <label for="edit_middle_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Middle Name</label>
+                                    <input type="text" id="edit_middle_name" name="middle_name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" autocomplete="off" placeholder="Enter Middle Name" />
+                                </div>
+                                <div>
+                                    <label for="edit_last_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Last Name</label>
+                                    <input type="text" id="edit_last_name" name="last_name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" autocomplete="off" placeholder="Enter Last Name" />
+                                </div>
+                                <div>
+                                    <label for="edit_name_extension" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Name Extension</label>
+                                    <select id="edit_name_extension" name="name_extension" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                                        <option selected disabled>Select an option</option>
+                                        <option value="">None</option>
+                                        <option value="Jr.">Jr.</option>
+                                        <option value="Sr.">Sr.</option>
+                                        <option value="II">II</option>
+                                        <option value="III">III</option>
+                                        <option value="IV">IV</option>
+                                    </select>
+                                </div>
                             </div>
-                            <div>
-                                <label for="batch" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Batch</label>
-                                <input type="text" id="edit_batch" name="batch" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" autocomplete="off" placeholder="Enter Batch" />
+                            <div class="grid gap-6 mb-6 md:grid-cols-2">
+                                <div>
+                                    <label for="edit_sex" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Sex</label>
+                                    <select id="edit_sex" name="sex" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                                        <option selected disabled>Select an option</option>
+                                        <option value="male">Male</option>
+                                        <option value="female">Female</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label for="edit_address" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Address</label>
+                                    <input type="text" id="edit_address" name="address" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" autocomplete="off" placeholder="Enter Address" />
+                                </div>
                             </div>
-                            <div>
-                                <label for="phone_number" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Phone Number</label>
-                                <input type="number" id="edit_phone_number" name="phone_number" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" autocomplete="off" placeholder="Enter Phone Number" />
-
+                            <div class="flex items-center gap-3">
+                                <button type="submit" class="text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">Save Changes</button>
+                                <button type="button" data-modal-hide="edit-student-modal" class="px-5 py-2.5 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 dark:hover:bg-gray-700">Cancel</button>
                             </div>
-                        </div>
-                        <div class="grid gap-6 mb-6 md:grid-cols-4">
-                            <div>
-                                <label for="first_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">First Name</label>
-                                <input type="text" id="edit_first_name" name="first_name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" autocomplete="off" placeholder="Enter First Name" />
-                            </div>
-                            <div>
-                                <label for="middle_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Middle Name</label>
-                                <input type="text" id="edit_middle_name" name="middle_name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" autocomplete="off" placeholder="Enter Middle Name" />
-                            </div>
-
-                            <div>
-                                <label for="last_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Last Name</label>
-                                <input type="text" id="edit_last_name" name="last_name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" autocomplete="off" placeholder="Enter Last Name" />
-                            </div>
-                            <div>
-                                <label for="name_extension" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Name Extension</label>
-                                <select id="edit_name_extension" name="name_extension" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                                <option selected disabled>Open melect menu</option>
-                                <option value="">None</option>
-                                <option value="Jr.">Jr.</option>
-                                <option value="Sr.">Sr.</option>
-                                <option value="II">II</option>
-                                <option value="III">III</option>
-                                <option value="IV">IV</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="grid gap-6 mb-6 md:grid-cols-2">
-                            <div>
-                                <label for="sex" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Sex</label>
-                                <select id="edit_sex" name="sex" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                                <option selected disabled>Open melect menu</option>
-                                <option value="male">Male</option>
-                                <option value="female">Female</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label for="address" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Address</label>
-                                <input type="text" id="edit_address" name="address" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" autocomplete="off" placeholder="Enter Address" />
-                            </div>
-   
-                        </div>
-                        <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Submit</button>
-                    </form>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -373,6 +249,7 @@ export function initializeStudentDatatable() {
 
     // Inject the modal HTML into the container
     editStudentModalContainer.innerHTML = editStudentModal;
+    refreshIcons();
 
     const editStudentModalEl = document.getElementById('edit-student-modal');
 
@@ -425,7 +302,7 @@ export function initializeStudentDatatable() {
     if (editForm) {
         editForm.addEventListener('submit', function (e) {
             e.preventDefault();
-            
+
             let formData = new FormData(editForm);
 
             axios.post(`/teacher/sections/${sectionSlug}/students/${studentId}`, formData, {
@@ -464,7 +341,7 @@ export function initializeStudentDatatable() {
                         let errorMessage = errors[key][0];
 
                         let errorElement = document.createElement('p');
-                        errorElement.classList.add('text-red-500', 'text-xs', 'mt-1', 'error-message');
+                        errorElement.classList.add('mt-1', 'text-xs', 'text-red-600', 'dark:text-red-400', 'error-message');
                         errorElement.innerText = errorMessage;
 
                         inputElement.after(errorElement);
@@ -479,38 +356,36 @@ export function initializeStudentDatatable() {
     const deleteStudentModalContainer = document.getElementById('delete-student-modal-container');
 
     if (deleteStudentModalContainer) {
-        let studentId; // To hold the ID of the section to delete
+        let studentId; // To hold the ID of the student to delete
 
         document.addEventListener('click', function (e) {
             if (e.target.closest('[data-modal-toggle="delete-student-modal"]')) {
                 e.preventDefault();
-                
+
                 studentId = e.target.closest('button').getAttribute('data-student-id');
 
                 // Create modal HTML
                 const modalHTML = `
                     <div id="delete-student-modal" tabindex="-1" class="overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 flex justify-center items-center w-full h-full">
                         <div class="relative p-6 w-full max-w-md max-h-full">
-                            <div class="relative bg-white rounded-lg shadow-lg dark:bg-gray-700">
-                                <button type="button" class="absolute top-3 right-3 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-full text-sm w-8 h-8 flex justify-center items-center" data-modal-hide="delete-student-modal">
-                                    <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
-                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
-                                    </svg>
+                            <div class="relative bg-white rounded-xl shadow-lg dark:bg-gray-800">
+                                <button type="button" class="absolute top-3 right-3 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="delete-student-modal">
                                     <span class="sr-only">Close modal</span>
+                                    <i data-lucide="x" class="h-4 w-4"></i>
                                 </button>
                                 <div class="p-6 text-center">
-                                    <svg class="mx-auto mb-4 text-gray-500 w-12 h-12 dark:text-gray-200" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
-                                    </svg>
-                                    <h3 class="mb-2 text-xl font-semibold text-gray-700 dark:text-gray-300">Delete Student?</h3>
+                                    <span class="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-red-100 text-red-600 dark:bg-red-600/10 dark:text-red-400">
+                                        <i data-lucide="circle-alert" class="h-6 w-6"></i>
+                                    </span>
+                                    <h3 class="mb-2 text-lg font-semibold text-gray-900 dark:text-white">Delete this student?</h3>
                                     <p class="mb-5 text-sm text-gray-500 dark:text-gray-400">All data including student and attendance records will be permanently removed. This action cannot be undone.</p>
-                                    <div class="flex justify-center space-x-3">
+                                    <div class="flex justify-center gap-3">
                                         <form action="">
-                                            <button type="submit" id="delete-student-confirm-btn" data-modal-hide="delete-student-modal" class="text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-700 font-medium rounded-lg text-sm px-5 py-2.5">
+                                            <button type="submit" id="delete-student-confirm-btn" data-modal-hide="delete-student-modal" class="text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm px-5 py-2.5">
                                                 Yes, Delete
                                             </button>
                                         </form>
-                                        <button id="delete-student-cancel-btn" data-modal-hide="delete-student-modal" type="button" class="px-5 py-2.5 text-sm font-medium text-gray-900 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 dark:hover:bg-gray-700">
+                                        <button id="delete-student-cancel-btn" data-modal-hide="delete-student-modal" type="button" class="px-5 py-2.5 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 dark:hover:bg-gray-700">
                                             No, Cancel
                                         </button>
                                     </div>
@@ -521,6 +396,7 @@ export function initializeStudentDatatable() {
 
                 // Inject the modal into the container
                 deleteStudentModalContainer.innerHTML = modalHTML;
+                refreshIcons();
 
                 // Show the modal
                 const deleteStudentModalEl = document.getElementById('delete-student-modal');
@@ -551,10 +427,10 @@ export function initializeStudentDatatable() {
                                 title: "Student record deleted successfully!"
                             });
 
-                            window.location.href = `/teacher/sections/${sectionSlug}/students`; 
+                            window.location.href = `/teacher/sections/${sectionSlug}/students`;
                         })
                         .catch(error => {
-                            console.error('There was an error deleting the section:', error);
+                            console.error('There was an error deleting the student:', error);
                         });
                     }
                 });

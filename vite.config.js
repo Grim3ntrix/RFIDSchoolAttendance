@@ -11,6 +11,14 @@ export default defineConfig({
             refresh: true,
         }),
     ],
+
+    server: {
+        host: '127.0.0.1',
+        cors: {
+            origin: 'https://rfidschoolattendance.test',
+        },
+    },
+
     build: {
         // ApexCharts is ~525 kB minified and cannot be tree-shaken (single
         // pre-bundled dist). It is dynamically imported only on pie-chart

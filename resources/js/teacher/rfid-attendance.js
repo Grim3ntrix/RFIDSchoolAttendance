@@ -3,9 +3,38 @@ import Swal from 'sweetalert2';
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
+import { refreshIcons } from "../icons";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
+
+/* Shared table markup for both branches (with / without records). */
+const dailyAttendanceTable = `
+    <div class="relative overflow-x-auto">
+        <table id="dailyAttendanceTable" class="w-full text-left text-sm text-gray-500 dark:text-gray-400">
+            <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                <tr>
+                    <th scope="col" class="px-4 py-3">School ID</th>
+                    <th scope="col" class="px-4 py-3">RFID Serial Number</th>
+                    <th scope="col" class="px-4 py-3">Full Name</th>
+                    <th scope="col" class="px-4 py-3">Section</th>
+                    <th scope="col" class="px-4 py-3">Class Schedule</th>
+                    <th scope="col" class="px-4 py-3">Status</th>
+                    <th scope="col" class="px-4 py-3">Created</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>`;
+
+const dailyAttendanceEmptyState = `
+    <div class="flex flex-col items-center justify-center py-12 text-center">
+        <span class="flex h-12 w-12 items-center justify-center rounded-full bg-gray-100 text-gray-500 dark:bg-gray-700 dark:text-gray-400">
+            <i data-lucide="scan-line" class="h-6 w-6"></i>
+        </span>
+        <h4 class="mt-4 text-base font-semibold text-gray-900 dark:text-white">No attendance records yet</h4>
+        <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Today's attendance logs will appear here as students tap in.</p>
+    </div>`;
 
 export function rfidAttendance() {
     // console.log("Attendance page function triggered.");
@@ -22,8 +51,7 @@ export function rfidAttendance() {
     const sectionElement       = document.getElementById('section');
     const classScheduleElement = document.getElementById('class_schedule');
     const rfidScanElement      = document.getElementById('rfid_serial_number');
-    const viewAttendanceHistoryModal      = document.getElementById('view-attendance-history-modal');
-    
+
     // Only focus if the page is focused
     if (document.hasFocus()) {
         rfidScanElement.focus();
@@ -43,7 +71,7 @@ export function rfidAttendance() {
         const interactiveElements = ['INPUT', 'TEXTAREA', 'BUTTON', 'SELECT', 'SPAN'];
 
         // Check if the clicked element is interactive or is within an SVG
-        if (!interactiveElements.includes(target.tagName) && 
+        if (!interactiveElements.includes(target.tagName) &&
             !isWithinSvg(target)) {
             rfidScanElement.focus(); // Refocus if not interacting with an interactive element or SVG
         }
@@ -71,7 +99,7 @@ export function rfidAttendance() {
         defaultSectionOption.textContent = 'Select a Section';
         defaultSectionOption.disabled = true;
         defaultSectionOption.selected = true;
-        sectionElement.appendChild(defaultSectionOption); 
+        sectionElement.appendChild(defaultSectionOption);
 
         axios.get(`/teacher/sections-record`)
         .then(response => {
@@ -131,7 +159,7 @@ export function rfidAttendance() {
                     function getAbbreviatedDays(daysOfWeek) {
                         return daysOfWeek.map(day => dayAbbreviations[day.day_name]).join('');
                     }
-                    
+
                     dailyAttendancesData.forEach(scheduleData => {
                         const option = document.createElement('option');
                         option.value = scheduleData.id;
@@ -180,12 +208,12 @@ export function rfidAttendance() {
                         toast.onmouseleave = Swal.resumeTimer;
                     }
                 });
-            
+
                 Toast.fire({
                     icon: "success",
                     title: "Attendance record added successfully!"
                 });
-            
+
                 form.reset();
                 window.location.href = `/teacher/rfid-attendances`;
             })
@@ -207,7 +235,7 @@ export function rfidAttendance() {
                         let errorMessage = errors[key];
 
                         let errorElement = document.createElement('p');
-                        errorElement.classList.add('text-red-500', 'text-xs', 'mt-1', 'error-message');
+                        errorElement.classList.add('mt-1', 'text-xs', 'text-red-600', 'dark:text-red-400', 'error-message');
                         errorElement.innerText = errorMessage;
 
                         inputElement.after(errorElement); // Insert error message after the input field
@@ -235,72 +263,7 @@ export function rfidAttendance() {
                 /* Datatable */
 
                 if (dailyAttendances.length > 0) {
-                    const tableHTML = `
-                    <table id="dailyAttendanceTable" class="bg-gray-50 dark:bg-gray-800">
-                        <thead>
-                            <tr>
-                                <th>
-                                    <span class="flex items-center">
-                                        School ID
-                                        <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4"/>
-                                        </svg>
-                                    </span>
-                                </th>
-                                <th>
-                                    <span class="flex items-center">
-                                        RFID Serial Number
-                                        <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4"/>
-                                        </svg>
-                                    </span>
-                                </th>
-                                <th>
-                                    <span class="flex items-center">
-                                        Full Name
-                                        <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4"/>
-                                        </svg>
-                                    </span>
-                                </th>
-                                <th>
-                                    <span class="flex items-center">
-                                        Section
-                                        <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4"/>
-                                        </svg>
-                                    </span>
-                                </th>
-                                <th>
-                                    <span class="flex items-center">
-                                        Class Schedule
-                                        <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4"/>
-                                        </svg>
-                                    </span>
-                                </th>
-                                <th>
-                                    <span class="flex items-center">
-                                        Status
-                                        <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4"/>
-                                        </svg>
-                                    </span>
-                                </th>
-                                <th>
-                                    <span class="flex items-center">
-                                        Created
-                                        <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4"/>
-                                        </svg>
-                                    </span>
-                                </th>
-                            </tr>
-                        </thead>
-                    <tbody></tbody>
-                    </table>`;
-
-                    document.getElementById('daily-attendance-table-container').innerHTML = tableHTML;
+                    document.getElementById('daily-attendance-table-container').innerHTML = dailyAttendanceTable;
                     const tbody = document.querySelector('#dailyAttendanceTable tbody');
                     tbody.innerHTML = '';
 
@@ -313,40 +276,42 @@ export function rfidAttendance() {
 
                     // Map attendance statuses to specific badge color classes
                     const attendanceBadgeMap = {
-                        'present': 'bg-green-100 text-green-800 dark:bg-gray-700 dark:text-green-400 border border-green-400',
-                        'excuse': 'bg-yellow-100 text-yellow-800 dark:bg-gray-700 dark:text-yellow-300 border border-yellow-300',
-                        'absent': 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-400 border border-gray-500',
-                        'late': 'bg-red-100 text-red-800 dark:bg-gray-700 dark:text-red-400 border border-red-400',
+                        'present': 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300',
+                        'excuse': 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300',
+                        'absent': 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300',
+                        'late': 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300',
                     };
 
                     function convertToAsiaManilaTime(datetime) {
                         return dayjs(datetime).tz('Asia/Manila').format('h:mm A'); // Convert to Asia/Manila and format to 12-hour
                     }
-                    
+
                     dailyAttendances.forEach(attendance => {
                         const row = document.createElement('tr');
 
                         const student       = attendance.student;
                         const classSchedule = attendance.class_schedule;
                         const attendanceCreatedAt = convertToAsiaManilaTime(attendance.created_at);
-                        
+
                         const startTime = convertToAmPm(classSchedule.start_time);
                         const endTime   = convertToAmPm(classSchedule.end_time);
 
                         // Create badge for attendance status
-                        const badgeClass  = attendanceBadgeMap[attendance.attendance_status.status] || 'bg-gray-100 text-gray-800'; // Default to gray if status is not found
-                        const statusBadge = `<span class="text-xs font-medium px-2.5 py-0.5 rounded-full ${badgeClass}">${attendance.attendance_status.status}</span>`;
+                        const badgeClass  = attendanceBadgeMap[attendance.attendance_status.status] || 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'; // Default to gray if status is not found
+                        const statusText  = attendance.attendance_status.status.charAt(0).toUpperCase() + attendance.attendance_status.status.slice(1);
+                        const statusBadge = `<span class="text-xs font-medium px-2.5 py-0.5 rounded-full ${badgeClass}">${statusText}</span>`;
 
+                        row.className = 'border-b hover:bg-gray-50 dark:border-gray-700 dark:hover:bg-gray-700/50';
                         row.innerHTML = `
-                            <td>${student.school_id ?? 'N/A'}</td>
-                            <td>${student.rfid_serial_number}</td>
-                            <td>${student.first_name} ${student.middle_name ?? ''} ${student.last_name} ${student.name_extension ?? ''}</td>
-                            <td>${classSchedule.section.section_name}</td>
-                            <td>${classSchedule.subject} (${classSchedule.subject_code}) - (${startTime} - ${endTime})</td>
-                            <td>${statusBadge}</td> <!-- Updated to include the badge -->
-                            <td>${attendanceCreatedAt}</td>
+                            <td class="px-4 py-3">${student.school_id ?? 'N/A'}</td>
+                            <td class="px-4 py-3">${student.rfid_serial_number}</td>
+                            <td class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">${student.first_name} ${student.middle_name ?? ''} ${student.last_name} ${student.name_extension ?? ''}</td>
+                            <td class="px-4 py-3">${classSchedule.section.section_name}</td>
+                            <td class="px-4 py-3">${classSchedule.subject} (${classSchedule.subject_code}) - (${startTime} - ${endTime})</td>
+                            <td class="px-4 py-3">${statusBadge}</td>
+                            <td class="px-4 py-3 whitespace-nowrap">${attendanceCreatedAt}</td>
                         `;
-                        
+
                         tbody.appendChild(row);
                     });
 
@@ -360,86 +325,13 @@ export function rfidAttendance() {
                     document.getElementById('table-loader').style.display = 'none';
 
                 } else {
-                    const tableHTML = `
-                        <table id="dailyAttendanceTable" class="bg-gray-50 dark:bg-gray-800">
-                        <thead>
-                            <tr>
-                                <th>
-                                    <span class="flex items-center">
-                                        School ID
-                                        <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4"/>
-                                        </svg>
-                                    </span>
-                                </th>
-                                <th>
-                                    <span class="flex items-center">
-                                        RFID Serial Number
-                                        <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4"/>
-                                        </svg>
-                                    </span>
-                                </th>
-                                <th>
-                                    <span class="flex items-center">
-                                        Full Name
-                                        <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4"/>
-                                        </svg>
-                                    </span>
-                                </th>
-                                <th>
-                                    <span class="flex items-center">
-                                        Section
-                                        <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4"/>
-                                        </svg>
-                                    </span>
-                                </th>
-                                <th>
-                                    <span class="flex items-center">
-                                        Class Schedule
-                                        <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4"/>
-                                        </svg>
-                                    </span>
-                                </th>
-                                <th>
-                                    <span class="flex items-center">
-                                        Status
-                                        <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4"/>
-                                        </svg>
-                                    </span>
-                                </th>
-                                <th>
-                                    <span class="flex items-center">
-                                        Created
-                                        <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4"/>
-                                        </svg>
-                                    </span>
-                                </th>
-                            </tr>
-                        </thead>
-                    <tbody></tbody>
-                    </table>`;
-
-                    document.getElementById('daily-attendance-table-container').innerHTML = tableHTML;
-                    const tbody = document.querySelector('#dailyAttendanceTable tbody');
-                    tbody.innerHTML = '';
-
-                    new DataTable('#dailyAttendanceTable', {
-                        searchable: true,
-                        fixedHeight: true,
-                        sortable: true,
-                        perPage: 10,
-                    });
+                    document.getElementById('daily-attendance-table-container').innerHTML = dailyAttendanceEmptyState;
+                    refreshIcons();
 
                     document.getElementById('table-loader').style.display = 'none';
                 }
             })
-                
+
             .catch(error => {
                 console.error('Error fetching daily attendances data:', error);
                 document.getElementById('table-loader').style.display = 'none';
@@ -457,18 +349,15 @@ export function rfidAttendance() {
 
         if (separatorDailyAttendance) {
             const separatorDailyAttendanceHTML = `
-                <div class="flex justify-center mb-6">
-                    <button id="toggleTableDailyAttendanceBtn" class="relative text-gray-500 hover:text-gray-900 dark:hover:text-white cursor-pointer">
-                        <svg class="w-7 h-7 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                            <path stroke="currentColor" stroke-width="2" d="M3 11h18m-9 0v8m-8 0h16a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1Z"/>
-                        </svg>
-                        <span class="sr-only">Toggle Attendance Table</span>
-                        <div class="absolute inline-flex items-center justify-center w-6 h-6 text-xs font-bold text-white bg-red-500 border-2 border-white rounded-full -top-2 -end-2 dark:border-gray-900">
-                        ${dailyAttendancesCount}
-                        </div>
+                <div class="flex justify-center">
+                    <button id="toggleTableDailyAttendanceBtn" class="relative cursor-pointer rounded-lg p-2 text-gray-500 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+                        <i data-lucide="table-2" class="h-6 w-6"></i>
+                        <span class="sr-only">Jump to today's attendance logs</span>
+                        <span class="absolute -top-1 -end-1 inline-flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-red-500 rounded-full">${dailyAttendancesCount}</span>
                     </button>
                 </div>`;
             separatorDailyAttendance.innerHTML = separatorDailyAttendanceHTML;
+            refreshIcons();
 
             // Add event listener to scroll to the table when the button is clicked
             const toggleTableDailyAttendanceBtn = document.getElementById('toggleTableDailyAttendanceBtn');
@@ -482,18 +371,15 @@ export function rfidAttendance() {
 
         if (separatorAttendanceHistory) {
             const separatorAttendanceHistoryHTML = `
-                <button id="toggleTableAttendanceHistoryBtn" class="relative cursor-pointer">
-                    <svg class="w-7 h-7 flex-shrink-0 text-gray-800 dark:text-white transition duration-75 group-hover:text-gray-900 dark:group-hover:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8V12L14.5 14.5"></path>
-                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="0.2" d="M5.60414 5.60414L5.07381 5.07381V5.07381L5.60414 5.60414ZM4.33776 6.87052L3.58777 6.87429C3.58984 7.28556 3.92272 7.61844 4.33399 7.62051L4.33776 6.87052ZM6.87954 7.6333C7.29375 7.63539 7.63122 7.30129 7.6333 6.88708C7.63538 6.47287 7.30129 6.1354 6.88708 6.13332L6.87954 7.6333ZM5.07496 4.3212C5.07288 3.90699 4.73541 3.5729 4.3212 3.57498C3.90699 3.57706 3.5729 3.91453 3.57498 4.32874L5.07496 4.3212ZM3.82661 10.7849C3.88286 10.3745 3.59578 9.99627 3.1854 9.94002C2.77503 9.88377 2.39675 10.1708 2.3405 10.5812L3.82661 10.7849ZM18.8622 5.13777C15.042 1.31758 8.86873 1.27889 5.07381 5.07381L6.13447 6.13447C9.33358 2.93536 14.5571 2.95395 17.8016 6.19843L18.8622 5.13777ZM5.13777 18.8622C8.95796 22.6824 15.1313 22.7211 18.9262 18.9262L17.8655 17.8655C14.6664 21.0646 9.44291 21.0461 6.19843 17.8016L5.13777 18.8622ZM18.9262 18.9262C22.7211 15.1313 22.6824 8.95796 18.8622 5.13777L17.8016 6.19843C21.0461 9.44291 21.0646 14.6664 17.8655 17.8655L18.9262 18.9262ZM5.07381 5.07381L3.80743 6.34019L4.86809 7.40085L6.13447 6.13447L5.07381 5.07381ZM4.33399 7.62051L6.87954 7.6333L6.88708 6.13332L4.34153 6.12053L4.33399 7.62051ZM5.08775 6.86675L5.07496 4.3212L3.57498 4.32874L3.58777 6.87429L5.08775 6.86675ZM2.3405 10.5812C1.93907 13.5099 2.87392 16.5984 5.13777 18.8622L6.19843 17.8016C4.27785 15.881 3.48663 13.2652 3.82661 10.7849L2.3405 10.5812Z" fill="currentColor"></path>
-                    </svg>
-                    <svg class="w-6 h-6 text-white p-1 dark:text-white absolute -top-4 -end-0 transform translate-x-2 translate-y-2 bg-red-500 border-2 border-white rounded-full" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M10 2a8 8 0 1 0 0 16 8 8 0 0 0 0-16Z"/>
-                        <path fill-rule="evenodd" d="M21.707 21.707a1 1 0 0 1-1.414 0l-3.5-3.5a1 1 0 0 1 1.414-1.414l3.5 3.5a1 1 0 0 1 0 1.414Z" clip-rule="evenodd"/>
-                    </svg>      
-                </button>`;
+                <div class="flex justify-center">
+                    <button id="toggleTableAttendanceHistoryBtn" class="relative cursor-pointer rounded-lg p-2 text-gray-500 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+                        <i data-lucide="history" class="h-6 w-6"></i>
+                        <span class="sr-only">Jump to review previous attendances</span>
+                    </button>
+                </div>`;
             separatorAttendanceHistory.innerHTML = separatorAttendanceHistoryHTML;
-    
+            refreshIcons();
+
             // Add event listener to scroll to the table when the button is clicked
             const toggleTableBtn = document.getElementById('toggleTableAttendanceHistoryBtn');
             toggleTableBtn.addEventListener('click', () => {
@@ -503,5 +389,5 @@ export function rfidAttendance() {
                 }
             });
         }
-    })      
+    })
 }
