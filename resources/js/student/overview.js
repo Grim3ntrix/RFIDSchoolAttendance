@@ -1,6 +1,12 @@
 export function overview(totalPresent, totalLate, totalAbsent, totalExcuse) {
     // console.log("Overview initialized for student!");
 
+    // app.js also calls this with no arguments as its init hook — leave the
+    // placeholder "-" visible until the first fetch returns real values.
+    if (totalPresent === undefined) {
+        return;
+    }
+
     const totalPresentEl  = document.getElementById('total-present');
     const totalLateEl     = document.getElementById('total-late');
     const totalAbsentEl   = document.getElementById('total-absent');
