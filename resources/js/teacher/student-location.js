@@ -6,9 +6,13 @@ import 'leaflet.fullscreen/Control.FullScreen.css';
 import { addBasemap } from '../map-basemap';
 import { refreshIcons } from "../icons";
 
-/* Shared table markup for both branches (with / without records). */
+/* Shared table markup for both branches (with / without records).
+   No overflow-x-auto wrapper: simple-datatables hoists its own widget
+   (search bar, .datatable-container, pager) in place of the table, so an
+   overflow div here would scroll the whole widget and stack a second
+   scrollbar under Flowbite's .datatable-container one, which already
+   scrolls the table. */
 const studentLocationTable = `
-    <div class="relative overflow-x-auto">
         <table id="studentLocationTable" class="w-full text-left text-sm text-gray-500 dark:text-gray-400">
             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                 <tr>
@@ -23,8 +27,7 @@ const studentLocationTable = `
                 </tr>
             </thead>
             <tbody></tbody>
-        </table>
-    </div>`;
+        </table>`;
 
 const studentLocationEmptyState = `
     <div class="flex flex-col items-center justify-center py-12 text-center">

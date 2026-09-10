@@ -17,3 +17,16 @@ input:-webkit-autofill {
     -webkit-text-fill-color: #fff;                  /* white */
     caret-color: #fff;                              /* white — visible on the dark surface even before typing */
 }
+
+/* simple-datatables hoists its widget (search bar, .datatable-container,
+   pager) in place of the table, so the Flowbite plugin's .datatable-container
+   is the table's own horizontal scroller. Absolute-positioned content inside
+   table cells (Tailwind .sr-only labels on icon-only action buttons) resolves
+   its containing block to the viewport when nothing between it and the page
+   is positioned — the static .datatable-container does not clip it, and the
+   page grows a second, page-level horizontal scrollbar. Making the scroller
+   relative keeps that content inside the scrolled area, so the table's own
+   scrollbar stays the only one. */
+.datatable-wrapper .datatable-container {
+    position: relative;
+}

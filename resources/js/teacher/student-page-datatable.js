@@ -2,9 +2,13 @@ import { DataTable } from "simple-datatables";
 import Swal from 'sweetalert2';
 import { refreshIcons } from "../icons";
 
-/* Shared table markup for both branches (with / without records). */
+/* Shared table markup for both branches (with / without records).
+   No overflow-x-auto wrapper: simple-datatables hoists its own widget
+   (search bar, .datatable-container, pager) in place of the table, so an
+   overflow div here would scroll the whole widget and stack a second
+   scrollbar under Flowbite's .datatable-container one, which already
+   scrolls the table. */
 const studentTable = `
-    <div class="relative overflow-x-auto">
         <table id="studentTable" class="w-full text-left text-sm text-gray-500 dark:text-gray-400">
             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                 <tr>
@@ -19,8 +23,7 @@ const studentTable = `
                 </tr>
             </thead>
             <tbody></tbody>
-        </table>
-    </div>`;
+        </table>`;
 
 const studentEmptyState = `
     <div class="flex flex-col items-center justify-center py-12 text-center">

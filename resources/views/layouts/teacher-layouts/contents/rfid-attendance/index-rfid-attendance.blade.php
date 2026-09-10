@@ -67,7 +67,10 @@
             <span class="ms-2 text-sm text-gray-500 dark:text-gray-400">Loading data, please wait...</span>
         </div>
 
-        <div id="daily-attendance-table-container" class="mt-4 overflow-x-auto">
+        {{-- No overflow-x-auto: the datatable widget hoists here (search bar + Flowbite's
+             scrollable .datatable-container + pager); an overflow container would scroll
+             the whole widget and stack a second scrollbar under the table's own. --}}
+        <div id="daily-attendance-table-container" class="mt-4">
             <!-- Table content goes here -->
         </div>
     </div>
@@ -95,7 +98,10 @@
             </div>
         </div>
 
-        <div id="review-previous-attendances-table-container" class="mt-4 overflow-x-auto">
+        {{-- No overflow-x-auto: the datatable widget hoists here (search bar + Flowbite's
+             scrollable .datatable-container + pager); an overflow container would scroll
+             the whole widget and stack a second scrollbar under the table's own. --}}
+        <div id="review-previous-attendances-table-container" class="mt-4">
             <!-- Table content goes here -->
         </div>
     </div>
