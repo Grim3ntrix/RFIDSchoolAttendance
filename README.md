@@ -1,31 +1,8 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
-
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
-
-## About Laravel
-
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
-
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
-
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
-
 # RFIDSchoolAttendance
 
 RFIDSchoolAttendance is a comprehensive attendance system designed for schools. It uses RFID technology combined with geofencing and location-based tracking to monitor student attendance. The system allows teachers to capture attendance records automatically based on students' proximity to designated geofence boundaries set by the school administrator. Students' locations are tracked with their consent, and attendance is logged in real-time using a semi-geofencing approach. This project aims to streamline the attendance process, improve accuracy, and enhance overall school management.
 
-**Current Version:** v1.0.0 (Stable Beta)
+**Current Version:** v1.2.0
 
 ## Features
 
@@ -127,16 +104,23 @@ RFIDSchoolAttendance is a comprehensive attendance system designed for schools. 
 
 ---
 
-## First User
+## Seeded Test Accounts
 
-After running the seeders, the following default Super Admin account is created:
+Running the seeders creates one login per role, so every workflow can be exercised without manual setup:
 
-| Field    | Value                  |
-|----------|------------------------|
-| Email    | superadmin@gmail.com   |
-| Password | Spassword              |
+| Role        | Email                | Password   |
+|-------------|----------------------|------------|
+| Super Admin | superadmin@gmail.com | SUpassword |
+| Teacher     | teacher@gmail.com    | TEpassword |
+| Student     | student@gmail.com    | STpassword |
 
-Use this account to log in and begin configuring the system.
+Each account mirrors the flow that creates it in production, where the passwords work differently:
+
+- **Super Admin** — the bootstrap account, created at deployment with whatever email the school sets. On a real deployment, either don't run the seeders or change the seeded credentials immediately.
+- **Teacher** — pre-registered as `T-2026-0001` by the Super Admin, then registered. In production, the teacher logs in with the email and password they chose during registration; there is no default.
+- **Student** — enrolled by the seeded teacher into the seeded "Rizal" section (Grade 10). In production, the login email is the one the teacher entered when enrolling the student, and the default password is the birth date formatted as `mdY` (e.g., `01012010` for January 1, 2010) — the seeded student's birth date is January 1, 2010.
+
+> **Warning:** These accounts exist for local testing only. On any real deployment, either don't run the seeders or change these passwords immediately.
 
 ---
 

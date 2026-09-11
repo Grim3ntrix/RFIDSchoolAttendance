@@ -1,6 +1,14 @@
 # RFID School Attendance - Release Notes
 
-**Version:** v1.1.0
+**Version:** v1.2.0
+
+---
+
+## **General (UI/UX)**
+
+- All pages follow the Flowbite design system defined in `docs/design/FLOWBITE_UI_UX_GUIDELINES.md`.
+- Dark mode is available via a header toggle; maps are theme-aware.
+- The seeders create one test account per role (see README — Seeded Test Accounts) so every workflow can be exercised without manual setup.
 
 ---
 
@@ -18,9 +26,15 @@
 
 ### **Geofence Boundary**
 1. Required fields: Latitude, Longitude, Radius (Auto-filled if possible)
-2. By default, new geofences are disabled.
+2. The first boundary created is automatically enabled; boundaries created afterwards default to disabled. Only one boundary can be enabled at a time.
 3. Enabled geofences are used to determine if students are inside or outside the boundary.
 4. Super Admin can interact with OpenStreetMap to display enabled geofences.
+5. The boundary map editor supports:
+   - Searching a location (suggestions include the postcode) and flying to it
+   - Dragging the boundary marker and adjusting its radius
+   - Locating the Super Admin's current position
+   - Automatic school name and address autofill based on the boundary's placement
+   - Dark mode
 
 ---
 
@@ -118,6 +132,7 @@ Generates quarterly attendance reports for each student in a section.
 
 | Version | Date | Notes |
 |---------|------|-------|
+| v1.2.0 | 2026-09-11 | Flowbite UI/UX modernization across all roles with dark mode; interactive geofence map editor with search and school name autofill; seeded test accounts for all roles. |
 | v1.1.0 | 2026-09-07 | Upgraded to Laravel 13 (PHP 8.4); session/cache security hardening; fixed invalid auth redirects and test database isolation. |
 | v1.0.0 (Stable Beta) | 2026-07-20 | Concluded stable beta phase; all core features verified. |
 | v1.0.0-beta2 | 2024-10-24 | Dynamic focus on RFID input, version tracking improvements. |

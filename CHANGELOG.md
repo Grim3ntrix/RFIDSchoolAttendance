@@ -1,5 +1,24 @@
 # Changelog
 
+## [v1.2.0] - 2026-09-11
+### Added
+- Modernized all role pages (Super Admin, Teacher, Student), auth screens, and shared chrome (sidebar, navbar, footer) to the Flowbite design system.
+- Dark mode with a header toggle, theme-aware Leaflet maps, and avatar initials in the navbar.
+- Interactive geofence boundary map editor: draggable boundary, radius control, locate-me, and location search (suggestions include the postcode), backed by a rate-limited Nominatim geocoding proxy with 30-day response caching.
+- Automatic school name and address autofill from the boundary's placement (search result, marker drag, or GPS position), with stale school names cleared when the boundary moves off a school.
+- Seeded test accounts for all three roles (Super Admin, Teacher, Student), each mirroring its real registration flow and covered by `UserSeederTest`.
+
+### Changed
+- The first geofence boundary created is now automatically enabled, so it displays on the page map immediately after saving; boundaries created afterwards still default to disabled.
+- Bumped the application version to `1.2.0` across `.env.example` and `.env`.
+
+### Fixed
+- The modal map now initializes from every trigger (Add Boundary, Configure Geofence, Edit Configuration), and the page map is restored on every dismissal path (buttons, backdrop click, Escape).
+- Fixed the red boundary circle appearing over unloaded tiles when flying to a searched location — boundary layers are hidden during the flight and revealed when it completes.
+- Resolved the hidden/flex display conflict on geofence empty states.
+- Removed the duplicate horizontal scrollbar from all datatable pages.
+- Fixed the sidebar brand text overlapping the logo.
+
 ## [v1.1.0] - 2026-09-07
 ### Changed
 - Upgraded the framework from Laravel 11.22 to 13.30.1 following the official 12.x and 13.x upgrade guides.

@@ -8,6 +8,22 @@ The default password is the student's birth date formatted as `mdY` (e.g., `0101
 
 ---
 
+## Seeded Test Account
+
+A student account is pre-seeded via `database/seeders/UserSeeder.php`, enrolled in the seeded teacher's "Rizal" section (Grade 10):
+
+| Field    | Value             |
+|----------|-------------------|
+| Email    | student@gmail.com |
+| Password | STpassword        |
+
+> **Testing vs. real-world login:**
+>
+> - **Testing (seeded):** log in with `student@gmail.com` / `STpassword`.
+> - **Real-world:** the login email is the one the teacher entered when enrolling the student (Student Management → Email). The default password is the student's birth date formatted as `mdY` — a student born on January 1, 2010 logs in with `01012010`. (The seeded student's birth date is January 1, 2010, so her production password would be `01012010`.)
+
+---
+
 ## Routes & Middleware
 
 All Student routes are prefixed with `/student` and protected by:

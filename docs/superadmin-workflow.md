@@ -1,14 +1,19 @@
 # Superadmin Workflow
 
-## First User
+## Seeded Test Account
 
 The first user in the system is the **Super Admin**. This account is pre-seeded via `database/seeders/UserSeeder.php` and is assigned the `superadmin` role using Spatie Permission.
 
-| Field    | Value                  |
-|----------|------------------------|
-| Email    | superadmin@gmail.com   |
-| Password | Spassword              |
-| Role     | superadmin             |
+| Field    | Value                |
+|----------|----------------------|
+| Email    | superadmin@gmail.com |
+| Password | SUpassword           |
+| Role     | superadmin           |
+
+> **Testing vs. real-world login:**
+>
+> - **Testing (seeded):** log in with `superadmin@gmail.com` / `SUpassword`.
+> - **Real-world:** the Super Admin is the bootstrap account created at deployment — its email is whatever the school sets it to. On a real deployment, either don't run the seeders or change the seeded credentials immediately after first login.
 
 Run the seeders after setting up the database:
 

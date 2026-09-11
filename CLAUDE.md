@@ -56,8 +56,10 @@ Composer is invoked as `php /c/laragon/bin/composer/composer.phar`.
   reintroduce those names.
 - Teacher registration requires the `teacher_id` to exist in
   `pre_registered_teachers` (all columns are non-nullable).
-- Seeded logins: `superadmin@gmail.com` / `Spassword` (teacher/student blocks
-  in `UserSeeder` are commented out).
+- Seeded logins (one per role, in `UserSeeder`): `superadmin@gmail.com` /
+  `SUpassword`, `teacher@gmail.com` / `TEpassword`, `student@gmail.com` /
+  `STpassword`. Testing-only passwords — real flows: teachers pick their own
+  password at registration, students get their birth date as `mdY`.
 - Page JS lives in per-feature files under `resources/js/` — keep JS modular
   per role/feature rather than one bundle.
 - Pint has never been run on the legacy codebase; only fix style on files

@@ -8,6 +8,24 @@ Teacher accounts are created by the Super Admin through the Pre-Registered Teach
 
 ---
 
+## Seeded Test Account
+
+A teacher account is pre-seeded via `database/seeders/UserSeeder.php`, mirroring the real flow (pre-registered as `T-2026-0001`, then registered):
+
+| Field    | Value             |
+|----------|-------------------|
+| Email    | teacher@gmail.com |
+| Password | TEpassword        |
+
+The seeded teacher owns one section ("Rizal", Grade 10) with one enrolled student (`student@gmail.com` — see the [Student Workflow](./student-workflow.md)), so section and student management have data to work with after `php artisan migrate:fresh --seed`.
+
+> **Testing vs. real-world login:**
+>
+> - **Testing (seeded):** log in with `teacher@gmail.com` / `TEpassword`.
+> - **Real-world:** log in with the email and password the teacher chose during registration — there is no default password, and the email is whatever they registered with.
+
+---
+
 ## Routes & Middleware
 
 All Teacher routes are prefixed with `/teacher` and protected by:
