@@ -56,7 +56,9 @@ class GeofenceBoundaryGeocodeRequest extends Controller
      */
     private function forwardGeocode(string $query): array
     {
-        $cacheKey = 'geocode:forward:'.md5(mb_strtolower(trim($query)));
+        // Versioned so a change to the mapped result shape (postcode below)
+        // doesn't keep serving the older 30-day cached shape without it.
+        $cacheKey = 'geocode:forward:v2:'.md5(mb_strtolower(trim($query)));
 
         if (Cache::has($cacheKey)) {
             return Cache::get($cacheKey);
@@ -86,7 +88,9 @@ class GeofenceBoundaryGeocodeRequest extends Controller
      */
     private function reverseGeocode(float $latitude, float $longitude): array
     {
-        $cacheKey = 'geocode:reverse:'.md5($latitude.','.$longitude);
+        // Versioned so a change to the lookup parameters (zoom below)
+        // doesn't keep serving stale shape from the previous 30-day cache.
+        $cacheKey = 'geocode:reverse:v2:'.md5($latitude.','.$longitude);
 
         if (Cache::has($cacheKey)) {
             return Cache::get($cacheKey);
@@ -96,7 +100,12 @@ class GeofenceBoundaryGeocodeRequest extends Controller
             'lat' => $latitude,
             'lon' => $longitude,
             'format' => 'jsonv2',
-            'zoom' => 16,
+            // Building level: the superadmin typically stands inside the
+            // school when pressing Auto Fill, so the nearest building is
+            // the feature most likely to carry the school's name. Street
+            // level (16) resolves to the road or campus edge instead and
+            // regularly loses the name.
+            'zoom' => 18,
             'addressdetails' => 1,
         ]);
 
@@ -136,24 +145,41 @@ class GeofenceBoundaryGeocodeRequest extends Controller
     }
 
     /**
-     * Only resolve a school name when the coordinates actually identify a
-     * school-like feature — either Nominatim's education category or one of
-     * the school address parts. A street or building name ("P. Paterno
-     * Street") is not a school name and would leave the modal looking
-     * auto-filled with nonsense.
+     * Resolve a school name for the Auto Fill button, in order of
+     * confidence:
+     *
+     *   1. The feature itself, when it is school-like — Nominatim's
+     *      education category, or a school/college/university amenity (the
+     *      legacy tagging of the same thing).
+     *   2. A school address part Nominatim attached from the surroundings.
+     *   3. The named building at the coordinates — someone pressing Auto
+     *      Fill is usually standing in the school, so the nearest building
+     *      is the school even when it is tagged as a plain named building.
+     *      The field stays editable, so a wrong guess is a one-keystroke
+     *      fix rather than a dead end.
+     *
+     * Streets and residential places are still never used — those are
+     * genuine nonsense for a school name.
      */
     private function extractSchoolName(array $result, array $address): ?string
     {
-        $isSchoolFeature = ($result['category'] ?? null) === 'education';
+        $schoolTypes = ['school', 'college', 'university', 'kindergarten'];
+
+        $isSchoolFeature = ($result['category'] ?? null) === 'education'
+            || (($result['category'] ?? null) === 'amenity' && in_array($result['type'] ?? null, $schoolTypes, true));
 
         if ($isSchoolFeature && ! empty($result['name'])) {
             return $result['name'];
         }
 
-        foreach (['school', 'college', 'university', 'kindergarten'] as $key) {
+        foreach ($schoolTypes as $key) {
             if (! empty($address[$key])) {
                 return $address[$key];
             }
+        }
+
+        if (($result['category'] ?? null) === 'building' && ! empty($result['name'])) {
+            return $result['name'];
         }
 
         return null;
@@ -223,6 +249,10 @@ class GeofenceBoundaryGeocodeRequest extends Controller
                 'name' => $result['name'] ?? null,
                 'display_name' => $result['display_name'] ?? null,
                 'type' => $result['type'] ?? null,
+                // Surfaced in the suggestion list's detail line so
+                // same-named places can be told apart — the postcode pins
+                // a result to its locality.
+                'postcode' => $result['address']['postcode'] ?? null,
                 'latitude' => (float) $result['lat'],
                 'longitude' => (float) $result['lon'],
             ];

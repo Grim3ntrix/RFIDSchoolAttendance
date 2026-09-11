@@ -32,25 +32,37 @@ class GeofenceBoundaryController extends Controller
      */
     public function store(Request $request)
     {
-        $user       = Auth::user();
+        $user = Auth::user();
         $superAdmin = $user->superAdmin;
 
-        $status = GeofenceBoundaryStatus::where('status', 'disabled')->firstOrFail();
+        $enabledStatusId = GeofenceBoundaryStatus::where('status', 'enabled')->value('id');
+
+        /* The page map only renders the enabled boundary, so a first
+           boundary created as disabled is invisible until the user hunts
+           it down in the table and enables it — a dead end right after
+           "added successfully". The first boundary is therefore enabled
+           straight away; later ones stay disabled, since only one
+           boundary can be enabled at a time (enforced in update()). */
+        $isEnabled = ! GeofenceBoundary::where('status_id', $enabledStatusId)->exists();
+
+        $statusId = $isEnabled
+            ? $enabledStatusId
+            : GeofenceBoundaryStatus::where('status', 'disabled')->value('id');
 
         $validated = $request->validate([
             'school_name' => 'required|string|max:255',
-            'address'     => 'required|string|max:255',
-            'latitude'    => 'required|numeric',
-            'longitude'   => 'required|numeric',
-            'radius'      => 'required|numeric',
+            'address' => 'required|string|max:255',
+            'latitude' => 'required|numeric',
+            'longitude' => 'required|numeric',
+            'radius' => 'required|numeric',
         ]);
 
         GeofenceBoundary::create(array_merge($validated, [
-            'super_admin_id'  => $superAdmin->id,
-            'status_id'       => $status->id,
+            'super_admin_id' => $superAdmin->id,
+            'status_id' => $statusId,
         ]));
 
-        return response()->json(['success' => true]);
+        return response()->json(['success' => true, 'enabled' => $isEnabled]);
     }
 
     /**
@@ -67,6 +79,7 @@ class GeofenceBoundaryController extends Controller
     public function edit(GeofenceBoundary $geofenceBoundary)
     {
         $geofenceBoundary->load('geofenceBoundaryStatus');
+
         return response()->json($geofenceBoundary);
     }
 
@@ -79,11 +92,11 @@ class GeofenceBoundaryController extends Controller
 
         $validated = $request->validate([
             'school_name' => 'required|string|max:255',
-            'address'     => 'required|string|max:255',
-            'latitude'    => 'required|numeric',
-            'longitude'   => 'required|numeric',
-            'radius'      => 'required|numeric',
-            'status_id'   => [
+            'address' => 'required|string|max:255',
+            'latitude' => 'required|numeric',
+            'longitude' => 'required|numeric',
+            'radius' => 'required|numeric',
+            'status_id' => [
                 'required',
                 'numeric',
                 'exists:geofence_boundary_statuses,id',
@@ -107,6 +120,7 @@ class GeofenceBoundaryController extends Controller
     public function destroy(GeofenceBoundary $geofenceBoundary)
     {
         $geofenceBoundary->delete();
+
         return response()->json(['success' => true]);
     }
 }

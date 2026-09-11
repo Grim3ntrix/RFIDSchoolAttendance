@@ -69,7 +69,6 @@ export function initializeGeofenceDatatable() {
 
     /* --- Add modal: editable boundary map + Auto Fill --- */
 
-    const addGeofenceBoundaryBtn = document.getElementById('add-geofence-boundary-btn');
     const addForm = document.getElementById('add-geofence-boundary-form');
     const schoolNameField = document.getElementById('school_name');
     const addressField = document.getElementById('address');
@@ -93,6 +92,17 @@ export function initializeGeofenceDatatable() {
             elementId: 'add-boundary-map',
             editable: true,
             onBoundaryChange: syncFieldsFromMap,
+            onBoundarySettle: ({ latitude, longitude, name }) => {
+                // Instant fill from the picked search result; the reverse
+                // geocode that follows refines it (e.g. to the building's
+                // name) and fills the address.
+                if (name) {
+                    schoolNameField.value = name;
+                    autoFilledSchoolName.set(schoolNameField, name);
+                }
+
+                reverseGeocodeIntoFields(latitude, longitude, schoolNameField, addressField);
+            },
         });
     }
 
@@ -121,8 +131,88 @@ export function initializeGeofenceDatatable() {
         field.addEventListener('change', syncMapFromFields);
     });
 
-    addGeofenceBoundaryBtn.addEventListener('click', function (e) {
-        const geofenceBoundary = document.getElementById('geofence-boundary-container');
+    /* Reverse geocode wherever the boundary ends up — dragged there or
+       placed by a search pick — into the school name / address fields, so
+       the form is never submitted with an empty school name just because
+       the boundary was placed by something other than the GPS button.
+       Debounced: the proxy fronts rate-limited Nominatim, and a quick
+       search-then-drag sequence must not fire overlapping requests. A
+       null result leaves the fields untouched (never clears them). */
+    /* School-name detection is deliberately strict — the field feeds the
+       datatable, reports, and the student/teacher maps, so an unrelated
+       place name is worse than an empty field. The hint below the field
+       replaces the submit-time validation surprise with an immediate,
+       actionable nudge the moment the boundary settles somewhere with no
+       detectable school. */
+    /* Tracks the school name each field last received from geocoding, so
+       a later move to a non-school spot can clear it — but only when the
+       user hasn't typed over it, since hand-typed names are deliberate
+       (the school may simply not exist in OSM) and must never be wiped. */
+    const autoFilledSchoolName = new WeakMap();
+
+    function setSchoolNameHint(schoolField, hint) {
+        document.getElementById('school-name-hint')?.remove();
+
+        if (! hint) {
+            return;
+        }
+
+        const hintElement = document.createElement('p');
+        hintElement.id = 'school-name-hint';
+        hintElement.classList.add('mt-1', 'text-xs', 'text-amber-600', 'dark:text-amber-400');
+        hintElement.innerText = hint;
+        schoolField.insertAdjacentElement('afterend', hintElement);
+    }
+
+    document.addEventListener('input', (e) => {
+        if (e.target.id === 'school_name' || e.target.id === 'edit_school_name') {
+            setSchoolNameHint(e.target, null);
+        }
+    });
+
+    let settleGeocodeTimer = null;
+
+    function reverseGeocodeIntoFields(latitude, longitude, schoolField, addressField) {
+        clearTimeout(settleGeocodeTimer);
+
+        settleGeocodeTimer = setTimeout(() => {
+            axios.get(GEOCODE_URL, { params: { lat: latitude, lon: longitude } })
+                .then(response => {
+                    const place = response.data;
+
+                    if (place.school_name) {
+                        schoolField.value = place.school_name;
+                        autoFilledSchoolName.set(schoolField, place.school_name);
+                        setSchoolNameHint(schoolField, null);
+                    } else if (autoFilledSchoolName.get(schoolField) === schoolField.value && schoolField.value) {
+                        // The name came from us and is now stale — the
+                        // boundary moved off the school it named.
+                        schoolField.value = '';
+                        autoFilledSchoolName.delete(schoolField);
+                        setSchoolNameHint(schoolField, 'No school detected at this spot — please type the school name.');
+                    } else if (! schoolField.value.trim()) {
+                        setSchoolNameHint(schoolField, 'No school detected at this spot — please type the school name.');
+                    }
+                    if (place.address) {
+                        addressField.value = place.address;
+                    }
+                })
+                .catch(() => {
+                    // Coordinates are still valid; names just stay as typed.
+                });
+        }, 500);
+    }
+
+    /* The modal opens from three triggers — the header "Add Boundary"
+       button and the "Configure Geofence" / "Edit Configuration"
+       empty-state buttons — and every one of them must initialize the
+       modal map, not just the header button. Document-level delegation
+       (the same pattern the edit modal uses below) covers all of them. */
+    document.addEventListener('click', function (e) {
+        if (! e.target.closest('[data-modal-toggle="geofence-boundary-modal"]')) {
+            return;
+        }
+
         if (geofenceBoundary) {
             geofenceBoundary.style.display = 'none';
         }
@@ -135,7 +225,11 @@ export function initializeGeofenceDatatable() {
 
     document.querySelectorAll('[data-modal-hide="geofence-boundary-modal"]').forEach(function (closeTrigger) {
         closeTrigger.addEventListener('click', function () {
-            if (geofenceBoundary) {
+            /* Only bring the page map back when one was actually drawn —
+               from the not-configured/incomplete states the container
+               still holds the stale loading spinner, which must stay
+               hidden. */
+            if (geofenceBoundary && document.getElementById('geofence-map')) {
                 geofenceBoundary.style.display = 'block'; // Show the map again
             }
         });
@@ -163,7 +257,9 @@ export function initializeGeofenceDatatable() {
 
                 Toast.fire({
                     icon: "success",
-                    title: "School geofence boundary record added successfully!"
+                    title: response.data.enabled
+                        ? "School geofence boundary added and enabled!"
+                        : "School geofence boundary record added successfully!"
                 });
 
                 addForm.reset();
@@ -489,6 +585,17 @@ export function initializeGeofenceDatatable() {
                 editLatitudeField.value = latitude.toFixed(6);
                 editLongitudeField.value = longitude.toFixed(6);
                 editRadiusField.value = Math.round(radius);
+            },
+            onBoundarySettle: ({ latitude, longitude, name }) => {
+                const editSchoolField = document.getElementById('edit_school_name');
+                const editAddressField = document.getElementById('edit_address');
+
+                if (name) {
+                    editSchoolField.value = name;
+                    autoFilledSchoolName.set(editSchoolField, name);
+                }
+
+                reverseGeocodeIntoFields(latitude, longitude, editSchoolField, editAddressField);
             },
         });
     }

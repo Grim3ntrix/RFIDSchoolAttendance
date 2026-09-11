@@ -63,7 +63,13 @@ const toolbarButtonClass =
  * options.center      — [lat, lng] initial center (default: DEFAULT_VIEW)
  * options.zoom        — initial zoom (default: DEFAULT_ZOOM)
  * options.editable    — enables drag center / radius handle / search
- * options.onBoundaryChange({latitude, longitude, radius}) — form sync callback
+ * options.onBoundaryChange({latitude, longitude, radius}) — form sync callback,
+ *   fired on every drag tick
+ * options.onBoundarySettle({latitude, longitude, name}) — fired once per
+ *   placement gesture (a search pick or a finished center drag); `name`
+ *   carries the picked suggestion's name when the settle came from search,
+ *   null when it came from a drag. Consumers use this for expensive work
+ *   like reverse geocoding, which must not run on every drag tick.
  */
 export function createBoundaryMap(options) {
     const element = document.getElementById(options.elementId);
@@ -110,6 +116,16 @@ export function createBoundaryMap(options) {
         }
     };
 
+    const notifyBoundarySettle = (extra = {}) => {
+        if (options.editable && typeof options.onBoundarySettle === 'function' && boundary) {
+            options.onBoundarySettle({
+                latitude: boundary.getLatLng().lat,
+                longitude: boundary.getLatLng().lng,
+                ...extra,
+            });
+        }
+    };
+
     /**
      * Draw the boundary circle. In editable mode the center becomes a
      * draggable marker and the circle's east edge gets a drag handle that
@@ -138,6 +154,10 @@ export function createBoundaryMap(options) {
                 positionRadiusHandle();
                 notifyBoundaryChange();
             });
+
+            /* One reverse geocode per gesture, not per drag tick — the
+               settle consumer hits the rate-limited geocoding proxy. */
+            centerMarker.on('dragend', () => notifyBoundarySettle());
 
             addRadiusHandle();
         }
@@ -198,11 +218,11 @@ export function createBoundaryMap(options) {
     /* Show the whole circle on screen — the recenter behavior the page
        requested: no scrolling back, one click jumps the view home.
 
-       `instant` skips the fly animation. A flyTo from a world-wide view
-       animates through every zoom level, forcing tile loads at each step —
-       the boundary circle paints long before the tiles catch up, which
-       reads as "a red circle and no map". Initial draws jump instead;
-       the toolbar recenter button keeps the animation. */
+       `instant` skips the fly animation. Initial draws jump straight to
+       the boundary (fitting a map while its container is still settling
+       computes a nonsense zoom); the toolbar recenter button flies
+       instead — through flyThenReveal so the circle stays hidden for the
+       flight and can't paint over not-yet-loaded tiles. */
     function fitBoundary(instant = false) {
         if (! boundary) {
             return;
@@ -213,7 +233,53 @@ export function createBoundaryMap(options) {
         if (instant) {
             map.fitBounds(boundary.getBounds(), { padding: [30, 30], animate: false });
         } else {
-            map.flyToBounds(boundary.getBounds(), { padding: [30, 30] });
+            flyThenReveal(() => map.flyToBounds(boundary.getBounds(), { padding: [30, 30] }));
+        }
+    }
+
+    /* Show the whole boundary again after a hidden fly — the layers exist
+       again only if a boundary is still drawn (clearBoundary may have run
+       while the animation was in flight). */
+    function setBoundaryLayersVisible(visible) {
+        if (boundary) {
+            const element = boundary.getElement();
+            if (element) {
+                element.style.visibility = visible ? '' : 'hidden';
+            }
+        }
+        if (centerMarker) {
+            centerMarker.setOpacity(visible ? 1 : 0);
+        }
+        if (radiusHandle) {
+            radiusHandle.setOpacity(visible ? 1 : 0);
+        }
+    }
+
+    /* Animate a move with the boundary hidden, revealing it once the view
+       lands. A fly from a world-wide view steps through every zoom level
+       and the vector circle paints instantly on top of tiles that haven't
+       loaded at those levels — "a red circle and no map". Hiding the
+       circle for the flight removes the symptom while keeping the
+       animation's sense of travel. moveend fires even when the animation
+       is interrupted (the user grabbing the map), so the boundary can
+       never stay hidden. */
+    function flyThenReveal(fly) {
+        setBoundaryLayersVisible(false);
+        map.once('moveend', () => setBoundaryLayersVisible(true));
+        fly();
+    }
+
+    /* Move the view with the boundary hidden on far jumps — a nearby move
+       already has its tiles loaded and needs no hiding (it would only
+       flicker). */
+    function moveView(position, zoom) {
+        const far = ! map.getBounds().contains(position)
+            || Math.abs(map.getZoom() - zoom) >= 4;
+
+        if (far) {
+            flyThenReveal(() => map.flyTo(position, zoom));
+        } else {
+            map.flyTo(position, zoom);
         }
     }
 
@@ -281,9 +347,8 @@ export function createBoundaryMap(options) {
                     .bindPopup('Your current location');
             }
 
-            map.flyTo(position_, 16);
-            locateMarker.openPopup();
-        }, (error) => {
+            moveView(position_, 16);
+            locateMarker.openPopup();        }, (error) => {
             Swal.fire({
                 icon: 'error',
                 title: 'Unable to retrieve location',
@@ -349,17 +414,24 @@ export function createBoundaryMap(options) {
             return `<li class="px-4 py-3 text-sm text-gray-500 dark:text-gray-400">No matches for "${escapeHtml(inputValue)}"</li>`;
         }
 
-        return list.map((suggestion, index) => `
+        return list.map((suggestion, index) => {
+            /* The detail line carries the postcode after the address —
+               same-named places in different towns are told apart by it.
+               Kept off the display_name line because that line truncates. */
+            const details = [suggestion.type, suggestion.postcode].filter(Boolean).join(' · ');
+
+            return `
             <li>
                 <button type="button" data-suggestion-index="${index}" class="flex w-full items-start gap-3 px-4 py-2.5 text-left text-sm text-gray-900 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">
                     <i data-lucide="map-pin" class="mt-0.5 h-4 w-4 shrink-0 text-gray-400 dark:text-gray-500"></i>
                     <span class="min-w-0">
                         <span class="block truncate font-medium">${escapeHtml(suggestion.display_name)}</span>
-                        ${suggestion.type ? `<span class="block truncate text-xs text-gray-500 dark:text-gray-400">${escapeHtml(suggestion.type)}</span>` : ''}
+                        ${details ? `<span class="block truncate text-xs text-gray-500 dark:text-gray-400">${escapeHtml(details)}</span>` : ''}
                     </span>
                 </button>
             </li>
-        `).join('');
+        `;
+        }).join('');
     }
 
     function buildSearch() {
@@ -431,16 +503,25 @@ export function createBoundaryMap(options) {
                     return;
                 }
 
+                const position = [suggestion.latitude, suggestion.longitude];
+
                 if (boundary) {
-                    boundary.setLatLng([suggestion.latitude, suggestion.longitude]);
+                    boundary.setLatLng(position);
                     if (centerMarker) {
-                        centerMarker.setLatLng([suggestion.latitude, suggestion.longitude]);
+                        centerMarker.setLatLng(position);
                     }
                     positionRadiusHandle();
-                    notifyBoundaryChange();
+                } else {
+                    /* Fresh editor with no boundary drawn yet — picking a
+                       search result must place the boundary there, not
+                       just pan the view, or lat/lng never reach the form. */
+                    drawBoundary(suggestion.latitude, suggestion.longitude, 100);
                 }
 
-                map.flyTo([suggestion.latitude, suggestion.longitude], 16);
+                notifyBoundaryChange();
+                notifyBoundarySettle({ name: suggestion.name || null });
+
+                moveView(position, 16);
                 input.value = '';
                 results.classList.add('hidden');
             });
