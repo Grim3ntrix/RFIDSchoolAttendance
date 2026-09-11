@@ -223,17 +223,29 @@ export function initializeGeofenceDatatable() {
         });
     })
 
-    document.querySelectorAll('[data-modal-hide="geofence-boundary-modal"]').forEach(function (closeTrigger) {
-        closeTrigger.addEventListener('click', function () {
+    /* Flowbite dismisses a modal from several paths the data-modal-hide
+       buttons can't see — backdrop clicks and the Escape key. Every path
+       funnels through adding the `hidden` class, so watching it restores
+       the page map on any dismissal, not just the button ones. */
+    function restorePageMapWhenModalCloses(modalElement) {
+        if (! modalElement) {
+            return;
+        }
+
+        new MutationObserver(() => {
             /* Only bring the page map back when one was actually drawn —
                from the not-configured/incomplete states the container
                still holds the stale loading spinner, which must stay
                hidden. */
-            if (geofenceBoundary && document.getElementById('geofence-map')) {
-                geofenceBoundary.style.display = 'block'; // Show the map again
+            if (modalElement.classList.contains('hidden')
+                && geofenceBoundary
+                && document.getElementById('geofence-map')) {
+                geofenceBoundary.style.display = 'block';
             }
-        });
-    });
+        }).observe(modalElement, { attributes: true, attributeFilter: ['class'] });
+    }
+
+    restorePageMapWhenModalCloses(document.getElementById('geofence-boundary-modal'));
 
     if (addForm) {
         addForm.addEventListener('submit', function (e) {
@@ -564,6 +576,7 @@ export function initializeGeofenceDatatable() {
     refreshIcons();
 
     const editGeofenceBoundaryModalEl = document.getElementById('edit-geofence-boundary-modal');
+    restorePageMapWhenModalCloses(editGeofenceBoundaryModalEl);
 
     let geofenceBoundaryId;
     let editBoundaryMap = null;
@@ -678,10 +691,6 @@ export function initializeGeofenceDatatable() {
             // Hide modal
             if (e.target.closest('[data-modal-hide="edit-geofence-boundary-modal"]')) {
                 editGeofenceBoundaryModal.hide();
-
-                if (geofenceBoundary) {
-                    geofenceBoundary.style.display = 'block'; // Show the map again
-                }
             }
         });
     }
@@ -798,6 +807,9 @@ export function initializeGeofenceDatatable() {
                 const deleteGeofenceBoundaryModal = new Modal(deleteGeofenceBoundaryModalEl);
                 deleteGeofenceBoundaryModal.show();
 
+                // Backdrop/Escape dismissals must restore the page map too.
+                restorePageMapWhenModalCloses(deleteGeofenceBoundaryModalEl);
+
                 // Hide the map when the modal is opened
                 const geofenceBoundary = document.getElementById('geofence-boundary-container');
                 if (geofenceBoundary) {
@@ -841,19 +853,11 @@ export function initializeGeofenceDatatable() {
                 document.querySelector('[data-modal-hide="delete-geofence-boundary-modal"]').addEventListener('click', function () {
                     deleteGeofenceBoundaryModal.hide();
                     deleteGeofenceBoundaryModalContainer.innerHTML = ''; // Clear modal content
-
-                    if (geofenceBoundary) {
-                        geofenceBoundary.style.display = 'block'; // Show the map again
-                    }
                 });
 
                 document.querySelector('#delete-geofence-boundary-cancel-btn').addEventListener('click', function (e) {
                     deleteGeofenceBoundaryModal.hide();
                     deleteGeofenceBoundaryModalContainer.innerHTML = ''; // Clear modal content
-
-                    if (geofenceBoundary) {
-                        geofenceBoundary.style.display = 'block'; // Show the map again
-                    }
                 });
             }
         });
