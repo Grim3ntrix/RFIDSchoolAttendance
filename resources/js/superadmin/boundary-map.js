@@ -397,12 +397,19 @@ export function createBoundaryMap(options) {
             });
 
             recenterButton = container.querySelector('[data-boundary-action="recenter"]');
-            refreshIcons();
 
             return container;
         };
 
         toolbar.addTo(map);
+
+        /* Icon conversion must happen AFTER addTo() — Leaflet calls onAdd()
+           first and appends the returned container to the map DOM only
+           afterwards, so refreshIcons() inside onAdd() can't see the
+           placeholders (createIcons only scans the attached document) and
+           the toolbar renders blank until some unrelated refreshIcons()
+           call happens to convert it. */
+        refreshIcons();
     }
 
     /* --- Place search (editable maps only) --- */
@@ -532,12 +539,13 @@ export function createBoundaryMap(options) {
                 }
             });
 
-            refreshIcons();
-
             return container;
         };
 
         search.addTo(map);
+
+        // Same as the toolbar: convert icons after addTo(), not in onAdd().
+        refreshIcons();
     }
 
     buildToolbar();

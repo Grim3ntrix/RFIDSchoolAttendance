@@ -81,10 +81,11 @@ class GeofenceBoundaryGeocodeRequest extends Controller
     }
 
     /**
-     * Coordinates -> place details for the Auto Fill button. Alongside the
-     * display name we surface a school name when the coordinates resolve to
-     * one, and a one-line postal address, so the add/edit modal can be
-     * filled completely.
+     * Coordinates -> place details for every boundary placement (drag,
+     * search pick, "Use Current Location"). Alongside the display name we
+     * surface a school name when the coordinates resolve to one, and a
+     * one-line postal address, so the add/edit modal can be filled
+     * completely.
      */
     private function reverseGeocode(float $latitude, float $longitude): array
     {
@@ -101,10 +102,10 @@ class GeofenceBoundaryGeocodeRequest extends Controller
             'lon' => $longitude,
             'format' => 'jsonv2',
             // Building level: the superadmin typically stands inside the
-            // school when pressing Auto Fill, so the nearest building is
-            // the feature most likely to carry the school's name. Street
-            // level (16) resolves to the road or campus edge instead and
-            // regularly loses the name.
+            // school when using "Use Current Location", so the nearest
+            // building is the feature most likely to carry the school's
+            // name. Street level (16) resolves to the road or campus edge
+            // instead and regularly loses the name.
             'zoom' => 18,
             'addressdetails' => 1,
         ]);
@@ -145,18 +146,17 @@ class GeofenceBoundaryGeocodeRequest extends Controller
     }
 
     /**
-     * Resolve a school name for the Auto Fill button, in order of
-     * confidence:
+     * Resolve a school name for a placed boundary, in order of confidence:
      *
      *   1. The feature itself, when it is school-like — Nominatim's
      *      education category, or a school/college/university amenity (the
      *      legacy tagging of the same thing).
      *   2. A school address part Nominatim attached from the surroundings.
-     *   3. The named building at the coordinates — someone pressing Auto
-     *      Fill is usually standing in the school, so the nearest building
-     *      is the school even when it is tagged as a plain named building.
-     *      The field stays editable, so a wrong guess is a one-keystroke
-     *      fix rather than a dead end.
+     *   3. The named building at the coordinates — someone placing the
+     *      boundary on their school is usually on the school grounds, so
+     *      the nearest building is the school even when it is tagged as a
+     *      plain named building. The field stays editable, so a wrong
+     *      guess is a one-keystroke fix rather than a dead end.
      *
      * Streets and residential places are still never used — those are
      * genuine nonsense for a school name.

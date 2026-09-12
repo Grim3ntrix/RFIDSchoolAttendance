@@ -5,6 +5,22 @@ import { refreshIcons } from '../icons';
 
 const GEOCODE_URL = '/superadmin/geofence-boundaries/geocode';
 
+/* One toast config for the whole page (design guidelines §18): small
+   transient confirmations render as non-blocking top-end toasts, never
+   center dialogs. `timer` can be overridden per fire() for messages that
+   need to linger longer than the default. */
+const toast = Swal.mixin({
+    toast: true,
+    position: 'top-end',
+    showConfirmButton: false,
+    timer: 800,
+    timerProgressBar: true,
+    didOpen: (toastElement) => {
+        toastElement.onmouseenter = Swal.stopTimer;
+        toastElement.onmouseleave = Swal.resumeTimer;
+    },
+});
+
 export function initializeGeofenceDatatable() {
     // console.log("School Geofence Boundary page function triggered.");
 
@@ -67,7 +83,7 @@ export function initializeGeofenceDatatable() {
         });
     }
 
-    /* --- Add modal: editable boundary map + Auto Fill --- */
+    /* --- Add modal: editable boundary map + "Use Current Location" --- */
 
     const addForm = document.getElementById('add-geofence-boundary-form');
     const schoolNameField = document.getElementById('school_name');
@@ -131,13 +147,12 @@ export function initializeGeofenceDatatable() {
         field.addEventListener('change', syncMapFromFields);
     });
 
-    /* Reverse geocode wherever the boundary ends up — dragged there or
-       placed by a search pick — into the school name / address fields, so
-       the form is never submitted with an empty school name just because
-       the boundary was placed by something other than the GPS button.
-       Debounced: the proxy fronts rate-limited Nominatim, and a quick
-       search-then-drag sequence must not fire overlapping requests. A
-       null result leaves the fields untouched (never clears them). */
+    /* Reverse geocode wherever the boundary ends up — dragged there,
+       placed by a search pick, or dropped at the device's GPS position —
+       into the school name / address fields, so the form is never
+       submitted with an empty school name just because the boundary was
+       placed by something other than the GPS button. A null result
+       leaves the fields untouched (never clears them). */
     /* School-name detection is deliberately strict — the field feeds the
        datatable, reports, and the student/teacher maps, so an unrelated
        place name is worse than an empty field. The hint below the field
@@ -149,6 +164,8 @@ export function initializeGeofenceDatatable() {
        user hasn't typed over it, since hand-typed names are deliberate
        (the school may simply not exist in OSM) and must never be wiped. */
     const autoFilledSchoolName = new WeakMap();
+
+    const NO_SCHOOL_HINT = 'No school detected at this spot — please type the school name.';
 
     function setSchoolNameHint(schoolField, hint) {
         document.getElementById('school-name-hint')?.remove();
@@ -170,33 +187,45 @@ export function initializeGeofenceDatatable() {
         }
     });
 
+    function fetchReverseGeocode(latitude, longitude) {
+        return axios.get(GEOCODE_URL, { params: { lat: latitude, lon: longitude } })
+            .then(response => response.data);
+    }
+
+    /* Apply one reverse-geocode result to the school name / address
+       fields — the single shared school-detection path for boundary
+       drags, search picks, and the "Use Current Location" button. */
+    function applyGeocodedPlace(place, schoolField, addressField) {
+        if (place.school_name) {
+            schoolField.value = place.school_name;
+            autoFilledSchoolName.set(schoolField, place.school_name);
+            setSchoolNameHint(schoolField, null);
+        } else if (autoFilledSchoolName.get(schoolField) === schoolField.value && schoolField.value) {
+            // The name came from us and is now stale — the
+            // boundary moved off the school it named.
+            schoolField.value = '';
+            autoFilledSchoolName.delete(schoolField);
+            setSchoolNameHint(schoolField, NO_SCHOOL_HINT);
+        } else if (! schoolField.value.trim()) {
+            setSchoolNameHint(schoolField, NO_SCHOOL_HINT);
+        }
+
+        if (place.address) {
+            addressField.value = place.address;
+        }
+    }
+
+    /* Debounced consumer for boundary settle events: the proxy fronts
+       rate-limited Nominatim, and a quick search-then-drag sequence must
+       not fire overlapping requests. */
     let settleGeocodeTimer = null;
 
     function reverseGeocodeIntoFields(latitude, longitude, schoolField, addressField) {
         clearTimeout(settleGeocodeTimer);
 
         settleGeocodeTimer = setTimeout(() => {
-            axios.get(GEOCODE_URL, { params: { lat: latitude, lon: longitude } })
-                .then(response => {
-                    const place = response.data;
-
-                    if (place.school_name) {
-                        schoolField.value = place.school_name;
-                        autoFilledSchoolName.set(schoolField, place.school_name);
-                        setSchoolNameHint(schoolField, null);
-                    } else if (autoFilledSchoolName.get(schoolField) === schoolField.value && schoolField.value) {
-                        // The name came from us and is now stale — the
-                        // boundary moved off the school it named.
-                        schoolField.value = '';
-                        autoFilledSchoolName.delete(schoolField);
-                        setSchoolNameHint(schoolField, 'No school detected at this spot — please type the school name.');
-                    } else if (! schoolField.value.trim()) {
-                        setSchoolNameHint(schoolField, 'No school detected at this spot — please type the school name.');
-                    }
-                    if (place.address) {
-                        addressField.value = place.address;
-                    }
-                })
+            fetchReverseGeocode(latitude, longitude)
+                .then(place => applyGeocodedPlace(place, schoolField, addressField))
                 .catch(() => {
                     // Coordinates are still valid; names just stay as typed.
                 });
@@ -255,19 +284,7 @@ export function initializeGeofenceDatatable() {
 
             axios.post('/superadmin/geofence-boundaries', formData)
             .then(response => {
-                const Toast = Swal.mixin({
-                    toast: true,
-                    position: "top-end",
-                    showConfirmButton: false,
-                    timer: 800,
-                    timerProgressBar: true,
-                    didOpen: (toast) => {
-                        toast.onmouseenter = Swal.stopTimer;
-                        toast.onmouseleave = Swal.resumeTimer;
-                    }
-                });
-
-                Toast.fire({
+                toast.fire({
                     icon: "success",
                     title: response.data.enabled
                         ? "School geofence boundary added and enabled!"
@@ -302,24 +319,23 @@ export function initializeGeofenceDatatable() {
         });
     }
 
-    /* Geofence - Auto Fill Button (GPS coordinates + reverse geocoding) */
+    /* --- "Use Current Location" button (GPS coordinates + reverse geocoding) --- */
 
-    const fillLocationBtnContainer = document.getElementById('fill-location-btn-container');
+    const useCurrentLocationBtn = document.getElementById('use-current-location-btn');
 
-    if (fillLocationBtnContainer) {
+    if (useCurrentLocationBtn) {
+        const BUTTON_LABELS = {
+            idle: '<i data-lucide="locate-fixed" class="h-4 w-4"></i> Use Current Location',
+            locating: '<i data-lucide="loader-circle" class="h-4 w-4 animate-spin"></i> Locating…',
+        };
 
-        const fillLocationBtnHTML =
-        `<button type="button" id="fill-location-btn" class="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-medium text-gray-900 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-200 disabled:cursor-not-allowed disabled:opacity-60 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-700">
-            <i data-lucide="locate-fixed" class="w-4 h-4"></i>
-            Auto Fill
-        </button>`;
+        function setLocating(locating) {
+            useCurrentLocationBtn.disabled = locating;
+            useCurrentLocationBtn.innerHTML = locating ? BUTTON_LABELS.locating : BUTTON_LABELS.idle;
+            refreshIcons();
+        }
 
-        fillLocationBtnContainer.innerHTML = fillLocationBtnHTML;
-        refreshIcons();
-
-        const fillLocationBtn = document.getElementById('fill-location-btn');
-
-        fillLocationBtn.addEventListener('click', function () {
+        useCurrentLocationBtn.addEventListener('click', function () {
             if (! navigator.geolocation) {
                 Swal.fire({
                     icon: 'error',
@@ -328,7 +344,7 @@ export function initializeGeofenceDatatable() {
                 return;
             }
 
-            fillLocationBtn.disabled = true;
+            setLocating(true);
 
             navigator.geolocation.getCurrentPosition(function (position) {
                 const latitude = position.coords.latitude;
@@ -336,44 +352,42 @@ export function initializeGeofenceDatatable() {
 
                 latitudeField.value = latitude;
                 longitudeField.value = longitude;
-                radiusField.value = 100;
+                // A deliberate GPS fetch defaults the radius but never
+                // tramples one the user already chose.
+                radiusField.value = radiusField.value.trim() || 100;
 
                 syncMapFromFields();
 
-                /* Fill school name and address via the reverse geocoding
-                   proxy so the whole form is filled, not just coordinates. */
-                axios.get(GEOCODE_URL, { params: { lat: latitude, lon: longitude } })
-                .then(reverseResponse => {
-                    const place = reverseResponse.data;
+                /* Same school detection the drag/search settle path uses.
+                   A pending settle geocode is cancelled so it can't race
+                   this deliberate one and overwrite its result. */
+                clearTimeout(settleGeocodeTimer);
 
-                    if (place.school_name) {
-                        schoolNameField.value = place.school_name;
-                    }
-                    if (place.address) {
-                        addressField.value = place.address;
-                    }
+                fetchReverseGeocode(latitude, longitude)
+                    .then(place => {
+                        applyGeocodedPlace(place, schoolNameField, addressField);
 
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Location filled successfully!',
-                        showConfirmButton: false,
-                        timer: 1200
+                        if (place.school_name) {
+                            toast.fire({ icon: 'success', title: 'Location filled successfully' });
+                        } else {
+                            // Actionable guidance lives in the inline hint
+                            // under the school name field (guidelines §18);
+                            // the toast is only the transient heads-up.
+                            toast.fire({ icon: 'warning', title: 'No school detected at this spot', timer: 2500 });
+                        }
+                    })
+                    .catch(() => {
+                        // Coordinates are still valid; only the lookup failed.
+                        toast.fire({ icon: 'warning', title: 'Location filled — school and address could not be identified', timer: 2500 });
+                    })
+                    .finally(() => {
+                        setLocating(false);
                     });
-                })
-                .catch(() => {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Location filled successfully!',
-                        text: 'School name and address could not be identified — please enter them manually.',
-                        showConfirmButton: false,
-                        timer: 2500
-                    });
-                })
-                .finally(() => {
-                    fillLocationBtn.disabled = false;
-                });
             }, function (error) {
-                fillLocationBtn.disabled = false;
+                setLocating(false);
+
+                // Permission/timeout failures need the user to act — a
+                // modal dialog, not a transient toast (guidelines §18).
                 Swal.fire({
                     icon: 'error',
                     title: 'Unable to retrieve location',
@@ -711,19 +725,7 @@ export function initializeGeofenceDatatable() {
                 }
             })
             .then(response => {
-                const Toast = Swal.mixin({
-                    toast: true,
-                    position: "top-end",
-                    showConfirmButton: false,
-                    timer: 800,
-                    timerProgressBar: true,
-                    didOpen: (toast) => {
-                        toast.onmouseenter = Swal.stopTimer;
-                        toast.onmouseleave = Swal.resumeTimer;
-                    }
-                });
-
-                Toast.fire({
+                toast.fire({
                     icon: "success",
                     title: "Geofence boundary record updated successfully!"
                 });
@@ -823,19 +825,7 @@ export function initializeGeofenceDatatable() {
                     if (geofenceBoundaryId) {
                         axios.delete(`/superadmin/geofence-boundaries/${geofenceBoundaryId}`)
                         .then(response => {
-                            const Toast = Swal.mixin({
-                                toast: true,
-                                position: "top-end",
-                                showConfirmButton: false,
-                                timer: 800,
-                                timerProgressBar: true,
-                                didOpen: (toast) => {
-                                    toast.onmouseenter = Swal.stopTimer;
-                                    toast.onmouseleave = Swal.resumeTimer;
-                                }
-                            });
-
-                            Toast.fire({
+                            toast.fire({
                                 icon: "success",
                                 title: "Geofence boundary record deleted successfully!"
                             });
